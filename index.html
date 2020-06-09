@@ -7,11 +7,67 @@
     <!-- ml5 -->
     <script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
 
+    <!-- ACE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
 
 </head>
 <body>
+    <div id="leftNav" class="sidenav sidenav-left">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeLeftNav()">&times;</a>
+        <a href="#">download code</a>
+        <a href="#">email code</a>
+        <a href="#">Stuff</a>
+        <a href="#">Stuff</a>
+    </div>
+    <div id="rightNav" class="sidenav sidenav-right">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeRightNav()">&times;</a>
+
+        <h2>Settings</h2>
+        <div class="padded">
+            <label class="switch">
+                <input type="checkbox" id="mousePosition">
+                <div name="mouse position" class="slider round"></div>
+            </label>
+        </div>
+        <div class="padded">
+            <label class="switch">
+                <input type="checkbox" id="skeleton">
+                <div name="skeleton" class="slider round"></div>
+            </label>
+        </div>
+    </div>
+
+    <div class="topnav">
+        <span style="cursor:pointer; float:left;" onclick="openLeftNav()">
+            <i class="material-icons md-48">menu</i>
+        </span>
+        <span style="cursor:pointer; float:right;" onclick="openRightNav()">
+            <i class="material-icons md-48">settings</i>
+        </span>
+        <h2 style="text-align:center;">danceON</h2>
+    </div>
+    <div class="row">
+        <div class="col-6 col-s-3">
+            <div id="editor" style="height:480px"></div>
+            <div class="col-9 col-s-9">console</div>
+            <div class="col-3 col-s-3">
+                <!--<button id="runCode" type="button">Run</button>-->
+            </div>
+        </div>
+        <div class="col-6 col-s-9">
+            <div id='p5Canvas'></div>
+        </div>
+    </div>
+
+    <script src="helpers.js"></script>
+    <script src="editor.js"></script>
+    <script src="navs.js"></script>
+    <script src="poser.js"></script>
+    <script src="my_data.js"></script>
     <script src="setup_script.js"></script>
     <script src="sketch.js"></script>
 </body>

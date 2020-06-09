@@ -1,7 +1,7 @@
 function preloadJSON(options) {
     let preprocessedPoses = {};
-    if !(options.webcam) {
-        preprocessedPoses = loadJSON(options.videoPoses).data;
+    if (!options.webcam) {
+        preprocessedPoses = loadJSON(options.videoPoses);
     }
 
     return preprocessedPoses;
