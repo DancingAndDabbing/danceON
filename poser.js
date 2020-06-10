@@ -2,7 +2,9 @@ class Poser {
     constructor(settings) {
         //this.options = settings.options; // defaults
         this.declarations = settings.declarations;
+        this.movers = new Movers();
 
+        // may need to move these elsewhere
         this.wrappers = {
             'circle': this.circle,
             'circles': this.circles
@@ -19,31 +21,47 @@ class Poser {
         let newFuncList = this.declarations(pose, poseHistory);
         //console.log(newFuncList);
         newFuncList.forEach((ff, i) => {
-            push();
-            // order by type
-            let func = this.wrappers[ff.draw];
-            // if undefined throw certain error;
-            let args = ff.bind || {};
-            //console.log(args);
 
+            // dynamic or static
+            let type = ff.type || 'static';
             let condition = (typeof ff.condition !== 'undefined') ? ff.condition : true;
-            // Check to ensure it is a boolean or a function?
 
-            let fillVal = ff.fill || 255;
-            let strokeVal = ff.stroke || 0;
-
-            fill(fillVal);
-            stroke(strokeVal);
-
-            // Only call on the current pose
-            if (returnCondition(condition, pose)) func.call(this, args);
-
-
-            /*for (let [key, value] of Object.entries(ff)) {
-                this.wrappers[key](value);
-            }*/
-            pop();
+            if (returnCondition(condition, pose)) {
+                if (type == 'static') this.customDraw(ff);
+                // framesToActivate parameter?
+                else if (type == 'dynamic') this.movers.add(ff);
+            }
         });
+
+        this.movers.update();
+        let funcArray = this.movers.show();
+        funcArray.forEach((ff) => {
+            this.customDraw(ff);
+        });
+    }
+
+    customDraw(ff) {
+        push();
+        // if undefined throw certain error;
+        console.log(ff);
+        let func = this.wrappers[ff.draw];
+        let args = ff.bind || {};
+        //console.log(args);
+
+        // Check to ensure it is a boolean or a function?
+
+        let fillVal = ff.bind.fill || 255;
+        let strokeVal = ff.bind.stroke || 0;
+
+        fill(fillVal);
+        stroke(strokeVal);
+
+        // Only call on the current pose
+        // this may actually be called as a list
+        func.call(this, args);
+
+        pop();
+
     }
 
     update(d) {
@@ -99,7 +117,7 @@ class Poser {
 
 
         // console.log(argsList) - Check how out-of-index ones appear
-        // Call draw functions
+        // Call draw functions - check if I need the self syntax
         let self = this;
         argsList.forEach(a => self.circle(a));
 
