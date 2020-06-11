@@ -111,4 +111,25 @@ class DrawFunctions {
         triangle(x1, y1, x2, y2, x3, y3);
     }
 
+    // -- Text Functions --
+    // Does not currently implement x2 and y2 arguments for text boxing
+    // only existing fonts -> perhaps we should load some in?
+    text(args) {
+        push(); // uses additional push/pop to not affect error message formatting
+        let str = fallbackToDefault(args.str, 'Words, words, words.');
+        let x = fallbackToDefault(args.x, width/2);
+        let y = fallbackToDefault(args.y, height/2);
+
+        let tSize = fallbackToDefault(args.textSize, 32);
+        let tAlign = fallbackToDefault(args.textAlign, [CENTER, CENTER]);
+        let tFont = fallbackToDefault(args.textFont, 'Helvetica');
+
+        textSize(tSize);
+        textAlign(...tAlign);
+        textFont(tFont);
+        text(str, x, y);
+        pop();
+
+    }
+
 }
