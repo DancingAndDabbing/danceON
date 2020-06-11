@@ -11,7 +11,7 @@ class Mover {
         this.velocityY = args.bind.velocityY || 0;
 
         this.accelerationX = args.bind.accelerationX || 0;
-        this.accelerationY = args.bind.accelerationY || 0;
+        this.accelerationY = args.bind.accelerationY || 0;        
 
         //delete args.type;
         //delete args.condition;

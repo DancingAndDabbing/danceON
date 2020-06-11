@@ -2,16 +2,6 @@ let editor = ace.edit("editor", {
     fontSize: 16
 });
 
-/*
-let startingCode = `(pose, poseHistory) => [
-    {'circle':{
-        'x': pose.rightWrist.x,
-        'y': pose.rightWrist.y,
-        'd': 10
-        }
-    }
-];`
-*/
 let startingCode = `(pose, poseHistory) => [
     {
         draw: 'circle',

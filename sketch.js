@@ -1,13 +1,7 @@
-// P5 Pose Starter
+// P5 Pose Editor
 // STEM FROM DANCE | NYU - 2020
 
-// The most important thing to know is that you can use the pose variable
-// and you have the option of switching between the webcam and any other videos
-// you've made.
-
-// https://docs.google.com/spreadsheets/d/1vYps_m7VXY-EtISOMcOuVPCls3WrKoBZEqiOAQdI6bw/edit?usp=sharing
-
-// ----- Global Options - Change Me! -----
+// ----- Global Options -----
 let options = {
     webcam: false, // true or false
     poseNet: false, // true or false
@@ -22,12 +16,13 @@ let options = {
 
     posesFunction: gotPoses, // see below
 
+    toggles: ['mousePosition', 'skeleton'],
     mousePosition: false,
     skeleton: false,
 }
 
 
-// ----- Global Pose Variables - Don't change (without reason)! -----
+// ----- Global Pose Variables -----
 let pose; // Current pose
 let poseHistory = [];
 let video; // Video source - either preloaded or webcam
@@ -43,7 +38,7 @@ let poser;
 // ...
 
 
-// ----- Main P5 Functions - Called in order -----
+// ----- Main P5 Functions -----
 function preload() {
     preprocessedPoses = preloadJSON(options); // may not need to do
 }
@@ -52,11 +47,6 @@ function setup() {
     poser = new Poser(myData);
     [video, poseNet] = startVideo(options);
     preprocessedPoses = preprocessedPoses.data;
-
-    // Get the content in editor
-    /*select('#runCode').mousePressed(function() {
-        poser.update(declarations.getValue());
-    });*/
 
     poser.update(declarations.getValue());
     declarations.on('change', function(e) {
@@ -72,11 +62,12 @@ function setup() {
     canvas.mouseClicked(playPauseVideo);
 
     // Refactor (list of checkbox strings)
-    select('#mousePosition').changed(function() {
-        options.mousePosition = select('#mousePosition').checked();
-    });
-    select('#skeleton').changed(function() {
-        options.skeleton = select('#skeleton').checked();
+
+    // Connect toggles in GUI to options
+    options.toggles.forEach(t => {
+        select(`#${t}`).changed(() => {
+            options[t] = select(`#${t}`).checked();
+        })
     });
 }
 
@@ -94,18 +85,17 @@ function draw() {
 
 
     if (pose) {
-        /*let [scaledX, scaledY] = scaleXAndYToVideo(
-            options, pose.nose.x, pose.nose.y);
-        ellipse(scaledX, scaledY, 10);*/
+        let scaledPose = scalePoseToWindow(options, pose);
+
         if (!(video.elt.paused || video.elt.ended)) {
-            poseHistory.unshift(pose);
+            poseHistory.unshift(scaledPose);
             if (poseHistory.length >= 1000) poseHistory.pop();
         }
 
-        if (options.skeleton) skeleton(pose);
+        if (options.skeleton) skeleton(scaledPose);
 
         try {
-            poser.execute(pose, poseHistory); // check if any issues occur on return
+            poser.execute(scaledPose, poseHistory); // check if any issues occur on return
 
         } catch (e) {
             // missing key (e.g)
@@ -182,7 +172,9 @@ function skeleton(pose) {
     // draw skeleton - update the JSON file
     // issue - text doesn't display properly if points too close
     pose.keypoints.forEach((p, i) => {
-        let [sx, sy] = scaleXAndYToVideo(options, p.position.x, p.position.y);
+        let sx = p.position.x;
+        let sy = p.position.y;
+
         fill('rgba(255, 255, 255, 0.9)');
         circle(sx, sy, 8);
         if ((video.elt.paused || video.elt.ended) &&

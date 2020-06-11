@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<title>danceON!</title>
 <head>
     <!-- p5 -->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
@@ -10,66 +13,115 @@
     <!-- ACE -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js"></script>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
+    <link rel="stylesheet" type="text/css" href="style/bulma.min.css">
+    <link rel="stylesheet" type="text/css" href="style/bulma-switch.min.css">
     <meta charset="utf-8" />
-
 </head>
 <body>
-    <div id="leftNav" class="sidenav sidenav-left">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeLeftNav()">&times;</a>
-        <a href="#">download code</a>
-        <a href="#">email code</a>
-        <a href="#">Stuff</a>
-        <a href="#">Stuff</a>
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <li class="navbar-item">danceON</li>
     </div>
-    <div id="rightNav" class="sidenav sidenav-right">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeRightNav()">&times;</a>
-
-        <h2>Settings</h2>
-        <div class="padded">
-            <label class="switch">
-                <input type="checkbox" id="mousePosition">
-                <div name="mouse position" class="slider round"></div>
-            </label>
-        </div>
-        <div class="padded">
-            <label class="switch">
-                <input type="checkbox" id="skeleton">
-                <div name="skeleton" class="slider round"></div>
-            </label>
-        </div>
+    <div class="navbar-start">
+        <a class="navbar-item">Docs</a>
     </div>
-
-    <div class="topnav">
-        <span style="cursor:pointer; float:left;" onclick="openLeftNav()">
-            <i class="material-icons md-48">menu</i>
-        </span>
-        <span style="cursor:pointer; float:right;" onclick="openRightNav()">
-            <i class="material-icons md-48">settings</i>
-        </span>
-        <h2 style="text-align:center;">danceON</h2>
-    </div>
-    <div class="row">
-        <div class="col-6 col-s-3">
-            <div id="editor" style="height:480px"></div>
-            <div class="col-9 col-s-9">console</div>
-            <div class="col-3 col-s-3">
-                <!--<button id="runCode" type="button">Run</button>-->
+    <div class="navbar-end">
+        <div class="navbar-item">
+            <div class="buttons">
+                <button id="settingsButton" onclick="openSettings()" class="button is-light is-inverted is-outlined">
+                    <span class="icon"><i class="fas fa-sliders-h"></i></span>
+                    <span>Controls</span>
+                </button>
             </div>
         </div>
-        <div class="col-6 col-s-9">
-            <div id='p5Canvas'></div>
+    </div>
+</nav>
+
+<!-- locked to 640px - consider adjusting $modal-content-width  -->
+<div class="modal" id="settings">
+    <div class="modal-background" onclick="closeSettings()"></div>
+    <div class="modal-content">
+        <div class="tile is-ancestor is-clipped">
+            <div class="tile is-5 is-vertical is-parent">
+                <div class="tile is-child notification is-light">
+                    <p class="subtitle">Overlays</p>
+                    <div class="field">
+                        <input id="mousePosition" type="checkbox" name="mousePosition" class="switch is-rounded is-outlined">
+                        <label for="mousePosition">cursor position</label>
+                    </div>
+                    <div class="field">
+                        <input id="skeleton" type="checkbox" name="skeleton" class="switch is-rounded is-outlined">
+                        <label for="skeleton">skeleton</label>
+                    </div>
+                </div>
+                <div class="tile is-child notification is-light">
+                    <p class="subtitle">Other Stuff</p>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <div class="tile is-child notification is-light">
+                    <p class="subtitle">Files</p>
+                    <div class="content">
+                        <div class="field">
+                            <div class="file has-name is-link">
+                                <label class="file-label">
+                                    <input class="file-input" type="file" name="video">
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">Video</span>
+                                    </span>
+                                    <span class="file-name">Balance001.mp4</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="file has-name is-link">
+                                <label class="file-label">
+                                    <input class="file-input" type="file" name="pose">
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">Pose</span>
+                                    </span>
+                                    <span class="file-name">Balance001.json</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <button class="modal-close is-large" onclick="closeSettings()" aria-label="close"></button>
+</div>
 
-    <script src="helpers.js"></script>
-    <script src="editor.js"></script>
-    <script src="navs.js"></script>
-    <script src="mover.js"></script>
-    <script src="poser.js"></script>
-    <script src="my_data.js"></script>
-    <script src="setup_script.js"></script>
-    <script src="sketch.js"></script>
+<section class="section">
+    <div class="container is-fluid">
+        <div class="columns">
+            <div class="column">
+                <div id="editor" style="height:480px"></div>
+            </div>
+            <div class="column is-narrow">
+                <div style="width: 640px;">
+                    <div id='p5Canvas'></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="helpers.js"></script>
+<script src="editor.js"></script>
+<script src="navs.js"></script>
+<script src="mover.js"></script>
+<script src="poser.js"></script>
+<script src="my_data.js"></script>
+<script src="setup_script.js"></script>
+<script src="sketch.js"></script>
 </body>
 </html>

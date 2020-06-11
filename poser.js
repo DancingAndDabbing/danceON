@@ -6,11 +6,8 @@ class Poser {
 
         // may need to move these elsewhere
         this.wrappers = {
-            'circle': this.circle,
-            'circles': this.circles
+            'circle': this.circle
         }
-
-        // object containing functions and proper arguments
 
         return;
     }
@@ -27,7 +24,14 @@ class Poser {
             let condition = (typeof ff.condition !== 'undefined') ? ff.condition : true;
 
             if (returnCondition(condition, pose)) {
-                if (type == 'static') this.customDraw(ff);
+                if (type == 'static') {
+                    let bind = ff.bind || {};
+                    let bindings = splitArgs(bind); // false or list
+                    
+                    if (bindings) bindings.forEach( b => {
+                        this.customDraw({draw: ff.draw, bind: b})
+                    });
+                }
                 // framesToActivate parameter?
                 else if (type == 'dynamic') this.movers.add(ff);
             }
@@ -43,10 +47,8 @@ class Poser {
     customDraw(ff) {
         push();
         // if undefined throw certain error;
-        console.log(ff);
         let func = this.wrappers[ff.draw];
         let args = ff.bind || {};
-        //console.log(args);
 
         // Check to ensure it is a boolean or a function?
 
@@ -69,9 +71,7 @@ class Poser {
         // I could append d to a history
         let func;
 
-        try {
-            func = new Function(`return ${d}`.trim())();
-        }
+        try { func = new Function(`return ${d}`.trim())(); }
         catch(err) {
             return false;
         }
@@ -84,48 +84,51 @@ class Poser {
 
     circle(args) {
         // set defaults
-        let x = args.x || width/2;
+        let x = args.x || width/2; // 0 won't work!!! make my own func
         let y = args.y || height/2;
         let d = args.d || 30;
 
         // Call draw functions
-        circle(x/2, y/2, d); // fix
+        circle(x, y, d); // fix
+    }
+}
 
+// For static objects
+function splitArgs(args) {
+    let lengths = {};
+    let argsList = [];
+
+    for (const [key, val] of Object.entries(args)) {
+        if (Array.isArray(val)) lengths[key] = val.length;
     }
 
-    circles(args) {
-        // set defaults
-        console.log(this);
-        let xList = args.x || [width/2];
-        let yList = args.y || [height/2];
-        let d = args.d || 30;
-        let argsList = [];
+    // If none of the provided arguments are arrays, we can
+    // return here
+    if (!Object.keys(lengths).length) return [args];
 
-        if (xList.length != yList.length) {
-            throw "x and y lengths must be equal.";
-            return false;
+    // check to ensure all array lengths are equal
+    let lengthArr = Object.values(lengths);
+    if (!(lengthArr.every( (val, i, arr) => val === arr[0] ))) {
+        throw `All array lengths in bind aren't equal. ${Object.entries(lengths)}`;
+        return false;
+    }
+
+    // generate a new list of arguments
+    let l = lengthArr[0];
+    for (let i = 0; i < l; i++) {
+        let newArgs = {};
+
+        for (const [key, val] of Object.entries(args)) {
+            if (Array.isArray(val)) newArgs[key] = val[i];
+            else newArgs[key] = val;
         }
-
-        // need to call in reverse!
-        xList.forEach((item, i) => {
-            argsList.push({
-                x: item,
-                y: yList[i],
-                d: d
-            })
-        });
-
-
-        // console.log(argsList) - Check how out-of-index ones appear
-        // Call draw functions - check if I need the self syntax
-        let self = this;
-        argsList.forEach(a => self.circle(a));
-
+        argsList.push(newArgs);
     }
+
+    return argsList;
 }
 
 function returnCondition(condition, pose) {
     if (typeof(condition) === 'function') return condition(pose);
     else return condition; // More error checking?
-
 }
