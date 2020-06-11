@@ -5,13 +5,13 @@ class Mover {
         this.maxFrames = args.frames || 10000;
         this.draw = args.draw;
 
-        this.points = args.start; // syntax???
+        this.points = args.start; // syntax??? Error catching???
 
-        this.velocityX = args.bind.velocityX || 0;
-        this.velocityY = args.bind.velocityY || 0;
+        this.velocityX = fallbackToDefault(args.bind.velocityX, 0);
+        this.velocityY = fallbackToDefault(args.bind.velocityY, 0);
 
-        this.accelerationX = args.bind.accelerationX || 0;
-        this.accelerationY = args.bind.accelerationY || 0;        
+        this.accelerationX = fallbackToDefault(args.bind.accelerationX, 0);
+        this.accelerationY = fallbackToDefault(args.bind.accelerationY, 0);
 
         //delete args.type;
         //delete args.condition;

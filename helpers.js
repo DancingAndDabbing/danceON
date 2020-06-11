@@ -1,6 +1,10 @@
 // Useful Functions for developers and users
 
 // External Helper Functions
+function fallbackToDefault(val, def) {
+    if (val === undefined) return def;
+    else return val;
+}
 
 // pose history subset
 

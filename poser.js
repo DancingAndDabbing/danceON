@@ -3,6 +3,7 @@ class Poser {
         //this.options = settings.options; // defaults
         this.declarations = settings.declarations;
         this.movers = new Movers();
+        this.drawFunctions = new DrawFunctions();
 
         // may need to move these elsewhere
         this.wrappers = {
@@ -27,7 +28,7 @@ class Poser {
                 if (type == 'static') {
                     let bind = ff.bind || {};
                     let bindings = splitArgs(bind); // false or list
-                    
+
                     if (bindings) bindings.forEach( b => {
                         this.customDraw({draw: ff.draw, bind: b})
                     });
@@ -47,7 +48,8 @@ class Poser {
     customDraw(ff) {
         push();
         // if undefined throw certain error;
-        let func = this.wrappers[ff.draw];
+        //let func = this.wrappers[ff.draw];
+        let func = this.drawFunctions[ff.draw];
         let args = ff.bind || {};
 
         // Check to ensure it is a boolean or a function?
@@ -57,9 +59,8 @@ class Poser {
 
         fill(fillVal);
         stroke(strokeVal);
+        // strokeWeight
 
-        // Only call on the current pose
-        // this may actually be called as a list
         func.call(this, args);
 
         pop();
