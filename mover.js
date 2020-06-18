@@ -2,24 +2,23 @@ class Mover {
     constructor(args) {
 
         this.framesAlive = 0;
-        this.maxFrames = args.frames || 10000;
+        this.maxFrames = fallbackToDefault(args.frames, 10000);
         this.draw = args.draw;
+        this.bind = fallbackToDefault(args.bind, {});
 
-        this.points = args.start; // syntax??? Error catching???
+        this.points = fallbackToDefault(args.start, {});; // syntax??? Error catching???
 
-        this.velocityX = fallbackToDefault(args.bind.velocityX, random(-2, 2));
-        this.velocityY = fallbackToDefault(args.bind.velocityY, -10);
+        this.velocityX = fallbackToDefault(this.bind.velocityX, random(-2, 2));
+        this.velocityY = fallbackToDefault(this.bind.velocityY, -10);
 
-        this.accelerationX = fallbackToDefault(args.bind.accelerationX, 0);
-        this.accelerationY = fallbackToDefault(args.bind.accelerationY, 0.5);
+        this.accelerationX = fallbackToDefault(this.bind.accelerationX, 0);
+        this.accelerationY = fallbackToDefault(this.bind.accelerationY, 0.5);
 
         // These don't belong in "bind" going forward
-        delete args.bind.velocityX;
-        delete args.bind.velocityY;
-        delete args.bind.accelerationX;
-        delete args.bind.accelerationY;
-
-        this.bind = args.bind;
+        delete this.bind.velocityX;
+        delete this.bind.velocityY;
+        delete this.bind.accelerationX;
+        delete this.bind.accelerationY;
     }
 
     update() {

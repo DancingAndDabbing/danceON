@@ -7,6 +7,11 @@ function fallbackToDefault(val, def) {
 }
 
 // pose history subset
+function historySubset(pHistory, limb, param, start=0, end=1, interval=1) {
+    return pHistory.slice(start, end)
+                   .filter((p, i) => i % interval === 0)
+                   .map(p => p[limb][param])
+}
 
 // Internal Helper Functions
 function getFrame(options, video) {
@@ -24,8 +29,8 @@ function getTimeFromFrame(frame, vidFramerate) {
 
 function resizeVideo(options, video) {
     if (!options.webcam) return [
-        video.width * options.videoWidthScale,
-        video.height * options.videoHeightScale
+        video.width * options.videoScale,
+        video.height * options.videoScale
     ]
     else return [video.width, video.height];
 }
@@ -33,8 +38,8 @@ function resizeVideo(options, video) {
 // Need also to support up/down shifting
 function scalePositionToVideo(options, position) {
     return {
-        x: position.x * options.videoWidthScale,
-        y: position.y * options.videoHeightScale
+        x: position.x * options.videoScale,
+        y: position.y * options.videoScale
     }
 }
 

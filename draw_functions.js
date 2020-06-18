@@ -29,7 +29,7 @@ class DrawFunctions {
         let x = fallbackToDefault(args.x, width/2);
         let y = fallbackToDefault(args.y, height/2);
         let w = fallbackToDefault(args.w, 30);
-        let h = fallbackToDefault(args.h, d);
+        let h = fallbackToDefault(args.h, w);
 
         ellipse(x, y, w, h);
 

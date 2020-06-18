@@ -90,7 +90,7 @@ class Poser {
         let d = args.d || 30;
 
         // Call draw functions
-        circle(x, y, d); // fix
+        circle(x, y, d);
     }
 }
 

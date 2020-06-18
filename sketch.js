@@ -7,15 +7,24 @@ let options = {
     poseNet: false, // true or false
     record: false, // true or false
 
-    // change to use your own video
+    // video options
     videoLocation: 'assets/Balance001.mp4',
     videoPoses: 'assets/Balance001.json',
     videoFramerate: 30, // For Yoav - always 30?
-    videoWidthScale: 0.5,
-    videoHeightScale: 0.5,
+    videoWidth: 640,
+    videoHeight: 480,
+    videoScale: undefined,
+    videoVerticalShift: 0,
+    videoHorizontalShift: 0,
+    playing: false, // TODO - use this
+    // frameNum?
 
+    playbarHeight: 40,
+
+    // posenet options
     posesFunction: gotPoses, // see below
 
+    // UI toggles
     toggles: ['mousePosition', 'skeleton'],
     mousePosition: false,
     skeleton: false,
@@ -27,15 +36,14 @@ let pose; // Current pose
 let poseHistory = [];
 let video; // Video source - either preloaded or webcam
 
+let playBar;
+
 // Depending on poseNet option we will use either of these
 let poseNet; // Machine Learning Algorithm for detecting poses
 let preprocessedPoses; // Array of poses captured in advance by frame
 // -----                                       -----
 
 let poser;
-
-// Add other global variables here!
-// ...
 
 
 // ----- Main P5 Functions -----
@@ -50,18 +58,26 @@ function setup() {
 
     poser.update(declarations.getValue());
     declarations.on('change', function(e) {
-        //console.log(declarations.getValue());
         poser.update(declarations.getValue());
     });
 
     noCursor();
 
-    let canvas = createCanvas(640, 480);
+    let canvas = createCanvas(options.videoWidth,
+        options.videoHeight + options.playbarHeight);
     canvas.parent('p5Canvas');
 
-    canvas.mouseClicked(playPauseVideo);
+    playBar = new PlayBar(options);
 
-    // Refactor (list of checkbox strings)
+    // Mouse Click Events
+    canvas.mouseClicked(() => {
+        // animate the cursor
+        if (playBar.overPlayButton()) playPauseVideo();
+        else if (playBar.overBar()) changeFrame(playBar.getFrame());
+
+        // other ideas include getting the coordinates
+        // and getting the skeleton part
+    });
 
     // Connect toggles in GUI to options
     options.toggles.forEach(t => {
@@ -72,22 +88,24 @@ function setup() {
 }
 
 function draw() {
+    background(220);
     if (!options.webcam) {
         let frameNum = min(
             getFrame(options, video), preprocessedPoses.length - 1);
         gotPoses(preprocessedPoses[frameNum]);
+
+        playBar.update({playing: options.playing, frameNum: frameNum,
+                        totalFrames: preprocessedPoses.length - 1});
+        playBar.draw();
     }
 
-    background(220);
     image(video, 0, 0, ...resizeVideo(options, video)); // Deal with resize
 
     // Draw on top of the image using pose
-
-
     if (pose) {
         let scaledPose = scalePoseToWindow(options, pose);
 
-        if (!(video.elt.paused || video.elt.ended)) {
+        if (options.playing) {
             poseHistory.unshift(scaledPose);
             if (poseHistory.length >= 1000) poseHistory.pop();
         }
@@ -124,9 +142,23 @@ function gotPoses(poses) {
 }
 
 function playPauseVideo() {
-    if (video.elt.paused || video.elt.ended) video.loop();
-    else video.pause();
+    if (video.elt.paused || video.elt.ended) {
+        options.playing = true;
+        video.loop();
+    }
+    else {
+        options.playing = false;
+        video.pause();
+    }
 }
+
+// Scrubbing function - doesn't seem to work in local host - will set to 0
+function changeFrame(frameNum) {
+    video.time(getTimeFromFrame(frameNum, options.videoFramerate));
+}
+
+// Overlays to draw
+// Refactor - move to different file
 
 // May become a class
 function cursorIcon() {
@@ -145,20 +177,20 @@ function cursorPosition() {
     noStroke();
     fill('rgba(30,30,30, 0.5)');
     rect(
-        constrain(mouseX-4, 4, width-44),
-        constrain(mouseY-34, 2, height-34),
+        constrain(mouseX-4, 4, options.videoWidth-44),
+        constrain(mouseY-34, 2, options.videoHeight-34),
         40, 30, 4);
 
     fill(255);
     text(
-        `x: ${floor(constrain(mouseX, 0, width))}`,
-        constrain(mouseX, 8, width-40),
-        constrain(mouseY-22, 14, height-22)
+        `x: ${floor(constrain(mouseX, 0, options.videoWidth))}`,
+        constrain(mouseX, 8, options.videoWidth-40),
+        constrain(mouseY-22, 14, options.videoHeight-22)
     );
     text(
-        `y: ${floor(constrain(mouseY, 0, height))}`,
-        constrain(mouseX, 8, width-40),
-        constrain(mouseY-10, 26, height-10),
+        `y: ${floor(constrain(mouseY, 0, options.videoHeight))}`,
+        constrain(mouseX, 8, options.videoWidth-40),
+        constrain(mouseY-10, 26, options.videoHeight-10),
     );
 
     pop();
@@ -177,8 +209,7 @@ function skeleton(pose) {
 
         fill('rgba(255, 255, 255, 0.9)');
         circle(sx, sy, 8);
-        if ((video.elt.paused || video.elt.ended) &&
-            dist(mouseX, mouseY, sx, sy) < 8) {
+        if (!options.playing && dist(mouseX, mouseY, sx, sy) < 8) {
                 fill('rgba(30,30,30, 0.5)');
                 rect(sx-37, sy+8, 74, 16, 4); // improvement - respond to text
 
