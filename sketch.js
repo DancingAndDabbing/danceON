@@ -1,13 +1,20 @@
 // P5 Pose Editor
 // STEM FROM DANCE | NYU - 2020
 
+// BUG - Webcam turns off, but I can't deactivate the light
+// https://stackoverflow.com/questions/11642926/stop-close-webcam-which-is-opened-by-navigator-getusermedia
+
 // ----- Global Options -----
 let options = {
+    // Assume that if the user is using the webcam, we will run Posenet
+    // Otherwise, we will wait for an uploaded JSON file
     webcam: false, // true or false
-    poseNet: false, // true or false
     record: false, // true or false
+    posenetLoaded: false,
 
     // video options
+    videoToggle: 'videoToggle',
+    webcamToggle: 'webcamToggle',
     videoLocation: 'assets/Balance001.mp4',
     videoPoses: 'assets/Balance001.json',
     videoFramerate: 30, // For Yoav - always 30?
@@ -24,10 +31,11 @@ let options = {
     // posenet options
     posesFunction: gotPoses, // see below
 
-    // UI toggles
-    toggles: ['mousePosition', 'skeleton'],
+    // UI Overlay toggles
+    toggles: ['mousePosition', 'skeleton', 'ml'],
     mousePosition: false,
     skeleton: false,
+    ml: false
 }
 
 
@@ -48,21 +56,56 @@ let poser;
 
 // ----- Main P5 Functions -----
 function preload() {
-    preprocessedPoses = preloadJSON(options); // may not need to do
+    preprocessedPoses = preloadJSON(options);
 }
 
 function setup() {
     // Video and pose setup - calls functions in setup_script.js
     poser = new Poser(myData);
-    [video, poseNet] = startVideo(options);
-    preprocessedPoses = preprocessedPoses.data;
+    video = startVideo(options);
+    preprocessedPoses = preprocessedPoses.data; // Use default JSON
 
+    // Toggle between Webcam and Video
+    select(`#${options.videoToggle}`).mouseClicked(() => {
+        if (!options.webcam) return;
+        options.webcam = false;
+        poseHistory = [];
+
+        // stop events on poseNet if possible?
+        console.log(poseNet);
+        poseNet = stopPoseNet(poseNet);
+        console.log(video);
+
+        video.pause();
+        video.src = "";
+        video.srcObject = null;
+
+        navigator.getUserMedia({audio: true, video: true},
+            (stream => stream.getTracks().forEach( (track) => track.stop())),
+            (error => console.log('getUserMedia() error', error))
+        );
+
+            video = startVideo(options);
+        });
+
+    select(`#${options.webcamToggle}`).mouseClicked(() => {
+        if (options.webcam) return;
+        options.webcam = true;
+        options.playing = false;
+        poseHistory = [];
+
+        video = startVideo(options);
+        poseNet = startPoseNet(options, poseNet, video);
+        console.log(poseNet);
+    });
+
+    // Editor/Poser API
     poser.update(declarations.getValue());
     declarations.on('change', function(e) {
         poser.update(declarations.getValue());
     });
 
-    // p5 canvas setup
+    // p5 Canvas Setup
     noCursor();
     let canvas = createCanvas(options.videoWidth,
         options.videoHeight + options.playbarHeight);
@@ -70,7 +113,7 @@ function setup() {
 
     playBar = new PlayBar(options);
 
-    // Mouse Click Events
+    // Mouse Click Events on Canvas
     canvas.mouseClicked(() => {
         // animate the cursor
         if (playBar.overPlayButton()) playPauseVideo();

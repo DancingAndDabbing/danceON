@@ -54,6 +54,10 @@
                         <input id="skeleton" type="checkbox" name="skeleton" class="switch is-rounded is-outlined">
                         <label for="skeleton">skeleton</label>
                     </div>
+                    <div class="field">
+                        <input id="ml" type="checkbox" name="ml" class="switch is-rounded is-outlined" disabled>
+                        <label for="ml">classifier</label>
+                    </div>
                 </div>
                 <div class="tile is-child notification is-light">
                     <p class="subtitle">Other Stuff</p>
@@ -61,8 +65,12 @@
             </div>
             <div class="tile is-parent">
                 <div class="tile is-child notification is-light">
-                    <p class="subtitle">Files</p>
+                    <p class="subtitle">Video Sources</p>
                     <div class="content">
+                        <div class="buttons has-addons">
+                            <button id="videoToggle" onclick="activateVideoButton()" class="button is-link">Video</button>
+                            <button id="webcamToggle" onclick="activateWebCamButton()" class="button">Webcam</button>
+                        </div>
                         <div class="field">
                             <div class="file has-name is-link">
                                 <label class="file-label">
@@ -117,7 +125,7 @@
 
 <script src="helpers.js"></script>
 <script src="editor.js"></script>
-<script src="navs.js"></script>
+<script src="dom_adjustments.js"></script>
 <script src="play_bar.js"></script>
 <script src="mover.js"></script>
 <script src="draw_functions.js"></script>

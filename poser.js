@@ -17,7 +17,9 @@ class Poser {
             // look for condition, bind, draw, type
             // dynamic or static
             let type = 'static';
-            if (ff.where.start != undefined) type = 'dynamic';
+            // fix - if (ff.where != undefined)
+            if (ff.where == undefined) type = 'static'
+            else if (ff.where.start != undefined) type = 'dynamic';
             let when = fallbackToDefault(ff.when, true);
 
             if (returnCondition(when, pose)) {
