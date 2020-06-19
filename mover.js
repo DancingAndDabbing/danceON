@@ -1,24 +1,30 @@
+// TODO - Update animation system to support strings and lists
+
 class Mover {
     constructor(args) {
 
         this.framesAlive = 0;
-        this.maxFrames = fallbackToDefault(args.frames, 10000);
-        this.draw = args.draw;
-        this.bind = fallbackToDefault(args.bind, {});
+        this.maxFrames = fallbackToDefault(args.how.frames, 10000);
 
-        this.points = fallbackToDefault(args.start, {});; // syntax??? Error catching???
+        this.what = args.what;
+        this.where = fallbackToDefault(args.where, {}); // this.points???
+        this.how = fallbackToDefault(args.how, {});
 
-        this.velocityX = fallbackToDefault(this.bind.velocityX, random(-2, 2));
-        this.velocityY = fallbackToDefault(this.bind.velocityY, -10);
+        this.points = fallbackToDefault(this.where.start, {}); // syntax??? Error catching???
 
-        this.accelerationX = fallbackToDefault(this.bind.accelerationX, 0);
-        this.accelerationY = fallbackToDefault(this.bind.accelerationY, 0.5);
+        this.velocityX = fallbackToDefault(this.points.velocityX, random(-2, 2));
+        this.velocityY = fallbackToDefault(this.points.velocityY, -10);
 
-        // These don't belong in "bind" going forward
-        delete this.bind.velocityX;
-        delete this.bind.velocityY;
-        delete this.bind.accelerationX;
-        delete this.bind.accelerationY;
+        this.accelerationX = fallbackToDefault(this.where.accelerationX, 0);
+        this.accelerationY = fallbackToDefault(this.where.accelerationY, 0.5);
+
+        // These don't belong in the args going forward as they are not
+        // present in the static counterparts
+        // * maybe reconsider - could be useful for animations...
+        delete this.points.velocityX;
+        delete this.points.velocityY;
+        delete this.where.accelerationX;
+        delete this.where.accelerationY;
     }
 
     update() {
@@ -26,6 +32,8 @@ class Mover {
             if (prop[0] == 'x') this.points[prop] += this.velocityX;
             if (prop[0] == 'y') this.points[prop] += this.velocityY;
         }
+
+        // I could interpolate here if acceleration is passed an object arg
 
         this.velocityX += this.accelerationX;
         this.velocityY += this.accelerationY;
@@ -36,18 +44,20 @@ class Mover {
     // function for dealing with key frames
     // This returns an object that should be identical to its static counterpart
     show() {
-        let currentBind = {};
-        Object.assign(currentBind, this.bind);
-        for (const prop in currentBind) {
-            if (Array.isArray(currentBind[prop])) {
-                currentBind[prop] = this.interpolate(currentBind[prop]);
+        let currentHow = {};
+        let currentWhere = {};
+        Object.assign(currentHow, this.how);
+
+        for (const prop in currentHow) {
+            if (Array.isArray(currentHow[prop])) {
+                currentHow[prop] = this.interpolate(currentHow[prop]);
             }
         }
 
         for (const prop in this.points) {
-            currentBind[prop] = this.points[prop];
+            currentWhere[prop] = this.points[prop];
         }
-        return {'bind': currentBind, 'draw': this.draw};
+        return {'what': this.what, 'where': currentWhere, 'how': currentHow};
     }
 
     // currently only supports numbers - not strings or colors

@@ -5,11 +5,6 @@ class Poser {
         this.movers = new Movers();
         this.drawFunctions = new DrawFunctions();
 
-        // may need to move these elsewhere
-        this.wrappers = {
-            'circle': this.circle
-        }
-
         return;
     }
 
@@ -19,19 +14,45 @@ class Poser {
         let newFuncList = this.declarations(pose, poseHistory);
         //console.log(newFuncList);
         newFuncList.forEach((ff, i) => {
-
+            // look for condition, bind, draw, type
             // dynamic or static
-            let type = ff.type || 'static';
-            let condition = (typeof ff.condition !== 'undefined') ? ff.condition : true;
+            let type = 'static';
+            if (ff.where.start != undefined) type = 'dynamic';
+            let when = fallbackToDefault(ff.when, true);
 
-            if (returnCondition(condition, pose)) {
+            if (returnCondition(when, pose)) {
                 if (type == 'static') {
-                    let bind = ff.bind || {};
-                    let bindings = splitArgs(bind); // false or list
+                    let where = fallbackToDefault(ff.where, {});
+                    let how = fallbackToDefault(ff.how, {});
 
-                    if (bindings) bindings.forEach( b => {
-                        this.customDraw({draw: ff.draw, bind: b})
-                    });
+                    let whereList = splitArgs(where); // false or list
+                    let howList = splitArgs(how);
+
+                    // if either is false - there is something wrong
+
+                    let bindings = [];
+                    let numberOfBindings;
+
+                    // If either list has only length one - apply its values
+                    // to everything
+                    if (whereList.length == 1 || howList.length == 1) {
+                        numberOfBindings = max(whereList.length, howList.length);
+                    }
+                    else numberOfBindings = min(whereList.length, howList.length);
+
+                    for (let i = 0; i < numberOfBindings; i++) {
+                        let w, h;
+
+                        if (whereList.length == 1) w = whereList[0];
+                        else w = whereList[i];
+
+                        if (howList.length == 1) h = howList[0];
+                        else h = howList[i];
+
+                        bindings.push({what: ff.what, where: w, how: h});
+                    }
+
+                    if (bindings) bindings.forEach( b => this.customDraw(b) );
                 }
                 // framesToActivate parameter?
                 else if (type == 'dynamic') this.movers.add(ff);
@@ -45,23 +66,21 @@ class Poser {
         });
     }
 
-    customDraw(ff) {
+    customDraw(bb) {
         push();
         // if undefined throw certain error;
-        //let func = this.wrappers[ff.draw];
-        let func = this.drawFunctions[ff.draw];
-        let args = ff.bind || {};
+        let func = this.drawFunctions[bb.what];
 
         // Check to ensure it is a boolean or a function?
 
-        let fillVal = ff.bind.fill || 255;
-        let strokeVal = ff.bind.stroke || 0;
+        let fillVal = fallbackToDefault(bb.how.fill, 255);
+        let strokeVal = fallbackToDefault(bb.how.stroke, 0);
 
         fill(fillVal);
         stroke(strokeVal);
         // strokeWeight
 
-        func.call(this, args);
+        func.call(this, bb.where, bb.how);
 
         pop();
 
@@ -82,16 +101,6 @@ class Poser {
             localStorage.setItem('userDeclarations', d.trim());
         }*/
     }
-
-    circle(args) {
-        // set defaults
-        let x = args.x || width/2; // 0 won't work!!! make my own func
-        let y = args.y || height/2;
-        let d = args.d || 30;
-
-        // Call draw functions
-        circle(x, y, d);
-    }
 }
 
 // For static objects
@@ -107,15 +116,17 @@ function splitArgs(args) {
     // return here
     if (!Object.keys(lengths).length) return [args];
 
-    // check to ensure all array lengths are equal
     let lengthArr = Object.values(lengths);
-    if (!(lengthArr.every( (val, i, arr) => val === arr[0] ))) {
+    // check to ensure all array lengths are equal
+    /*if (!(lengthArr.every( (val, i, arr) => val === arr[0] ))) {
         throw `All array lengths in bind aren't equal. ${Object.entries(lengths)}`;
         return false;
-    }
+    }*/
 
     // generate a new list of arguments
-    let l = lengthArr[0];
+    // The final list is as long as the shortest list argument
+    // This protects errors from cases that use a partial history
+    let l = Math.min(...lengthArr);
     for (let i = 0; i < l; i++) {
         let newArgs = {};
 
@@ -129,7 +140,7 @@ function splitArgs(args) {
     return argsList;
 }
 
-function returnCondition(condition, pose) {
-    if (typeof(condition) === 'function') return condition(pose);
-    else return condition; // More error checking?
+function returnCondition(when, pose) {
+    if (typeof(when) === 'function') return when(pose);
+    else return when; // More error checking?
 }

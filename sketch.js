@@ -52,6 +52,7 @@ function preload() {
 }
 
 function setup() {
+    // Video and pose setup - calls functions in setup_script.js
     poser = new Poser(myData);
     [video, poseNet] = startVideo(options);
     preprocessedPoses = preprocessedPoses.data;
@@ -61,8 +62,8 @@ function setup() {
         poser.update(declarations.getValue());
     });
 
+    // p5 canvas setup
     noCursor();
-
     let canvas = createCanvas(options.videoWidth,
         options.videoHeight + options.playbarHeight);
     canvas.parent('p5Canvas');
@@ -77,6 +78,7 @@ function setup() {
 
         // other ideas include getting the coordinates
         // and getting the skeleton part
+        return false; // prevent default
     });
 
     // Connect toggles in GUI to options
