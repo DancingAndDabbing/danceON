@@ -1,6 +1,5 @@
-// Does not support drag yet
+// Playbar not support drag yet
 // TODO - Add Record Button
-// TODO - Test whether it can be clicked during webcam
 
 class PlayBar {
     constructor(options) {
@@ -11,7 +10,7 @@ class PlayBar {
 
         this.buttonWidth = 40;
         this.barWidth = 0;
-        this.maxBarWidth = options.videoWidth - this.buttonWidth;
+        this.maxBarWidth = options.videoWidth - (this.buttonWidth * 2);
 
         this.playing = false;
         this.recording = false;
@@ -24,13 +23,16 @@ class PlayBar {
         this.playing = args.playing;
 
         this.barWidth = map(args.frameNum, 0, args.totalFrames, 0, this.maxBarWidth);
-        this.hoverFrame = floor(map(mouseX, this.buttonWidth, width,
+        this.hoverFrame = floor(map(mouseX, this.buttonWidth*2, width,
                                     0, args.totalFrames, true));
     }
 
     // Shapes to draw
     draw() {
         this.drawPlayButton();
+        this.drawRecordButton();
+        this.drawDivider(this.buttonWidth);
+        this.drawDivider(this.buttonWidth*2);
         this.drawBar();
         if (this.overBar()) this.drawHoverText();
     }
@@ -53,9 +55,26 @@ class PlayBar {
                      this.x+12, this.y + 32,
                      this.buttonWidth -6, this.y + (this.height/2),)
         }
-        //rect(this.x, this.y, this.buttonWidth, this.height);
-        // if this.playing draw pause with two rectangles
-        // else
+        pop();
+        return;
+    }
+
+    drawDivider(xPos) {
+        stroke('rgba(30,30,30, 0.5)');
+        line(xPos, this.y+5, xPos, this.y+this.height-5);
+
+        return;
+    }
+
+    drawRecordButton() {
+        push();
+        noStroke();
+        if (this.overRecordButton()) fill('rgba(200,30,30, 0.8)');
+        else fill('rgba(30,30,30, 0.5)');
+
+        circle(this.buttonWidth + this.buttonWidth/2, this.y + this.height/2,
+               this.height/3);
+
         pop();
         return;
     }
@@ -66,7 +85,7 @@ class PlayBar {
         // settings
         noStroke();
         fill(245);
-        rect(this.buttonWidth, this.y, this.barWidth, this.height,
+        rect(this.buttonWidth*2, this.y, this.barWidth, this.height,
             0, 10, 10, 0);
 
         pop();
@@ -95,12 +114,15 @@ class PlayBar {
             (mouseY > this.y && mouseY < height)) return true;
     }
 
-    overBar() {
-        if ((mouseX > this.buttonWidth && mouseX < width) &&
+    overRecordButton() {
+        if ((mouseX > this.buttonWidth && mouseX < this.buttonWidth*2) &&
             (mouseY > this.y && mouseY < height)) return true;
     }
 
-    getFrame() {
-        return this.hoverFrame;
+    overBar() {
+        if ((mouseX > this.buttonWidth*2 && mouseX < width) &&
+            (mouseY > this.y && mouseY < height)) return true;
     }
+
+    getFrame() { return this.hoverFrame; }
 }

@@ -101,9 +101,7 @@ class Movers {
         this.movers.forEach(m => m.update());
     }
 
-    show() {
-        let thingsToDraw = this.movers.map(m => m.show()).reverse();
-        // reverse
-        return thingsToDraw;
-    }
+    show() { return this.movers.map(m => m.show()).reverse(); }
+
+    clear() { this.movers = []; }
 }

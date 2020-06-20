@@ -52,11 +52,11 @@ let playBar;
 // Depending on poseNet option we will use either of these
 let poseNet; // Machine Learning Algorithm for detecting poses
 let preprocessedPoses; // Array of poses captured in advance by frame
+
+let poser; // Code API - This will all parsing/running of user code
+
+let recorder; // For storing recording after button pressed
 // -----                                       -----
-
-let poser;
-
-let recorder;
 
 // ----- Main P5 Functions -----
 function preload() {
@@ -77,6 +77,7 @@ function setup() {
         if (!options.webcam) return;
         options.webcam = false;
         poseHistory = [];
+        poser.clearMovers();
 
         poseNet = stopPoseNet(poseNet);
 
@@ -92,13 +93,16 @@ function setup() {
 
         // Start video this time with video
         video = startVideo(options);
+        video.onended((elt) => stopRecording(elt, options));
     });
 
     select(`#${options.webcamToggle}`).mouseClicked(() => {
         if (options.webcam) return;
         options.webcam = true;
         options.playing = false;
+
         poseHistory = [];
+        poser.clearMovers();
 
         video.clearCues(); // currently no cues
         video._onended = undefined;
@@ -125,9 +129,9 @@ function setup() {
     // Mouse Click Events on Canvas - Disable if recording
     canvas.mouseClicked(() => {
         // animate the cursor
-        if (playBar.overPlayButton()) playPauseVideo();
-        else if (playBar.overBar()) changeFrame(playBar.getFrame());
-        else startRecording(options, video); // ?? Canvas
+        if ((!options.webcam) && playBar.overPlayButton()) playPauseVideo();
+        else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
+        else if ((!options.webcam) && playBar.overRecordButton()) startRecording(options, video); // ?? Canvas
 
         // other ideas include getting the coordinates
         // and getting the skeleton part
@@ -217,13 +221,24 @@ function playPauseVideo(optionalValue, disableLoop) {
 
 function startRecording(options, video) {
     if (options.webcam) return; // don't support webcam recording
-    // clear poseHistory
-    // start video
+    poser.clearMovers(); // clear movers
+    poseHistory = []; // clear poseHistory
+
+    // Resize the canvas so that the play bar disappears
+    // (This would otherwise show up in the video!)
+    resizeCanvas(options.videoWidth, options.videoHeight);
+    toggleRecordingNotifier(true); // Recording indicator
+
+    // Start the video from the beginning and ensure that it does not loop
+    // (Recording stops when the video ends - looping would prevent callback)
     video.stop();
     playPauseVideo(true, true);
 
+    // Start recording the canvas
     recorder = record(options, recorder, canvas);
 
+    // When recording is true, all the overlays and the cursor will disappear
+    // Click events on canvas are also disabled
     options.recording = true;
 }
 
@@ -234,8 +249,9 @@ function stopRecording(elt, options) {
     options.recording = false;
     playPauseVideo(false);
 
-    console.log('stopped');
-    // console log
+    // Remove the notification and display the playbar again
+    toggleRecordingNotifier(false);
+    resizeCanvas(options.videoWidth, options.videoHeight + options.playbarHeight);
 }
 
 // Scrubbing function - doesn't seem to work in local host - will set to 0

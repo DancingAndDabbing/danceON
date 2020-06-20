@@ -103,6 +103,8 @@ class Poser {
             localStorage.setItem('userDeclarations', d.trim());
         }*/
     }
+
+    clearMovers() { this.movers.clear(); }
 }
 
 // For static objects

@@ -28,3 +28,9 @@ function activateVideoButton() {
     document.getElementById("videoToggle").classList.add("is-selected");
     document.getElementById("videoToggle").classList.add("is-link");
 }
+
+function toggleRecordingNotifier(visible=true) {
+    if (visible) document.getElementById("recordingNotifier").classList.remove("is-hidden");
+    else document.getElementById("recordingNotifier").classList.add("is-hidden");
+
+}
