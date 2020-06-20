@@ -23,9 +23,10 @@ function startVideo(options) {
 }
 
 // This should get called at the beginning and if a new video has been uploaded
+// Currently only sets the scale by height - this assumes that it is wider
+// than tall - we will need to check both cases and recenter
 function setVideoScale(options, video) {
     options.videoScale = options.videoHeight / (video.height);
-    console.log(options.videoScale);
 }
 
 // PoseNet
@@ -58,6 +59,13 @@ function stopPoseNet(poseNet) {
 // On Load Events
 function videoLoaded(options, video) {
     setVideoScale(options, video);
+
+    let audioContext = new AudioContext();
+    let dest = audioContext.createMediaStreamDestination();
+    options.audioStream = dest.stream;
+    let sourceNode = audioContext.createMediaElementSource(video.elt);
+    sourceNode.connect(dest)
+
     console.log('Video Loaded!');
 }
 

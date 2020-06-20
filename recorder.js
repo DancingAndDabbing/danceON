@@ -1,0 +1,42 @@
+// Functions for recording the p5 canvas
+// Partially adapted from this Stack Overflow example:
+// https://stackoverflow.com/questions/39302814/mediastream-capture-canvas-and-audio-simultaneously
+// TODO: Refactoring - This should really be a class
+
+let chunks = [];
+
+function record(options, recorder, canvas) {
+    let canvasStream = canvas.elt.captureStream(options.vidFramerate);
+    canvasStream.addTrack(options.audioStream.getAudioTracks()[0]);
+
+    recorder = new MediaRecorder(canvasStream);
+
+    recorder.start();
+    recorder.ondataavailable = saveChunks;
+    recorder.onstop = exportRecording;
+
+    return recorder;
+}
+
+// Currently it will automatically download
+function exportRecording(e) {
+    if (chunks.length) {
+        let blob = new Blob(chunks);
+        let vidURL = URL.createObjectURL(blob, {type: 'video/webm'});
+
+        let a = document.createElement("a",);
+        a.href = vidURL;
+        a.download = "MyVideo.webm";
+        a.click();
+        window.URL.revokeObjectURL(vidURL);
+
+        alert('Downloading your recording');
+    }
+
+    chunks = [];
+    return;
+}
+
+function saveChunks(e) {
+    e.data.size && chunks.push(e.data);
+}

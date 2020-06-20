@@ -1,4 +1,6 @@
 // Does not support drag yet
+// TODO - Add Record Button
+// TODO - Test whether it can be clicked during webcam
 
 class PlayBar {
     constructor(options) {
@@ -12,6 +14,7 @@ class PlayBar {
         this.maxBarWidth = options.videoWidth - this.buttonWidth;
 
         this.playing = false;
+        this.recording = false;
         this.hover = false;
         this.hoverFrame = 0;
 

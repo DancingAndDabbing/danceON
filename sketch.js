@@ -9,7 +9,6 @@ let options = {
     // Assume that if the user is using the webcam, we will run Posenet
     // Otherwise, we will wait for an uploaded JSON file
     webcam: false, // true or false
-    record: false, // true or false
     posenetLoaded: false,
 
     // video options
@@ -24,6 +23,8 @@ let options = {
     videoVerticalShift: 0,
     videoHorizontalShift: 0,
     playing: false, // TODO - use this
+    recording: false, // true or false
+    audioStream: undefined,
     // frameNum?
 
     playbarHeight: 40,
@@ -40,6 +41,8 @@ let options = {
 
 
 // ----- Global Pose Variables -----
+let canvas;
+
 let pose; // Current pose
 let poseHistory = [];
 let video; // Video source - either preloaded or webcam
@@ -53,6 +56,7 @@ let preprocessedPoses; // Array of poses captured in advance by frame
 
 let poser;
 
+let recorder;
 
 // ----- Main P5 Functions -----
 function preload() {
@@ -63,6 +67,9 @@ function setup() {
     // Video and pose setup - calls functions in setup_script.js
     poser = new Poser(myData);
     video = startVideo(options);
+    video.onended((elt) => stopRecording(elt, options));
+    console.log(video);
+
     preprocessedPoses = preprocessedPoses.data; // Use default JSON
 
     // Toggle between Webcam and Video
@@ -71,11 +78,9 @@ function setup() {
         options.webcam = false;
         poseHistory = [];
 
-        // stop events on poseNet if possible?
-        console.log(poseNet);
         poseNet = stopPoseNet(poseNet);
-        console.log(video);
 
+        // Attempts at disabling webcam light
         video.pause();
         video.src = "";
         video.srcObject = null;
@@ -85,8 +90,9 @@ function setup() {
             (error => console.log('getUserMedia() error', error))
         );
 
-            video = startVideo(options);
-        });
+        // Start video this time with video
+        video = startVideo(options);
+    });
 
     select(`#${options.webcamToggle}`).mouseClicked(() => {
         if (options.webcam) return;
@@ -94,9 +100,12 @@ function setup() {
         options.playing = false;
         poseHistory = [];
 
+        video.clearCues(); // currently no cues
+        video._onended = undefined;
+
+        // Start video - this time with webcam
         video = startVideo(options);
         poseNet = startPoseNet(options, poseNet, video);
-        console.log(poseNet);
     });
 
     // Editor/Poser API
@@ -107,17 +116,18 @@ function setup() {
 
     // p5 Canvas Setup
     noCursor();
-    let canvas = createCanvas(options.videoWidth,
+    canvas = createCanvas(options.videoWidth,
         options.videoHeight + options.playbarHeight);
     canvas.parent('p5Canvas');
 
     playBar = new PlayBar(options);
 
-    // Mouse Click Events on Canvas
+    // Mouse Click Events on Canvas - Disable if recording
     canvas.mouseClicked(() => {
         // animate the cursor
         if (playBar.overPlayButton()) playPauseVideo();
         else if (playBar.overBar()) changeFrame(playBar.getFrame());
+        else startRecording(options, video); // ?? Canvas
 
         // other ideas include getting the coordinates
         // and getting the skeleton part
@@ -144,7 +154,7 @@ function draw() {
         playBar.draw();
     }
 
-    image(video, 0, 0, ...resizeVideo(options, video)); // Deal with resize
+    image(video, 0, 0, ...resizeVideo(options, video));
 
     // Draw on top of the image using pose
     if (pose) {
@@ -155,7 +165,7 @@ function draw() {
             if (poseHistory.length >= 1000) poseHistory.pop();
         }
 
-        if (options.skeleton) skeleton(scaledPose);
+        if (options.skeleton && !options.recording) skeleton(scaledPose);
 
         try {
             poser.execute(scaledPose, poseHistory); // check if any issues occur on return
@@ -173,9 +183,11 @@ function draw() {
         }
     }
 
-    cursorIcon();
-    if (options.mousePosition) cursorPosition(); // disable during record
-
+    // Display cursor, but not during record to prevent it from appearing
+    if (!options.recording) {
+        cursorIcon();
+        if (options.mousePosition) cursorPosition();
+    }
 }
 
 
@@ -186,15 +198,44 @@ function gotPoses(poses) {
     if (poses.length > 0) pose = poses[0].pose;
 }
 
-function playPauseVideo() {
-    if (video.elt.paused || video.elt.ended) {
-        options.playing = true;
-        video.loop();
+// Play or Pause the video - if a value is passed, do that
+// If a value is not passed it will check the state of the media object
+function playPauseVideo(optionalValue, disableLoop) {
+    if (optionalValue == undefined) {
+        if (video.elt.paused || video.elt.ended) options.playing = true;
+        else options.playing = false;
     }
-    else {
-        options.playing = false;
-        video.pause();
+    else options.playing = !!optionalValue;
+
+    if (options.playing && disableLoop) {
+        video.elt.loop = false;
+        video.play();
     }
+    else if (options.playing) video.loop();
+    else video.pause();
+}
+
+function startRecording(options, video) {
+    if (options.webcam) return; // don't support webcam recording
+    // clear poseHistory
+    // start video
+    video.stop();
+    playPauseVideo(true, true);
+
+    recorder = record(options, recorder, canvas);
+
+    options.recording = true;
+}
+
+function stopRecording(elt, options) {
+    if (!options.recording) return;
+
+    if (recorder) recorder.stop();
+    options.recording = false;
+    playPauseVideo(false);
+
+    console.log('stopped');
+    // console log
 }
 
 // Scrubbing function - doesn't seem to work in local host - will set to 0
