@@ -8,11 +8,11 @@
     <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
 
     <!-- ml5 -->
-    <script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
+    <!--<script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>-->
 
     <!-- TensorFlow -->
-    <!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>-->
-    <!--<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
 
     <!-- ACE -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js"></script>
@@ -135,6 +135,10 @@
             <div class="column is-narrow">
                 <div style="width: 640px;">
                     <div id='p5Canvas'></div>
+                    <div id="analyzingNotifier" class="notification is-warning" style="padding:0rem 2.5rem 0rem 3rem; margin: 0px 0px 8px 0px;">
+                        <button class="button is-warning is-small is-loading"></button>
+                        <button class="button is-warning is-small" style="cursor:default;">estimating and classifying poses...</button>
+                    </div>
                     <div id="recordingNotifier" class="notification is-danger is-hidden" style="padding:0rem 2.5rem 0rem 3rem; margin: 0px 0px 8px 0px;">
                         <button class="button is-danger is-small is-loading"></button>
                         <button class="button is-danger is-small" style="cursor:default;">recording...</button>
@@ -148,6 +152,7 @@
 
 <script src="helpers.js"></script>
 <script src="editor.js"></script>
+<script src="tmClassifier.js"></script>
 <script src="dom_adjustments.js"></script>
 <script src="play_bar.js"></script>
 <script src="mover.js"></script>

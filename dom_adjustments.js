@@ -34,3 +34,9 @@ function toggleRecordingNotifier(visible=true) {
     else document.getElementById("recordingNotifier").classList.add("is-hidden");
 
 }
+
+function toggleAnalyzingNotifier(visible=true) {
+    if (visible) document.getElementById("analyzingNotifier").classList.remove("is-hidden");
+    else document.getElementById("analyzingNotifier").classList.add("is-hidden");
+
+}

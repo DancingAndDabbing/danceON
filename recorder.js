@@ -7,7 +7,7 @@
 let chunks = [];
 
 function record(options, recorder, canvas) {
-    let canvasStream = canvas.elt.captureStream(60);
+    let canvasStream = canvas.elt.captureStream(options.videoFramerate);
     canvasStream.addTrack(options.audioStream.getAudioTracks()[0]);
 
     recorder = new MediaRecorder(canvasStream);

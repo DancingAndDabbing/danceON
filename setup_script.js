@@ -66,6 +66,8 @@ function videoLoaded(options, video) {
     let sourceNode = audioContext.createMediaElementSource(video.elt);
     sourceNode.connect(dest)
 
+    options.videoLoaded = true;
+    //video.loop();
     console.log('Video Loaded!');
 }
 

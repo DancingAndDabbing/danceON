@@ -10,8 +10,10 @@ let options = {
     // Otherwise, we will wait for an uploaded JSON file
     webcam: false, // true or false
     posenetLoaded: false,
+    finishedAnalyzing: false,
 
     // video options
+    videoLoaded: false,
     videoToggle: 'videoToggle',
     webcamToggle: 'webcamToggle',
     videoLocation: 'assets/Balance001.mp4',
@@ -29,7 +31,7 @@ let options = {
 
     playbarHeight: 40,
 
-    mlModelURL: 'https://teachablemachine.withgoogle.com/models/VYlFXZf_k/',
+    modelURL: 'https://teachablemachine.withgoogle.com/models/VYlFXZf_k/',
 
     // posenet options
     posesFunction: gotPoses, // see below
@@ -47,6 +49,7 @@ let canvas;
 
 let pose; // Current pose
 let poseHistory = [];
+let classification;
 let video; // Video source - either preloaded or webcam
 
 let playBar;
@@ -59,12 +62,16 @@ let poser; // Code API - This will all parsing/running of user code
 
 let recorder; // For storing recording after button pressed
 
-let tmModel;
+let tmClassifier;
 // -----                                       -----
 
 // ----- Main P5 Functions -----
 function preload() {
-    preprocessedPoses = preloadJSON(options);
+    //preprocessedPoses = preloadJSON(options);
+    tmClassifier = new TMClassifier(options);
+    //tmClassifier.loadJSON(options);
+    tmClassifier.loadModel(() => playPauseVideo(true));
+
 }
 
 function setup() {
@@ -74,7 +81,7 @@ function setup() {
     video.onended((elt) => stopRecording(elt, options));
     console.log(video);
 
-    preprocessedPoses = preprocessedPoses.data; // Use default JSON
+    //preprocessedPoses = preprocessedPoses.data; // Use default JSON
 
     // Toggle between Webcam and Video
     select(`#${options.videoToggle}`).mouseClicked(() => {
@@ -83,7 +90,7 @@ function setup() {
         poseHistory = [];
         poser.clearMovers();
 
-        poseNet = stopPoseNet(poseNet);
+        //poseNet = stopPoseNet(poseNet);
 
         // Attempts at disabling webcam light
         video.pause();
@@ -113,7 +120,7 @@ function setup() {
 
         // Start video - this time with webcam
         video = startVideo(options);
-        poseNet = startPoseNet(options, poseNet, video);
+        //poseNet = startPoseNet(options, poseNet, video);
     });
 
     // Editor/Poser API
@@ -136,7 +143,7 @@ function setup() {
         if ((!options.webcam) && playBar.overPlayButton()) playPauseVideo();
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
         else if ((!options.webcam) && playBar.overRecordButton()) startRecording(options, video); // ?? Canvas
-
+        else {console.log(tmClassifier)}
         // other ideas include getting the coordinates
         // and getting the skeleton part
         return false; // prevent default
@@ -152,13 +159,22 @@ function setup() {
 
 function draw() {
     background(220);
+
+    // Things loading
+    if (!tmClassifier.loaded) { return false; }
+    if (!options.webcam && !options.videoLoaded) { return false; }
+
+    // Video Mode
     if (!options.webcam) {
-        let frameNum = min(
-            getFrame(options, video), preprocessedPoses.length - 1);
-        gotPoses(preprocessedPoses[frameNum]);
+        let frameNum = getFrame(options, video);
+        let pc = tmClassifier.predictForVideo(video, frameNum);
+        pose = pc.pose;
+        classification = pc.pose;
+
+        console.log('pose', pc, frameNum);
 
         playBar.update({playing: options.playing, frameNum: frameNum,
-                        totalFrames: preprocessedPoses.length - 1});
+                totalFrames: floor(video.duration() * options.videoFramerate)}); // write total frames function please...
         playBar.draw();
     }
 
