@@ -75,6 +75,6 @@ function webcamLoaded(options, video) {
 }
 
 function modelLoaded(options) {
-    console.log('PoseNet Loaded!');
     options.posenetLoaded = true;
+    console.log('PoseNet Loaded!');
 }

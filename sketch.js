@@ -29,6 +29,8 @@ let options = {
 
     playbarHeight: 40,
 
+    mlModelURL: 'https://teachablemachine.withgoogle.com/models/VYlFXZf_k/',
+
     // posenet options
     posesFunction: gotPoses, // see below
 
@@ -56,6 +58,8 @@ let preprocessedPoses; // Array of poses captured in advance by frame
 let poser; // Code API - This will all parsing/running of user code
 
 let recorder; // For storing recording after button pressed
+
+let tmModel;
 // -----                                       -----
 
 // ----- Main P5 Functions -----
