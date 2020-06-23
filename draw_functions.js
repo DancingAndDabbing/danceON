@@ -52,7 +52,8 @@ class DrawFunctions {
         let y1 = fallbackToDefault(where.y1, height/2);
         let x2 = fallbackToDefault(where.x2, x1+30);
         let y2 = fallbackToDefault(where.y2, y1+30);
-
+//        let st = fallbackToDefault(how.stroke, 50);
+  //      let col = fallbackToDefault(how.fill, 'rgba(0,0,255,1)');
         line(x1, y1, x2, y2);
     }
 

@@ -4,15 +4,16 @@ let editor = ace.edit("editor", {
 
 let startingCode = `(pose, poseHistory) => [
     {
-        what: 'circle',
+        what: 'line',
         when: true,
         where: {
-            x: pose.leftHip.x,
-            y: pose.leftHip.y,
+          x1: pose.leftHip.x,
+          y1: pose.leftHip.y,
+          x2: pose.rightHip.x,
+          y2: pose.rightHip.y
         },
         how: {
-            d: [30],
-            fill: 'rgba(0,0,255, 0.25)',
+            fill: 'rgba(0,0,255, 1)',
             stroke: 50
         }
     },
