@@ -14,11 +14,11 @@ let options = {
     // video options
     videoToggle: 'videoToggle',
     webcamToggle: 'webcamToggle',
-    videoLocation: 'assets/Balance001.mp4',
-    videoPoses: 'assets/Balance001.json',
+    videoLocation: 'assets/SFD1_trim.mp4',
+    videoPoses: 'assets/SFD1_trim.json',
     videoFramerate: 30, // For Yoav - always 30?
-    videoWidth: 640,
-    videoHeight: 480,
+    videoWidth: 360,
+    videoHeight: 640,
     videoScale: undefined,
     videoVerticalShift: 0,
     videoHorizontalShift: 0,
@@ -134,7 +134,11 @@ function setup() {
     canvas.mouseClicked(() => {
         // animate the cursor
         if ((!options.webcam) && playBar.overPlayButton()) playPauseVideo();
-        else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
+        else if ((!options.webcam) && playBar.overBar()) {
+          // console.log(playBar.getFrame()); // this works
+          // changeFrame(playBar.getFrame()); // original call
+          video.time(playBar.getFrame()/options.videoFramerate) // still not working
+        }
         else if ((!options.webcam) && playBar.overRecordButton()) startRecording(options, video); // ?? Canvas
 
         // other ideas include getting the coordinates
@@ -260,7 +264,8 @@ function stopRecording(elt, options) {
 
 // Scrubbing function - doesn't seem to work in local host - will set to 0
 function changeFrame(frameNum) {
-    video.time(getTimeFromFrame(frameNum, options.videoFramerate));
+  video.time(frameNum/options.videoFramerate);
+  // video.time(getTimeFromFrame(frameNum, options.videoFramerate));
 }
 
 // Overlays to draw
