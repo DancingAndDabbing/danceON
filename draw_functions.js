@@ -46,6 +46,20 @@ class DrawFunctions {
         circle(x, y, d);
     }
 
+    image(where, how) {
+        let x = fallbackToDefault(where.x, width/2);
+        let y = fallbackToDefault(where.y, height/2);
+        //path
+        let imagePath = fallbackToDefault(how.file, 'assets/devil-face-icon.png')
+        //scale
+        let dx = fallbackToDefault(how.dx, 50);
+        let dy = fallbackToDefault(how.dy, 50);
+        loadImage(imagePath, img => {
+          image(img, x, y, dx, dy);
+        });
+        image(devilIcon, x, y, dx, dy);
+    }
+
     // Does not support z-coordinates
     line(where, how) {
         let x1 = fallbackToDefault(where.x1, width/2);

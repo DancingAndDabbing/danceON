@@ -65,6 +65,7 @@ let tmModel;
 // ----- Main P5 Functions -----
 function preload() {
     preprocessedPoses = preloadJSON(options);
+    devilIcon = loadImage('assets/devil-face-icon.png');
 }
 
 function setup() {
