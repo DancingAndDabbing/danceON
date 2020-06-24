@@ -43,13 +43,6 @@ function stopPoseNet(poseNet) {
 function videoLoaded(options, video, callback) {
     setVideoScale(options, video);
 
-    // Set up media contexts - necessary for recording
-    let audioContext = new AudioContext();
-    let dest = audioContext.createMediaStreamDestination();
-    options.audioStream = dest.stream;
-    let sourceNode = audioContext.createMediaElementSource(video.elt);
-    sourceNode.connect(dest);
-
     options.videoLoaded = true;
     if (callback != undefined) callback();
 

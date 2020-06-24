@@ -7,6 +7,13 @@
 let chunks = [];
 
 function record(options, recorder, canvas) {
+    // Set up media contexts - necessary for recording
+    let audioContext = new AudioContext();
+    let dest = audioContext.createMediaStreamDestination();
+    options.audioStream = dest.stream;
+    let sourceNode = audioContext.createMediaElementSource(video.elt);
+    sourceNode.connect(dest);
+
     let canvasStream = canvas.elt.captureStream(options.videoFramerate);
     canvasStream.addTrack(options.audioStream.getAudioTracks()[0]);
 

@@ -67,7 +67,8 @@ function preload() {
     //preprocessedPoses = preloadJSON(options);
     tmClassifier = new TMClassifier();
     tmClassifier.loadJSON(options);
-    tmClassifier.loadModel(options, () => playPauseVideo(true));
+    //tmClassifier.loadModel(options, () => playPauseVideo(true));
+    tmClassifier.loadModel(options);
 }
 
 function setup() {
