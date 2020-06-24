@@ -56,3 +56,30 @@ function updatePoseFileText(fullPath, active=true) {
     dv.classList.toggle("is-link", active);
     dv.classList.toggle("is-danger", !active);
 }
+
+function changeTMLinkInput(state) {
+    let inp = document.getElementById("mlInput");
+    let hlp = document.getElementById("mlHelp");
+
+    inp.classList.toggle("is-warning", state=='loading');
+    inp.classList.toggle("is-danger", state=='error');
+    inp.classList.toggle("is-success", state=='success');
+
+    //hlp.classList.toggle("is-warning", state=='loading');
+    hlp.classList.toggle("is-danger", state=='error');
+    hlp.classList.toggle("is-success", state=='success');
+
+    switch (state) {
+        case 'loading':
+            hlp.innerHTML = "Loading the link you pasted..."
+            break;
+        case 'error':
+            hlp.innerHTML = "Hmmm, that does not seem like a Teachable Machine url."
+            break;
+        case 'success':
+            hlp.innerHTML = "Teachable Machine Model loaded!"
+            break;
+        default:
+            hlp.innerHTML = "Paste in a link from Teachable Machine.";
+    }
+}

@@ -52,7 +52,9 @@ class TMClassifier {
         });
     }
 
-    async loadModel(options, callbackFunction=undefined) {
+    // Still causes one "video element has not loaded" data yet error
+    async loadModel(options, onSuccess, onError) {
+        this.loaded = false;
         let modelURL = options.modelURL + 'model.json';
         let metadataURL = options.modelURL + 'metadata.json';
 
@@ -60,24 +62,24 @@ class TMClassifier {
             // It could break here, so don't update the class properties yet
             let model = await tmPose.load(modelURL, metadataURL);
             let maxPredictions = model.getTotalClasses();
-
             this.resetForNewClassifier();
 
             this.model = model;
             this.maxPredictions = maxPredictions;
             this.loaded = true;
+
             console.log(`classifier loaded: ${this.maxPredictions} classes`);
+            if (onSuccess != undefined) onSuccess();
         } catch(err) {
             console.log(err);
-            alert("Something wrong with the link. We'll still use the previous one.");
+            if (this.model) this.loaded = true;
+            if (onError != undefined) onError();
+            alert("Something wrong with the link. We'll try to use the previous one.");
         }
-
-        if (callbackFunction) callbackFunction(this);
-        return this.modelURL;
     }
 
     predictForVideo(options, video, frame) {
-        if (!options.videoLoaded) return;
+        if (!(options.videoLoaded && this.loaded)) return {pose:undefined, prediction:undefined};
         this.checkIfComplete(getTotalFrames(options, video));
         // We already have both the pose and the classification! Simply return
         if (this.poses[frame] && this.predictions[frame]) {
@@ -110,20 +112,22 @@ class TMClassifier {
                 })
                 .then(p => self.predictions[frame] = p);
             }
-            return {pose:undefined, prediction: undefined};
+            return {pose:undefined, prediction:undefined};
         }
     }
 
     // Blocking - this function will not return until the pose and prediction
     // have run. In other words we will not continue through the draw loop
     // until we have all the data we need.
-    async predictForWebcam(video) {
-
+    async predictForWebCam(options, video, callback) {
+        if (!(options.videoLoaded && this.loaded)) return;
         let { pose, posenetOutput } = await this.model.estimatePose(video.elt);
+        if (!(options.videoLoaded && this.loaded)) return;
         let prediction = await this.model.predict(posenetOutput);
+        if (!(options.videoLoaded && this.loaded)) return;
 
         convertToML5Structure(pose);
-        return {pose:pose, prediction:prediction};
+        callback({pose: pose, prediction: prediction});
     }
 
     // How to alter state when the user uploads a new video, classifier

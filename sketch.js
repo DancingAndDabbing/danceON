@@ -34,7 +34,8 @@ let options = {
 
     playbarHeight: 40,
 
-    modelURL: 'https://teachablemachine.withgoogle.com/models/VYlFXZf_k/',
+    mlInput: 'mlInput',
+    modelURL: 'https://teachablemachine.withgoogle.com/models/Lp16aC0Y2/',
 
     // UI Overlay toggles
     toggles: ['mousePosition', 'skeleton', 'ml'],
@@ -122,7 +123,7 @@ function setup() {
         playPauseVideo(false);
 
         try {
-            handleVideoToggle(() => {
+            handleVideoToggle(() => { // callback after video loads
                 toggleAnalyzingNotifier(true);
                 tmClassifier.resetForNewVideo();
                 options.videoLoaded = true;
@@ -159,6 +160,26 @@ function setup() {
         tmClassifier.loadJSON(options,
             (() => updatePoseFileText(newFileURL)), // Success handler
             (() => options.videoPoses = oldPoseLocation) // Fail handler
+        );
+    });
+
+    document.getElementById(options.mlInput).addEventListener('input', (ev) => {
+        let txt = ev.target.value;
+
+        // Error cases
+        if (txt == '') return changeTMLinkInput('empty');
+        if (!txt.startsWith("https://teachablemachine.withgoogle.com/models/")) return changeTMLinkInput('error');
+
+        // We might have good link
+        changeTMLinkInput('loading');
+        let oldModelURL = options.modelURL;
+        options.modelURL = txt;
+        tmClassifier.loadModel(options,
+            (() => changeTMLinkInput('success')), // success callback
+            (() => {
+                changeTMLinkInput('error');
+                options.modelURL = oldModelURL;
+            })
         );
     });
 
@@ -212,10 +233,7 @@ function draw() {
 
     // Detection and prediction for Webcam (blocking)
     else {
-        let pp = tmClassifier.predictForWebcam(video, frameNum);
-        pose = pp.pose;
-        prediction = pp.prediction;
-
+        tmClassifier.predictForWebCam(options, video, setPoseInWebCamMode);
         // Draw something equivalent to the playbar at the bottom
     }
 
@@ -262,6 +280,11 @@ function draw() {
 
 // ----- Other Functions -----
 
+function setPoseInWebCamMode(pp) {
+    pose = pp.pose;
+    prediction = pp.prediction;
+}
+
 function handleVideoToggle(callback=undefined) {
     poseHistory = [];
     poser.clearMovers();
@@ -283,6 +306,7 @@ function handleVideoToggle(callback=undefined) {
 
 function handleWebCamToggle() {
     options.playing = false;
+    options.videoLoaded = false; // make this consistent with video source
 
     poseHistory = [];
     poser.clearMovers();
@@ -290,7 +314,10 @@ function handleWebCamToggle() {
     video._onended = undefined;
 
     // Start video - this time with webcam
-    video = startVideo(options, () => toggleAnalyzingNotifier(false));
+    video = startVideo(options, () => {
+        toggleAnalyzingNotifier(false);
+        options.videoLoaded = true;
+    });
 }
 
 // Play or Pause the video - if a value is passed, do that
