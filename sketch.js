@@ -251,7 +251,7 @@ function draw() {
             if (poseHistory.length >= 1000) poseHistory.pop();
         }
 
-        if (options.skeleton && !options.recording) skeleton(scaledPose);
+        if (options.skeleton && !options.recording) skeleton(options, scaledPose);
 
         try {
             poser.execute(scaledPose, poseHistory); // check if any issues occur on return
@@ -263,7 +263,6 @@ function draw() {
             text('Hmmm...', width/2, height/2);
             text(e, width/2, height/2 + 20);
             pop();
-            //
         }
     }
 
@@ -273,7 +272,8 @@ function draw() {
     // Display cursor, but not during record to prevent it from appearing
     if (!options.recording) {
         cursorIcon();
-        if (options.mousePosition) cursorPosition();
+        if (options.mousePosition) cursorPosition(options);
+        if (prediction && options.ml) mlText(options, prediction);
     }
 }
 
@@ -375,67 +375,4 @@ function stopRecording(elt, options) {
 // Scrubbing function - doesn't seem to work in local host - will set to 0
 function changeFrame(frameNum) {
     video.time(getTimeFromFrame(frameNum, options.videoFramerate));
-}
-
-// Overlays to draw
-// Refactor - move to different file
-
-// May become a class
-function cursorIcon() {
-    push();
-
-    stroke(255);
-    fill('rgba(30, 30, 30, 0.5)');
-    circle(constrain(mouseX, 0, width), constrain(mouseY, 0, height), 6);
-
-    pop();
-}
-
-function cursorPosition() {
-    push();
-
-    noStroke();
-    fill('rgba(30,30,30, 0.5)');
-    rect(
-        constrain(mouseX-4, 4, options.videoWidth-44),
-        constrain(mouseY-34, 2, options.videoHeight-34),
-        40, 30, 4);
-
-    fill(255);
-    text(
-        `x: ${floor(constrain(mouseX, 0, options.videoWidth))}`,
-        constrain(mouseX, 8, options.videoWidth-40),
-        constrain(mouseY-22, 14, options.videoHeight-22)
-    );
-    text(
-        `y: ${floor(constrain(mouseY, 0, options.videoHeight))}`,
-        constrain(mouseX, 8, options.videoWidth-40),
-        constrain(mouseY-10, 26, options.videoHeight-10),
-    );
-
-    pop();
-}
-
-function skeleton(pose) {
-    push();
-    textAlign('center');
-    noStroke();
-
-    // draw skeleton - update the JSON file
-    // issue - text doesn't display properly if points too close
-    pose.keypoints.forEach((p, i) => {
-        let sx = p.position.x;
-        let sy = p.position.y;
-
-        fill('rgba(255, 255, 255, 0.9)');
-        circle(sx, sy, 8);
-        if (!options.playing && dist(mouseX, mouseY, sx, sy) < 8) {
-                fill('rgba(30,30,30, 0.5)');
-                rect(sx-37, sy+8, 74, 16, 4); // improvement - respond to text
-
-                fill(255);
-                text(p.part, sx, sy+20);
-            }
-    });
-    pop();
 }
