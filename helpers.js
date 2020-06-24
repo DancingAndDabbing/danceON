@@ -13,6 +13,8 @@ function historySubset(pHistory, limb, param, start=0, end=1, interval=1) {
                    .map(p => p[limb][param])
 }
 
+function inRange(x, min, max) { return ((x-min)*(x-max) <= 0); }
+
 // Internal Helper Functions
 function getFrame(options, video) {
     if (!video) return 0;
@@ -25,6 +27,11 @@ function getFrameFromTime(time, vidFramerate) {
 
 function getTimeFromFrame(frame, vidFramerate) {
     return frame/vidFramerate; // may need to check against duration
+}
+
+function getTotalFrames(options, video) {
+    if (!video) return 0;
+    return floor(video.duration() * options.videoFramerate);
 }
 
 function resizeVideo(options, video) {

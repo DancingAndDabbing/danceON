@@ -11,11 +11,14 @@ let options = {
     webcam: false, // true or false
     posenetLoaded: false,
     finishedAnalyzing: false,
+    finishedSetup: false,
 
     // video options
     videoLoaded: false,
     videoToggle: 'videoToggle',
     webcamToggle: 'webcamToggle',
+    videoUpload: 'videoUpload',
+    poseUpload: 'poseUpload',
     videoLocation: 'assets/Balance001.mp4',
     videoPoses: 'assets/Balance001.json',
     videoFramerate: 30, // For Yoav - always 30?
@@ -33,9 +36,6 @@ let options = {
 
     modelURL: 'https://teachablemachine.withgoogle.com/models/VYlFXZf_k/',
 
-    // posenet options
-    posesFunction: gotPoses, // see below
-
     // UI Overlay toggles
     toggles: ['mousePosition', 'skeleton', 'ml'],
     mousePosition: false,
@@ -48,79 +48,118 @@ let options = {
 let canvas;
 
 let pose; // Current pose
-let poseHistory = [];
-let classification;
+let poseHistory = []; // Recent history of poses
+
+let tmClassifier; // Teachable Machine classifier
+let prediction; // Current prediction
+
 let video; // Video source - either preloaded or webcam
-
-let playBar;
-
-// Depending on poseNet option we will use either of these
-let poseNet; // Machine Learning Algorithm for detecting poses
-let preprocessedPoses; // Array of poses captured in advance by frame
+let recorder; // For storing recording after button pressed
+let playBar; // Controls shown during video mode
 
 let poser; // Code API - This will all parsing/running of user code
 
-let recorder; // For storing recording after button pressed
-
-let tmClassifier;
 // -----                                       -----
 
 // ----- Main P5 Functions -----
 function preload() {
     //preprocessedPoses = preloadJSON(options);
-    tmClassifier = new TMClassifier(options);
-    //tmClassifier.loadJSON(options);
-    tmClassifier.loadModel(() => playPauseVideo(true));
-
+    tmClassifier = new TMClassifier();
+    tmClassifier.loadJSON(options);
+    tmClassifier.loadModel(options, () => playPauseVideo(true));
 }
 
 function setup() {
+    // p5 Canvas Setup
+    canvas = createCanvas(options.videoWidth,
+        options.videoHeight + options.playbarHeight);
+    canvas.parent('p5Canvas');
+    noCursor();
+
+    playBar = new PlayBar(options);
+
     // Video and pose setup - calls functions in setup_script.js
     poser = new Poser(myData);
     video = startVideo(options);
     video.onended((elt) => stopRecording(elt, options));
-    console.log(video);
-
-    //preprocessedPoses = preprocessedPoses.data; // Use default JSON
+    tmClassifier.onComplete(() => toggleAnalyzingNotifier(false)); // Callback
 
     // Toggle between Webcam and Video
+    // Refactor: These should really be their own functions
     select(`#${options.videoToggle}`).mouseClicked(() => {
         if (!options.webcam) return;
         options.webcam = false;
-        poseHistory = [];
-        poser.clearMovers();
-
-        //poseNet = stopPoseNet(poseNet);
-
-        // Attempts at disabling webcam light
-        video.pause();
-        video.src = "";
-        video.srcObject = null;
-
-        navigator.getUserMedia({audio: true, video: true},
-            (stream => stream.getTracks().forEach( (track) => track.stop())),
-            (error => console.log('getUserMedia() error', error))
-        );
-
-        // Start video this time with video
-        video = startVideo(options);
-        video.onended((elt) => stopRecording(elt, options));
+        handleVideoToggle(() => {
+            if (!tmClassifier.gotAllFrames) {
+                toggleAnalyzingNotifier(true);
+            }
+        });
     });
 
     select(`#${options.webcamToggle}`).mouseClicked(() => {
         if (options.webcam) return;
         options.webcam = true;
-        options.playing = false;
+        handleWebCamToggle();
+    });
 
-        poseHistory = [];
-        poser.clearMovers();
+    // This will upload the file, attempt to switch to the video source, and
+    // clear out the old classifier if successful
+    document.getElementById(options.videoUpload).addEventListener('change', (ev) => {
+        // In case there are problems, we'll revert back
+        //if (!finishedSetup) return;
+        if (!(ev.target.files && ev.target.files[0]))  {
+            alert("No video file found. We'll keep using the old one.");
+            return;
+        }
 
-        video.clearCues(); // currently no cues
-        video._onended = undefined;
+        options.videoLoaded = false;
+        let oldVideoLocation = options.videoLocation;
+        options.videoLocation = URL.createObjectURL(ev.target.files[0]);
+        let newFileURL = ev.target.value;
 
-        // Start video - this time with webcam
-        video = startVideo(options);
-        //poseNet = startPoseNet(options, poseNet, video);
+        activateVideoButton();
+        options.webcam = false;
+        playPauseVideo(false);
+
+        try {
+            handleVideoToggle(() => {
+                toggleAnalyzingNotifier(true);
+                tmClassifier.resetForNewVideo();
+                options.videoLoaded = true;
+                updateVideoFileText(newFileURL);
+                updatePoseFileText("", false);
+                playPauseVideo(true);
+            });
+
+        } catch (err) {
+            console.log(err);
+            options.videoLocation = oldVideoLocation;
+            handleVideoToggle(() => {
+                if (!tmClassifier.gotAllFrames) {
+                    toggleAnalyzingNotifier(true);
+                    playPauseVideo(true);
+                }
+                options.videoLoaded = true;
+            });
+            alert("Something wrong with that video file. We'll keep using the old one.")
+        }
+    });
+
+    document.getElementById(options.poseUpload).addEventListener('change', (ev) => {
+        if (ev.target.value == '') return;
+        if (!(ev.target.files && ev.target.files[0]))  {
+            alert("No pose file found. We'll keep using the old one.");
+            return;
+        }
+
+        let newFileURL = ev.target.value;
+        let oldPoseLocation = options.videoPoses;
+        options.videoPoses = URL.createObjectURL(ev.target.files[0]);
+
+        tmClassifier.loadJSON(options,
+            (() => updatePoseFileText(newFileURL)), // Success handler
+            (() => options.videoPoses = oldPoseLocation) // Fail handler
+        );
     });
 
     // Editor/Poser API
@@ -128,14 +167,6 @@ function setup() {
     declarations.on('change', function(e) {
         poser.update(declarations.getValue());
     });
-
-    // p5 Canvas Setup
-    noCursor();
-    canvas = createCanvas(options.videoWidth,
-        options.videoHeight + options.playbarHeight);
-    canvas.parent('p5Canvas');
-
-    playBar = new PlayBar(options);
 
     // Mouse Click Events on Canvas - Disable if recording
     canvas.mouseClicked(() => {
@@ -160,31 +191,44 @@ function setup() {
 function draw() {
     background(220);
 
-    // Things loading
+    // Things still loading - don't try to draw or calculate anything
     if (!tmClassifier.loaded) { return false; }
     if (!options.webcam && !options.videoLoaded) { return false; }
 
-    // Video Mode
+    // Detection and prediction for Video Mode (nonblocking)
     if (!options.webcam) {
         let frameNum = getFrame(options, video);
-        let pc = tmClassifier.predictForVideo(video, frameNum);
-        pose = pc.pose;
-        classification = pc.pose;
+        let totalFrames = getTotalFrames(options, video);
+        let pp = tmClassifier.predictForVideo(options, video, frameNum);
 
-        console.log('pose', pc, frameNum);
+        // One or both of these may return undefined if it has not been
+        // calculated yet
+        pose = pp.pose;
+        prediction = pp.prediction;
 
-        playBar.update({playing: options.playing, frameNum: frameNum,
-                totalFrames: floor(video.duration() * options.videoFramerate)}); // write total frames function please...
+        playBar.update({playing: options.playing, frameNum: frameNum, totalFrames: totalFrames});
         playBar.draw();
     }
 
+    // Detection and prediction for Webcam (blocking)
+    else {
+        let pp = tmClassifier.predictForWebcam(video, frameNum);
+        pose = pp.pose;
+        prediction = pp.prediction;
+
+        // Draw something equivalent to the playbar at the bottom
+    }
+
+    // Draw the current frame of the video at the proper size
     image(video, 0, 0, ...resizeVideo(options, video));
 
-    // Draw on top of the image using pose
+    // Draw on top of the image using pose and prediction
     if (pose) {
         let scaledPose = scalePoseToWindow(options, pose);
 
-        if (options.playing) {
+        // Only add to history if the video is not paused, or we are
+        // using the webcam
+        if (options.playing || options.webcam) {
             poseHistory.unshift(scaledPose);
             if (poseHistory.length >= 1000) poseHistory.pop();
         }
@@ -193,19 +237,20 @@ function draw() {
 
         try {
             poser.execute(scaledPose, poseHistory); // check if any issues occur on return
-
         } catch (e) {
-            // missing key (e.g)
             push();
             background('rgba(30, 30, 30, 0.9)');
             textAlign(CENTER);
             fill(255);
-            text('ERROR', width/2, height/2);
+            text('Hmmm...', width/2, height/2);
             text(e, width/2, height/2 + 20);
             pop();
             //
         }
     }
+
+    // Draw movers here - they should keep going even if the current frame
+    // does not have a pose
 
     // Display cursor, but not during record to prevent it from appearing
     if (!options.recording) {
@@ -217,9 +262,35 @@ function draw() {
 
 // ----- Other Functions -----
 
-// Update the pose variable
-function gotPoses(poses) {
-    if (poses.length > 0) pose = poses[0].pose;
+function handleVideoToggle(callback=undefined) {
+    poseHistory = [];
+    poser.clearMovers();
+
+    // Attempts at disabling webcam light
+    video.pause();
+    video.src = "";
+    video.srcObject = null;
+
+    navigator.getUserMedia({audio: true, video: true},
+        (stream => stream.getTracks().forEach( (track) => track.stop())),
+        (error => console.log('getUserMedia() error', error))
+    );
+
+    // Start video this time with video source
+    video = startVideo(options, callback);
+    video.onended((elt) => stopRecording(elt, options));
+}
+
+function handleWebCamToggle() {
+    options.playing = false;
+
+    poseHistory = [];
+    poser.clearMovers();
+
+    video._onended = undefined;
+
+    // Start video - this time with webcam
+    video = startVideo(options, () => toggleAnalyzingNotifier(false));
 }
 
 // Play or Pause the video - if a value is passed, do that

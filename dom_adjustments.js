@@ -40,3 +40,19 @@ function toggleAnalyzingNotifier(visible=true) {
     else document.getElementById("analyzingNotifier").classList.add("is-hidden");
 
 }
+
+function updateVideoFileText(fullPath) {
+    let fileName = fullPath.split(/(\\|\/)/g).pop();
+    document.getElementById("videoUploadName").innerHTML = fileName;
+}
+
+function updatePoseFileText(fullPath, active=true) {
+    let dv = document.getElementById("poseUploadDiv");
+    let txt = document.getElementById("poseUploadName");
+
+    if (active) txt.innerHTML = fullPath.split(/(\\|\/)/g).pop();
+    else txt.innerHTML = "none";
+
+    dv.classList.toggle("is-link", active);
+    dv.classList.toggle("is-danger", !active);
+}

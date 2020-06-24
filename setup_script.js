@@ -1,25 +1,13 @@
-// JSON
-function preloadJSON(options) {
-    let preprocessedPoses = {};
-    if (!options.webcam) {
-        preprocessedPoses = loadJSON(options.videoPoses);
-    }
-
-    return preprocessedPoses;
-}
-
 // Video
-function startVideo(options) {
+function startVideo(options, callback) {
     let video;
 
-    if (options.webcam) video = createCapture(VIDEO, () => webcamLoaded(options, video));
-    else video = createVideo(options.videoLocation, () => videoLoaded(options, video));
+    if (options.webcam) video = createCapture(VIDEO, () => webcamLoaded(options, video, callback));
+    else video = createVideo(options.videoLocation, () => videoLoaded(options, video, callback));
 
     video.hide();
 
     return video;
-    //if (options.webcam) return [video, startPoseNet(options, video)];
-    //else return [video, undefined];
 }
 
 // This should get called at the beginning and if a new video has been uploaded
@@ -34,12 +22,7 @@ function startPoseNet(options, poseNet, video) {
     // I always seem to need to declare a new poseNet object
     // I can't seem to simply change the video source of an
     // existing one
-    poseNet = ml5.poseNet(video, { // settings value speed over accuracy
-        imageScaleFactor: 0.2,
-        inputResolution: 257,
-        quantBytes: 2,
-        multiplier: 0.50
-    }, () => modelLoaded(options),);
+
     poseNet.on('pose', options.posesFunction);
 
     return poseNet;
@@ -57,26 +40,26 @@ function stopPoseNet(poseNet) {
 }
 
 // On Load Events
-function videoLoaded(options, video) {
+function videoLoaded(options, video, callback) {
     setVideoScale(options, video);
 
+    // Set up media contexts - necessary for recording
     let audioContext = new AudioContext();
     let dest = audioContext.createMediaStreamDestination();
     options.audioStream = dest.stream;
     let sourceNode = audioContext.createMediaElementSource(video.elt);
-    sourceNode.connect(dest)
+    sourceNode.connect(dest);
 
     options.videoLoaded = true;
-    //video.loop();
+    if (callback != undefined) callback();
+
     console.log('Video Loaded!');
 }
 
-function webcamLoaded(options, video) {
+function webcamLoaded(options, video, callback) {
     setVideoScale(options, video);
-    console.log('Webcam Loaded!');
-}
 
-function modelLoaded(options) {
-    options.posenetLoaded = true;
-    console.log('PoseNet Loaded!');
+    if (callback != undefined) callback();
+
+    console.log('Webcam Loaded!');
 }
