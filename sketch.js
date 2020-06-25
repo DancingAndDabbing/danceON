@@ -23,7 +23,7 @@ let options = {
     videoPoses: 'assets/Balance001.json',
     videoFramerate: 30, // For Yoav - always 30?
     videoWidth: 640,
-    videoHeight: 480,
+    videoHeight: 360,
     videoScale: undefined,
     videoVerticalShift: 0,
     videoHorizontalShift: 0,

@@ -3,10 +3,11 @@
 
 class PlayBar {
     constructor(options) {
+        this.options = options; // pointer to options
         this.height = options.playbarHeight;
 
         this.x = 0;
-        this.y = options.videoHeight;
+        this.options.videoHeight = this.options.videoHeight;
 
         this.buttonWidth = 40;
         this.barWidth = 0;
@@ -45,15 +46,15 @@ class PlayBar {
 
         // Draw pause icon
         if (this.playing) {
-            rect(this.x + 12, this.y + 8, 4, this.height - 16, 2);
-            rect(this.buttonWidth - 18, this.y + 8, 4, this.height - 16, 2);
+            rect(this.x + 12, this.options.videoHeight + 8, 4, this.height - 16, 2);
+            rect(this.buttonWidth - 18, this.options.videoHeight + 8, 4, this.height - 16, 2);
         }
 
         // Draw play icon
         else {
-            triangle(this.x+12, this.y + 8,
-                     this.x+12, this.y + 32,
-                     this.buttonWidth -6, this.y + (this.height/2),)
+            triangle(this.x+12, this.options.videoHeight + 8,
+                     this.x+12, this.options.videoHeight + 32,
+                     this.buttonWidth -6, this.options.videoHeight + (this.height/2),)
         }
         pop();
         return;
@@ -61,7 +62,7 @@ class PlayBar {
 
     drawDivider(xPos) {
         stroke('rgba(30,30,30, 0.5)');
-        line(xPos, this.y+5, xPos, this.y+this.height-5);
+        line(xPos, this.options.videoHeight+5, xPos, this.options.videoHeight+this.height-5);
 
         return;
     }
@@ -72,7 +73,7 @@ class PlayBar {
         if (this.overRecordButton()) fill('rgba(200,30,30, 0.8)');
         else fill('rgba(30,30,30, 0.5)');
 
-        circle(this.buttonWidth + this.buttonWidth/2, this.y + this.height/2,
+        circle(this.buttonWidth + this.buttonWidth/2, this.options.videoHeight + this.height/2,
                this.height/3);
 
         pop();
@@ -85,7 +86,7 @@ class PlayBar {
         // settings
         noStroke();
         fill(245);
-        rect(this.buttonWidth*2, this.y, this.barWidth, this.height,
+        rect(this.buttonWidth*2, this.options.videoHeight, this.barWidth, this.height,
             0, 10, 10, 0);
 
         pop();
@@ -96,14 +97,14 @@ class PlayBar {
         noStroke();
         fill('rgba(30,30,30, 0.5)');
         rect(mouseX - 4,
-            this.y, 8, this.height);
+            this.options.videoHeight, 8, this.height);
 
         fill(30);
         textSize(16);
         textAlign(LEFT, CENTER);
         text(`frame: ${this.hoverFrame}`,
             min(width-100, mouseX + 6),
-            this.y + this.height/2);
+            this.options.videoHeight + this.height/2);
 
         pop();
     }
@@ -111,18 +112,22 @@ class PlayBar {
     // Mouse Interaction Checks
     overPlayButton() {
         if ((mouseX > this.x && mouseX < this.buttonWidth) &&
-            (mouseY > this.y && mouseY < height)) return true;
+            (mouseY > this.options.videoHeight && mouseY < height)) return true;
     }
 
     overRecordButton() {
         if ((mouseX > this.buttonWidth && mouseX < this.buttonWidth*2) &&
-            (mouseY > this.y && mouseY < height)) return true;
+            (mouseY > this.options.videoHeight && mouseY < height)) return true;
     }
 
     overBar() {
         if ((mouseX > this.buttonWidth*2 && mouseX < width) &&
-            (mouseY > this.y && mouseY < height)) return true;
+            (mouseY > this.options.videoHeight && mouseY < height)) return true;
     }
 
     getFrame() { return this.hoverFrame; }
+
+    maxBarWidth() {
+        return this.options.videoWidth - (this.buttonWidth * 2);
+    }
 }
