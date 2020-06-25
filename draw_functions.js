@@ -13,10 +13,10 @@ class DrawFunctions {
     // -- 2D Primitive Shape Functions --
     arc(where, how) {
         // set variables/defaults
-        let x = fallbackToDefault(where.x, width/2);
-        let y = fallbackToDefault(where.y, height/2);
+        let x = fallbackToDefault(where.x, random(width));
+        let y = fallbackToDefault(where.y, random(height));
 
-        let w = fallbackToDefault(how.w, 30);
+        let w = fallbackToDefault(how.w, random(10, 40));
         let h = fallbackToDefault(how.h, w);
         let start = fallbackToDefault(how.start, 0);
         let stop = fallbackToDefault(how.stop, HALF_PI);
@@ -27,8 +27,8 @@ class DrawFunctions {
     }
 
     ellipse(where, how) {
-        let x = fallbackToDefault(where.x, width/2);
-        let y = fallbackToDefault(where.y, height/2);
+        let x = fallbackToDefault(where.x, random(width));
+        let y = fallbackToDefault(where.y, random(height));
 
         let w = fallbackToDefault(how.w, 30);
         let h = fallbackToDefault(how.h, w);
@@ -38,27 +38,27 @@ class DrawFunctions {
     }
 
     circle(where, how) {
-        let x = fallbackToDefault(where.x, width/2);
-        let y = fallbackToDefault(where.y, height/2);
+        let x = fallbackToDefault(where.x, random(width));
+        let y = fallbackToDefault(where.y, random(height-40)); // fix hardcoding
 
-        let d = fallbackToDefault(how.d, 30);
+        let d = fallbackToDefault(how.d, random(10, 40));
 
         circle(x, y, d);
     }
 
     // Does not support z-coordinates
     line(where, how) {
-        let x1 = fallbackToDefault(where.x1, width/2);
-        let y1 = fallbackToDefault(where.y1, height/2);
-        let x2 = fallbackToDefault(where.x2, x1+30);
-        let y2 = fallbackToDefault(where.y2, y1+30);
+        let x1 = fallbackToDefault(where.x1, random(width));
+        let y1 = fallbackToDefault(where.y1, random(height-40));
+        let x2 = fallbackToDefault(where.x2, x1+random(-40, 40));
+        let y2 = fallbackToDefault(where.y2, y1+random(-40, 40));
 
         line(x1, y1, x2, y2);
     }
 
     point(where, how) {
-        let x = fallbackToDefault(where.x, width/2);
-        let y = fallbackToDefault(where.y, height/2);
+        let x = fallbackToDefault(where.x, random(width));
+        let y = fallbackToDefault(where.y, random(height-40));
         let coordinate_vector = fallbackToDefault(where.coordinate_vector,
             createVector(x, y));
 
@@ -66,24 +66,24 @@ class DrawFunctions {
     }
 
     quad(where, how) {
-        let x1 = fallbackToDefault(where.x1, width/2);
-        let y1 = fallbackToDefault(where.y1, height/2);
-        let x2 = fallbackToDefault(where.x2, x1+30);
-        let y2 = fallbackToDefault(where.y2, y1+30);
-        let x3 = fallbackToDefault(where.x3, x1+45);
-        let y3 = fallbackToDefault(where.y3, y1+45);
-        let x4 = fallbackToDefault(where.x4, x1-30);
-        let y4 = fallbackToDefault(where.y4, x1-30);
+        let x1 = fallbackToDefault(where.x1, random(width));
+        let y1 = fallbackToDefault(where.y1, random(height-40));
+        let x2 = fallbackToDefault(where.x2, x1+random(-40, 40));
+        let y2 = fallbackToDefault(where.y2, y1+random(-40, 40));
+        let x3 = fallbackToDefault(where.x3, x1+random(-40, 40));
+        let y3 = fallbackToDefault(where.y3, y1+random(-40, 40));
+        let x4 = fallbackToDefault(where.x4, x1+random(-40, 40));
+        let y4 = fallbackToDefault(where.y4, x1+random(-40, 40));
 
         quad(x1, y1, x2, y2, x3, y3, x4, y4);
     }
 
     rect(where, how) {
-        let x = fallbackToDefault(where.x, width/2);
-        let y = fallbackToDefault(where.y, height/2);
+        let x = fallbackToDefault(where.x, random(width));
+        let y = fallbackToDefault(where.y, random(height-40));
 
-        let w = fallbackToDefault(how.w, 30);
-        let h = fallbackToDefault(how.h, w);
+        let w = fallbackToDefault(how.w, random(10, 40));
+        let h = fallbackToDefault(how.h, random(10, 40));
         let tl = fallbackToDefault(how.tl, 0);
         let tr = fallbackToDefault(how.tr, tl);
         let br = fallbackToDefault(how.br, tl);
@@ -93,25 +93,25 @@ class DrawFunctions {
     }
 
     square(where, how) {
-        let x = fallbackToDefault(where.x, width/2);
-        let y = fallbackToDefault(where.y, height/2);
+        let x = fallbackToDefault(where.x, random(width));
+        let y = fallbackToDefault(where.y, random(height-40));
 
-        let s = fallbackToDefault(how.s, 30);
+        let s = fallbackToDefault(how.s, random(10, 40));
         let tl = fallbackToDefault(how.tl, 0);
         let tr = fallbackToDefault(how.tr, tl);
         let br = fallbackToDefault(how.br, tl);
         let bl = fallbackToDefault(how.bl, tl);
 
-        square(x, y, s, tl, tr, br, bl);
+        square(x, y, s, s, tl, tr, br, bl);
     }
 
     triangle(where, how) {
-        let x1 = fallbackToDefault(where.x1, width/2);
-        let y1 = fallbackToDefault(where.y1, height/2);
-        let x2 = fallbackToDefault(where.x2, x1+30);
-        let y2 = fallbackToDefault(where.y2, y1+30);
-        let x3 = fallbackToDefault(where.x3, x1-30);
-        let y3 = fallbackToDefault(where.y3, y1-30);
+        let x1 = fallbackToDefault(where.x1, random(width));
+        let y1 = fallbackToDefault(where.y1, random(height-40));
+        let x2 = fallbackToDefault(where.x2, x1+random(-40, 40));
+        let y2 = fallbackToDefault(where.y2, y1+random(-40, 40));
+        let x3 = fallbackToDefault(where.x3, x1+random(-40, 40));
+        let y3 = fallbackToDefault(where.y3, y1+random(-40, 40));
 
         triangle(x1, y1, x2, y2, x3, y3);
     }
