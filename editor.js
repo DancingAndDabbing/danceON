@@ -9,7 +9,11 @@ var reader = new FileReader();
 let exampleCode = reader.readAsText(exampleFile);
 // let exampleCode = reader.readAsArrayBuffer(exampleFile);
 
-let startingCode = eval("`"+exampleCode+"`");
+// let startingCode = eval("`"+exampleCode+"`");
+// let startingCode = exampleCode;
+
+let startingCode = `(pose) => [];`
+
 
 /*if (typeof(Storage) !== "undefined" && localStorage.getItem('userDeclarations')) {
     startingCode = localStorage.getItem('userDeclarations');

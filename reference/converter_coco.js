@@ -29,7 +29,7 @@ if (!openPoseVersionName) return false;
 
 let openPoseVersion = JSON.parse(fs.readFileSync(openPoseVersionName));
 
-let poseNetVersionName = `${openPoseVersionName.split(".")[0]}_converted.json`;
+let poseNetVersionName = `${openPoseVersionName.split(".")[0]}_converted3.json`;
 let poseNetVersion = [];
 
 openPoseVersion.forEach((frame, i) => {

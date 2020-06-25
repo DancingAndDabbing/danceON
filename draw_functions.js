@@ -38,8 +38,8 @@ class DrawFunctions {
     }
 
     circle(where, how) {
-        let x = fallbackToDefault(where.x, width/2);
-        let y = fallbackToDefault(where.y, height/2);
+        let x = fallbackToDefault(where.x, random(0,width));
+        let y = fallbackToDefault(where.y, random(0,height));
 
         let d = fallbackToDefault(how.d, 30);
 
