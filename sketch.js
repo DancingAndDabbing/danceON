@@ -15,7 +15,7 @@ let options = {
     videoToggle: 'videoToggle',
     webcamToggle: 'webcamToggle',
     videoLocation: 'assets/yoav_simple_hands.mp4',
-    videoPoses: 'assets/yoav_simple_hands_converted3.json',
+    videoPoses: 'assets/yoav_simple_hands_converted.json',
     videoFramerate: 30, // For Yoav - always 30?
     videoWidth: 360,
     videoHeight: 640,
