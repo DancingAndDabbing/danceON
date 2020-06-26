@@ -184,6 +184,7 @@ div.code-toolbar > .toolbar a {
 div.code-toolbar > .toolbar button {
 	background: none;
 	border: 0;
+    cursor: pointer;
 	color: inherit;
 	font: inherit;
 	line-height: normal;

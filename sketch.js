@@ -76,6 +76,8 @@ function setup() {
         options.videoHeight + options.playbarHeight);
     canvas.parent('p5Canvas');
     noCursor();
+    background(255);
+    loadingText('video and classifier');
 
     bulmaQuickview.attach();
     playBar = new PlayBar(options);
@@ -215,11 +217,22 @@ function setup() {
 }
 
 function draw() {
-    background(220);
+    background(255);
 
     // Things still loading - don't try to draw or calculate anything
-    if (!tmClassifier.loaded) { return false; }
-    if (!options.webcam && !options.videoLoaded) { return false; }
+    if (!tmClassifier.loaded) {
+        push();
+        stroke(200);
+        strokeWeight(2);
+        for (i = 0; i < 20; i++) {line(random(width), random(height), random(width), random(height));}
+        pop();
+        loadingText('classifier');
+        return false;
+    }
+    if (!options.webcam && !options.videoLoaded) {
+        loadingText('video');
+        return false;
+    }
 
     // Detection and prediction for Video Mode (nonblocking)
     if (!options.webcam) {
@@ -260,13 +273,7 @@ function draw() {
         try {
             poser.execute(scaledPose, poseHistory); // check if any issues occur on return
         } catch (e) {
-            push();
-            background('rgba(30, 30, 30, 0.9)');
-            textAlign(CENTER);
-            fill(255);
-            text('Hmmm...', width/2, height/2);
-            text(e, width/2, height/2 + 20);
-            pop();
+            errorText(e)
         }
     }
 
@@ -274,13 +281,13 @@ function draw() {
     // does not have a pose
 
     // TODO draw - blank bar
-    if (!options.webcam) playBar.draw();
+    playBar.draw();
 
     // Display cursor, but not during record to prevent it from appearing
     if (!options.recording) {
+        if (prediction && options.ml) mlText(options, prediction);
         cursorIcon();
         if (options.mousePosition) cursorPosition(options);
-        if (prediction && options.ml) mlText(options, prediction);
     }
 }
 

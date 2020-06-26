@@ -1,23 +1,28 @@
+// Appends code to the documentation page and makes the tabs interactive
+// docs_a.js is the current content created
+
+// This finds existing tabs, but probably we'll want to generate them dynamically
 const ATABS = [...document.querySelectorAll('#aTabs li')];
 const ACONTENT = [...document.querySelectorAll('#aContent div')];
-//console.log(ACONTENT);
 
 const ACTIVE_CLASS = 'is-active';
 
-setContent(ACONTENT, ACODE);
+setContent(ACONTENT, ATITLES, ACODE);
 setTabNames(ATABS, ATITLES);
 initTabs(ATABS, ACONTENT);
 
-function setTabNames(tabElements, tabTitles) {
-    tabElements.forEach((t, i) => {
-        t.firstChild.innerHTML = tabTitles[i];
-    });
-}
-
-function setContent(contentElements, contentList) {
+function setContent(contentElements, tabTitles, contentList) {
     contentElements.forEach((c, i) => {
+        let h = document.createElement('h1');
+        h.classList.add('title');
+        h.innerHTML = tabTitles[i];
+        c.appendChild(h)
         contentList[i].forEach((code) => {
-            c.appendChild(createCode(code));
+            let p = document.createElement('p');
+            p.innerHTML = code.description;
+            c.appendChild(p);
+            c.appendChild(createCode(code.code));
+            c.appendChild(document.createElement('hr'));
         });
     });
 }
@@ -33,6 +38,12 @@ function createCode(codeText) {
     pre.appendChild(code);
 
     return pre;
+}
+
+function setTabNames(tabElements, tabTitles) {
+    tabElements.forEach((t, i) => {
+        t.firstChild.innerHTML = tabTitles[i];
+    });
 }
 
 // Make tabs interactive

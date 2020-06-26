@@ -30,4 +30,10 @@ let a5 = '// not implemented';
 
 // Must be a list of lists of code examples
 // Probably in the future this could include text and examples
-let ACODE = [[a1a, a1b], [a2], [a3], [a4], [a5]];
+let ACODE = [
+    [{code:a1a, description: 'minimal'}, {code: a1b, description:'expanded'}],
+    [{code:a2, description: 'n/a'}],
+    [{code:a3, description: 'n/a'}],
+    [{code:a4, description: 'n/a'}],
+    [{code:a5, description: 'n/a'}],
+];

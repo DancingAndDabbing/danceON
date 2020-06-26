@@ -34,6 +34,25 @@ function cursorPosition(options) {
     pop();
 }
 
+function loadingText(txt) {
+    push();
+    textSize(24);
+    textAlign(CENTER);
+    fill(20);
+    text(`loading ${txt}...`, width/2, height/2);
+    pop();
+}
+
+function errorText(e) {
+    push();
+    background('rgba(30, 30, 30, 0.9)');
+    textAlign(CENTER);
+    fill(255);
+    text('Hmmm...', width/2, height/2);
+    text(e, width/2, height/2 + 20);
+    pop();
+}
+
 function skeleton(options, pose) {
     push();
     textAlign(CENTER);
