@@ -67,7 +67,6 @@ function preload() {
     //preprocessedPoses = preloadJSON(options);
     tmClassifier = new TMClassifier();
     tmClassifier.loadJSON(options);
-    //tmClassifier.loadModel(options, () => playPauseVideo(true));
     tmClassifier.loadModel(options);
 }
 
@@ -78,6 +77,7 @@ function setup() {
     canvas.parent('p5Canvas');
     noCursor();
 
+    bulmaQuickview.attach();
     playBar = new PlayBar(options);
 
     // Video and pose setup - calls functions in setup_script.js
@@ -193,7 +193,11 @@ function setup() {
     // Mouse Click Events on Canvas - Disable if recording
     canvas.mouseClicked(() => {
         // animate the cursor
-        if ((!options.webcam) && playBar.overPlayButton()) playPauseVideo();
+        if ((!options.webcam) && playBar.overPlayButton()) {
+            playPauseVideo(undefined, undefined, function() {
+                if (!tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true);
+            });
+        }
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
         else if ((!options.webcam) && playBar.overRecordButton()) startRecording(options, video); // ?? Canvas
         else {console.log(tmClassifier)}
@@ -229,7 +233,6 @@ function draw() {
         prediction = pp.prediction;
 
         playBar.update({playing: options.playing, frameNum: frameNum, totalFrames: totalFrames});
-        playBar.draw();
     }
 
     // Detection and prediction for Webcam (blocking)
@@ -269,6 +272,9 @@ function draw() {
 
     // Draw movers here - they should keep going even if the current frame
     // does not have a pose
+
+    // TODO draw - blank bar
+    if (!options.webcam) playBar.draw();
 
     // Display cursor, but not during record to prevent it from appearing
     if (!options.recording) {
@@ -323,7 +329,7 @@ function handleWebCamToggle() {
 
 // Play or Pause the video - if a value is passed, do that
 // If a value is not passed it will check the state of the media object
-function playPauseVideo(optionalValue, disableLoop) {
+function playPauseVideo(optionalValue, disableLoop, playCallback, pauseCallback) {
     if (optionalValue == undefined) {
         if (video.elt.paused || video.elt.ended) options.playing = true;
         else options.playing = false;
@@ -334,8 +340,14 @@ function playPauseVideo(optionalValue, disableLoop) {
         video.elt.loop = false;
         video.play();
     }
-    else if (options.playing) video.loop();
-    else video.pause();
+    else if (options.playing) {
+        video.loop();
+        if (playCallback != undefined) playCallback();
+    }
+    else {
+        if (pauseCallback != undefined) pauseCallback();
+        video.pause();
+    }
 }
 
 function startRecording(options, video) {

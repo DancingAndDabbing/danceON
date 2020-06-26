@@ -7,9 +7,6 @@
     <!-- p5 -->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
 
-    <!-- ml5 -->
-    <!--<script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>-->
-
     <!-- TensorFlow -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
@@ -20,7 +17,7 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
     <link rel="stylesheet" type="text/css" href="style/bulma.min.css">
     <link rel="stylesheet" type="text/css" href="style/bulma-switch.min.css">
-    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="style/bulma-quickview.css">
 </head>
 <body>
 <nav class="navbar is-light" role="navigation" aria-label="main navigation">
@@ -36,6 +33,10 @@
                 <button id="settingsButton" onclick="openSettings()" class="button is-light is-inverted is-outlined">
                     <span class="icon"><i class="fas fa-sliders-h"></i></span>
                     <span>Controls</span>
+                </button>
+                <button class="button button is-light is-inverted is-outlined" data-show="quickview" data-target="quickviewDefault">
+                    <span class="icon"><i class="far fa-file-code"></i></span>
+                    <span>Reference</span>
                 </button>
             </div>
         </div>
@@ -127,6 +128,27 @@
     <button class="modal-close is-large" onclick="closeSettings()" aria-label="close"></button>
 </div>
 
+<!-- Sliding Quickview -->
+<div id="quickviewDefault" class="quickview">
+    <header class="quickview-header">
+        <p class="title">Reference Code</p>
+        <span class="delete" data-dismiss="quickview"></span>
+    </header>
+
+    <div class="quickview-body">
+        <div class="quickview-block">
+            <div style="position:relative; padding-top: 80%; overflow:hidden;">
+                <iframe src="/doc" style="top: 0; left: 0; border:none; height:100%; position: absolute; width:100%;"></iframe>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="quickview-footer">
+        Copy and paste these examples into your code!
+    </footer>
+</div>
+
 <section class="section">
     <div class="container is-fluid">
         <div class="columns">
@@ -136,7 +158,7 @@
             <div class="column is-narrow">
                 <div style="">
                     <div id='p5Canvas'></div>
-                    <div id="analyzingNotifier" class="notification is-warning" style="padding:0rem 2.5rem 0rem 3rem; margin: 0px 0px 8px 0px;">
+                    <div id="analyzingNotifier" class="notification is-warning is-hidden" style="padding:0rem 2.5rem 0rem 3rem; margin: 0px 0px 8px 0px;">
                         <button class="button is-warning is-small is-loading"></button>
                         <button class="button is-warning is-small" style="cursor:default;">estimating and classifying poses...</button>
                     </div>
@@ -150,6 +172,8 @@
         </div>
     </div>
 </section>
+
+<script src="lib/bulma-quickview.min.js"></script>
 
 <script src="helpers.js"></script>
 <script src="editor.js"></script>

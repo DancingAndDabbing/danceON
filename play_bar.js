@@ -11,7 +11,7 @@ class PlayBar {
 
         this.buttonWidth = 40;
         this.barWidth = 0;
-        this.maxBarWidth = options.videoWidth - (this.buttonWidth * 2);
+        //this.maxBarWidth = options.videoWidth - (this.buttonWidth * 2);
 
         this.playing = false;
         this.recording = false;
@@ -23,7 +23,7 @@ class PlayBar {
     update(args) {
         this.playing = args.playing;
 
-        this.barWidth = map(args.frameNum, 0, args.totalFrames, 0, this.maxBarWidth);
+        this.barWidth = map(args.frameNum, 0, args.totalFrames, 0, this.maxBarWidth());
         this.hoverFrame = floor(map(mouseX, this.buttonWidth*2, width,
                                     0, args.totalFrames, true));
     }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" style="overscroll-behavior-x: none;">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<title>danceON Docs</title>
+<head>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
+    <link rel="stylesheet" type="text/css" href="../style/bulma.min.css">
+    <style>
+        .number { all: inherit; } /* fixes bulma styling bug */
+        .tabContent div.inner { display: none; }
+        .tabContent div.inner.is-active { display: block; }
+    </style>
+    <link rel="stylesheet" type="text/css" href="prism/prism.css"  />
+    <!--<link href="https://unpkg.com/prism-theme-night-owl@1.4.0/build/light.css" rel="stylesheet" />-->
+</head>
+<body>
+    <section class="section">
+        <div class="container is-fluid">
+            <div id="aTabs" class="tabs is-small">
+                <ul>
+                    <li data-tab="a1" class="is-active"><a>t</a></li>
+                    <li data-tab="a2"><a>tt</a></li>
+                    <li data-tab="a3"><a>t</a></li>
+                    <li data-tab="a4"><a>tt</a></li>
+                    <li data-tab="a5"><a>tt</a></li>
+                </ul>
+            </div>
+            <div class="tabContent" id="aContent">
+                <div data-content="a1" class="inner is-active"></div>
+                <div data-content="a2" class="inner"></div>
+                <div data-content="a3" class="inner"></div>
+                <div data-content="a4" class="inner"></div>
+                <div data-content="a5" class="inner"></div>
+            </div>
+        </div>
+    </div>
+    <script src="docs_a.js"></script>
+    <script src="setup.js"></script>
+    <script src="prism/prism.js"></script>
+
+</body>
