@@ -79,6 +79,7 @@ function setup() {
     background(255);
     loadingText('video and classifier');
 
+    // Dom Elements
     bulmaQuickview.attach();
     playBar = new PlayBar(options);
 
@@ -89,7 +90,6 @@ function setup() {
     tmClassifier.onComplete(() => toggleAnalyzingNotifier(false)); // Callback
 
     // Toggle between Webcam and Video
-    // Refactor: These should really be their own functions
     select(`#${options.videoToggle}`).mouseClicked(() => {
         if (!options.webcam) return;
         options.webcam = false;
@@ -104,6 +104,11 @@ function setup() {
         if (options.webcam) return;
         options.webcam = true;
         handleWebCamToggle();
+    });
+
+    //
+    document.getElementById('recordingPromptStart').addEventListener('click', function() {
+        startRecording(options, video);
     });
 
     // This will upload the file, attempt to switch to the video source, and
@@ -149,6 +154,7 @@ function setup() {
         }
     });
 
+    // Pose JSON File upload
     document.getElementById(options.poseUpload).addEventListener('change', (ev) => {
         if (ev.target.value == '') return;
         if (!(ev.target.files && ev.target.files[0]))  {
@@ -166,6 +172,7 @@ function setup() {
         );
     });
 
+    // Teachable Machine Link paste
     document.getElementById(options.mlInput).addEventListener('input', (ev) => {
         let txt = ev.target.value;
 
@@ -201,7 +208,7 @@ function setup() {
             });
         }
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
-        else if ((!options.webcam) && playBar.overRecordButton()) startRecording(options, video); // ?? Canvas
+        else if ((!options.webcam) && playBar.overRecordButton()) openRecordingPrompt();
         else {console.log(tmClassifier)}
         // other ideas include getting the coordinates
         // and getting the skeleton part

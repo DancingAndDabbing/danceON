@@ -127,6 +127,33 @@
     </div>
     <button class="modal-close is-large" onclick="closeSettings()" aria-label="close"></button>
 </div>
+<div class="modal" id="recordingPrompt">
+  <div class="modal-background" onclick="closeRecordingPrompt()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Record your video and animations</p>
+      <button class="delete" onclick="closeRecordingPrompt()" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <p>
+          Are you sure you are ready to make a recording? This will play through your entire video and might take some time.
+      </p>
+      <p>
+          Your video should automatically download after recording finishes.
+      </p>
+    </section>
+    <footer class="modal-card-foot">
+
+      <button id="recordingPromptStart" class="button is-danger" onclick="closeRecordingPrompt()">
+          <span class="icon is-small is-left">
+              <i class="fas fa-circle"></i>
+          </span>
+          <span>Yes, record!</span>
+      </button>
+      <button class="button" onclick="closeRecordingPrompt()">No, keep coding.</button>
+    </footer>
+  </div>
+</div>
 
 <!-- Sliding Quickview -->
 <div id="quickviewDefault" class="quickview">

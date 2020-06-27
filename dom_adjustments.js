@@ -10,6 +10,14 @@ function closeSettings() {
     document.getElementById("settings").classList.remove("is-active");
 }
 
+function openRecordingPrompt() {
+    document.getElementById("recordingPrompt").classList.add("is-active");
+}
+
+function closeRecordingPrompt() {
+    document.getElementById("recordingPrompt").classList.remove("is-active");
+}
+
 // Toggles
 function enableMLToggle(val=false) {
     document.getElementById("ml").disabled = val;
