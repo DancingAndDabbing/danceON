@@ -91,3 +91,20 @@ function changeTMLinkInput(state) {
             hlp.innerHTML = "Paste in a link from Teachable Machine.";
     }
 }
+
+function setSteps(state) {
+    let s1 = document.getElementById('startingStep');
+    let s2 = document.getElementById('editingStep');
+    let s3 = document.getElementById('debuggingStep');
+    let s4 = document.getElementById('runningStep');
+
+
+    s1.classList.toggle("is-active", state=='starting');
+    s2.classList.toggle("is-active", state=='editing');
+    s3.classList.toggle("is-active", state=='debugging');
+    s4.classList.toggle("is-active", state=='running');
+}
+
+function disableRevertButton(disabled=true) {
+    document.getElementById('revertButton').disabled = disabled;
+}

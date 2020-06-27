@@ -1,20 +1,32 @@
 class Poser {
-    constructor(settings) {
+    constructor() {
         //this.options = settings.options; // defaults
-        this.declarations = settings.declarations;
+        this.declarations = {text: '() => []', func: () => []}; // function that gets set in update
         this.movers = new Movers();
         this.drawFunctions = new DrawFunctions();
+
+        this.declarationsHistory = [this.declarations]; // history of working code
+        this.codeChanged = true;
+        this.usingOldCode = false;
+        // We can bind custom events based on where the user has progressed
+        this.events = {'starting': [],
+                       'editing': [],
+                       'debugging': [],
+                       'running': [],
+                        '*': []};
+        this.state = 'starting';
 
         return;
     }
 
-    // parser function that checks for issues at the start?
-
     execute(pose, poseHistory) {
-        let newFuncList = this.declarations(pose, poseHistory);
-        //console.log(newFuncList);
+        let newFuncList = this.declarations.func(pose, poseHistory);
+        if (!newFuncList.length) { // empty
+            if (!this.usingOldCode) this.callEventListenersIfStateChange('starting');
+            return;
+        }
         newFuncList.forEach((ff, i) => {
-            // look for condition, bind, draw, type
+
             // dynamic or static
             let type = 'static';
             // fix - if (ff.where != undefined)
@@ -61,11 +73,17 @@ class Poser {
             }
         });
 
+        // probably I should return this to run later since it won't
+        // draw movers unless a pose has been detected
         this.movers.update();
         let funcArray = this.movers.show();
         funcArray.forEach((ff) => {
             this.customDraw(ff);
         });
+
+        if (!this.usingOldCode) this.callEventListenersIfStateChange('running');
+        if (this.codeChanged) this.addWorkingCodeToHistory();
+
     }
 
     customDraw(bb) {
@@ -94,17 +112,51 @@ class Poser {
         let func;
 
         try { func = new Function(`return ${d}`.trim())(); }
-        catch(err) {
+        catch(err) { // syntax errors in code - don't run yet
+            if (this.state = 'debugging') this.revertToPreviousCode();
+            this.callEventListenersIfStateChange('editing');
+            this.usingOldCode = true;
             return false;
         }
 
-        this.declarations = func;
+        this.declarations = {text: d, func: func};
+        this.usingOldCode = false;
+        this.codeChanged = true;
         /*if (typeof(Storage) !== "undefined") {
             localStorage.setItem('userDeclarations', d.trim());
         }*/
     }
 
+    addWorkingCodeToHistory() {
+        let workingDeclarations = {};
+        workingDeclarations.text = this.declarations.text;
+        workingDeclarations.func = this.declarations.func;
+
+        this.declarationsHistory.unshift(workingDeclarations);
+        this.declarationsHistory.length = min(this.declarationsHistory.length, 100);
+        this.codeChanged = false;
+    }
+
+    // Reverts back to the last working code and returns the current state
+    revertToPreviousCode() {
+        this.declarations = this.declarationsHistory[0];
+        return this.declarations;
+    }
+
     clearMovers() { this.movers.clear(); }
+
+    // Event Handling
+    addEventListener(eventType, eFunc) {
+        this.events[eventType].push(eFunc);
+    }
+
+    // Calls when state changes
+    callEventListenersIfStateChange(newState) {
+        if (this.state == newState) return;
+        this.state = newState;
+        this.events[this.state].forEach(f => f(this));
+        this.events['*'].forEach(f => f(this));
+    }
 }
 
 // For static objects

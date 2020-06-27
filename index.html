@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="style/bulma.min.css">
     <link rel="stylesheet" type="text/css" href="style/bulma-switch.min.css">
     <link rel="stylesheet" type="text/css" href="style/bulma-quickview.css">
+    <link rel="stylesheet" type="text/css" href="style/bulma-steps.css">
 </head>
 <body>
 <nav class="navbar is-light" role="navigation" aria-label="main navigation">
@@ -181,6 +182,46 @@
         <div class="columns">
             <div class="column">
                 <div id="editor" style="height:480px"></div>
+                <div id="editorControls" class="mb-2">
+                    <button id="revertButton" disabled class="button is-success is-light is-fullwidth">
+                        <span class=icon>
+                            <i class="fas fa-history"></i>
+                        </span>
+                        <span>Revert Back!</span>
+                    </button>
+                </div>
+                <div id="codeProgress">
+                    <ul class="steps has-gaps is-horizontal">
+                        <li id="startingStep" class="steps-segment is-active">
+                            <span class="steps-marker is-hollow"></span>
+                        </li>
+                        <li id="editingStep" class="steps-segment is-dashed">
+                            <span class="steps-marker">
+                                <span class="icon">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </span>
+                            </span>
+                            <div class="steps-content is-divider-content">
+                                <p class="heading is-size-8">code run</p>
+                            </div>
+                        </li>
+                        <li id="debuggingStep" class="steps-segment">
+                            <span class="steps-marker">
+                                <span class="icon">
+                                    <i class="fas fa-hammer"></i>
+                                </span>
+                            </span>
+                        </li>
+                        <li id="runningStep" class="steps-segment">
+                            <span class="steps-marker">
+                                <span class="icon">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+
+                </div>
             </div>
             <div class="column is-narrow">
                 <div style="">
@@ -211,7 +252,6 @@
 <script src="recorder.js"></script>
 <script src="draw_functions.js"></script>
 <script src="poser.js"></script>
-<script src="my_data.js"></script>
 <script src="setup_script.js"></script>
 <script src="overlays.js"></script>
 <script src="sketch.js"></script>

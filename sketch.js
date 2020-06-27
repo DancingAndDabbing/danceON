@@ -76,7 +76,7 @@ function setup() {
         options.videoHeight + options.playbarHeight);
     canvas.parent('p5Canvas');
     noCursor();
-    background(255);
+    background(245);
     loadingText('video and classifier');
 
     // Dom Elements
@@ -84,7 +84,13 @@ function setup() {
     playBar = new PlayBar(options);
 
     // Video and pose setup - calls functions in setup_script.js
-    poser = new Poser(myData);
+    poser = new Poser();
+    poser.addEventListener('*', (p) => setSteps(p.state));
+    ['starting', 'running'].forEach(s => poser.addEventListener(s, (p) => disableRevertButton()));
+    ['editing', 'debugging'].forEach(s => poser.addEventListener(s, (p) => disableRevertButton(false)));
+
+    //poser.addEventListener('*', (p) => console.log(p.state));
+
     video = startVideo(options);
     video.onended((elt) => stopRecording(elt, options));
     tmClassifier.onComplete(() => toggleAnalyzingNotifier(false)); // Callback
@@ -177,7 +183,7 @@ function setup() {
         let txt = ev.target.value;
 
         // Error cases
-        if (txt == '') return changeTMLinkInput('empty');
+        if (txt == '') return changeTMLinkInput('empty'); // dom manipulation
         if (!txt.startsWith("https://teachablemachine.withgoogle.com/models/")) return changeTMLinkInput('error');
 
         // We might have good link
@@ -193,10 +199,22 @@ function setup() {
         );
     });
 
-    // Editor/Poser API
+    document.getElementById('revertButton').addEventListener('click', () => {
+        let currentCode = poser.revertToPreviousCode();
+        fromSetValueCall = true;
+        declarations.setValue(currentCode.text);
+    })
+
+    // Editor/Poser API (declarations is an editor)
     poser.update(declarations.getValue());
     declarations.on('change', function(e) {
-        poser.update(declarations.getValue());
+        let val = declarations.getValue();
+        if (val == '' && !fromSetValueCall) {
+            declarations.setValue(STARTING_CODE);
+            return;
+        };
+        poser.update(val);
+        fromSetValueCall = false;
     });
 
     // Mouse Click Events on Canvas - Disable if recording
@@ -224,7 +242,7 @@ function setup() {
 }
 
 function draw() {
-    background(255);
+    background(245);
 
     // Things still loading - don't try to draw or calculate anything
     if (!tmClassifier.loaded) {
@@ -280,14 +298,14 @@ function draw() {
         try {
             poser.execute(scaledPose, poseHistory); // check if any issues occur on return
         } catch (e) {
-            errorText(e)
+            errorText(e);
+            poser.callEventListenersIfStateChange('debugging');
         }
     }
 
     // Draw movers here - they should keep going even if the current frame
     // does not have a pose
 
-    // TODO draw - blank bar
     playBar.draw();
 
     // Display cursor, but not during record to prevent it from appearing
@@ -301,6 +319,8 @@ function draw() {
 
 // ----- Other Functions -----
 
+// Due to asyncronous issues, I directly set the pose and prediction
+// variables here rather than waiting for them to return
 function setPoseInWebCamMode(pp) {
     pose = pp.pose;
     prediction = pp.prediction;

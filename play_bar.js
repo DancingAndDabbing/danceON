@@ -32,7 +32,7 @@ class PlayBar {
 
     // Shapes to draw
     draw(args) {
-        this.drawBackdrop(!(this.options.webcam));
+        this.drawBackdrop();
         if (this.options.webcam) return;
         this.drawPlayButton();
         this.drawRecordButton();
@@ -43,12 +43,16 @@ class PlayBar {
         if (this.overBar()) this.drawHoverText();
     }
 
-    drawBackdrop(rounded=true) {
+    drawBackdrop() {
         push();
         noStroke();
+
+        fill(255);
+        rect(0, this.options.videoHeight, width, this.height);
+
         fill(220);
-        rect(0, this.options.videoHeight, width, this.height, 0, 0,
-            rounded * 10, rounded * 10)
+        rect(0, this.options.videoHeight, width, this.height, 0, 0, 10, 10);
+
         pop();
     }
 
