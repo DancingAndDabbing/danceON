@@ -1,13 +1,15 @@
 /* PrismJS 1.20.0
 https://prismjs.com/download.html#themes=prism&languages=clike+javascript&plugins=toolbar+copy-to-clipboard */
 /**
- * Mixture of default Prism theme and Night Owl Theme
+ * Mixture of default Prism theme, Light Owl Theme, Custom mixing
  */
 
  code[class*="language-"],
  pre[class*="language-"] {
    color: #403f53;
-   font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+   font-size: 14px;
+   font-family: 'Space Mono', monospace;
+   font-variant-ligatures: none;
    text-align: left;
    white-space: pre;
    word-spacing: normal;
@@ -30,7 +32,7 @@ https://prismjs.com/download.html#themes=prism&languages=clike+javascript&plugin
  code[class*="language-"]::-moz-selection,
  code[class*="language-"] ::-moz-selection {
    text-shadow: none;
-   background: #fff2a8;
+   background: rgba(128, 128, 128, 0.22);
  }
 
  pre[class*="language-"]::selection,
@@ -38,7 +40,7 @@ https://prismjs.com/download.html#themes=prism&languages=clike+javascript&plugin
  code[class*="language-"]::selection,
  code[class*="language-"] ::selection {
    text-shadow: none;
-   background: #fff2a8;
+   background: rgba(128, 128, 128, 0.22);
  }
 
  @media print {

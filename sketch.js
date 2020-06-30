@@ -209,7 +209,7 @@ function setup() {
     poser.update(declarations.getValue());
     declarations.on('change', function(e) {
         let val = declarations.getValue();
-        if (val == '' && !fromSetValueCall) {
+        if (val == '' && !fromSetValueCall && (declarations.curOp.command.name != 'paste')) {
             declarations.setValue(STARTING_CODE);
             return;
         };
@@ -422,4 +422,15 @@ function stopRecording(elt, options) {
 // Scrubbing function - doesn't seem to work in local host - will set to 0
 function changeFrame(frameNum) {
     video.time(getTimeFromFrame(frameNum, options.videoFramerate));
+}
+
+// Secret
+let danceON = {
+    what: 'text',
+    how: {
+        textSize: 14,
+        fill: 255,
+        stroke: 255,
+        str: 'Built by Willie Payne while listening to Phoebe Bridgers and procrastinating an essay.'
+    }
 }
