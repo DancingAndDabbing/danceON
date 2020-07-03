@@ -1,16 +1,23 @@
-// TODO - Update animation system to support strings and lists
-
 class Mover {
     constructor(args) {
 
         this.framesAlive = 0;
-        this.maxFrames = fallbackToDefault(args.how.frames, 10000);
 
         this.what = args.what;
         this.where = fallbackToDefault(args.where, {}); // this.points???
-        this.how = fallbackToDefault(args.how, {});
 
-        this.points = fallbackToDefault(this.where.start, {}); // syntax??? Error catching???
+        this.how = fallbackToDefault(args.how, {});
+        this.maxFrames = fallbackToDefault(this.how.frames, 10000);
+
+        // We shouldn't get here without a start...
+        this.points = fallbackToDefault(this.where.start, {
+            x: random(width), y: random(height),
+            x1: random(width), y1: random(height),
+            x2: random(width), y2: random(height),
+            x3: random(width), y3: random(height),
+            x4: random(width), y4: random(height),
+
+        });
 
         this.velocityX = fallbackToDefault(this.points.velocityX, random(-2, 2));
         this.velocityY = fallbackToDefault(this.points.velocityY, -10);
@@ -27,6 +34,7 @@ class Mover {
         delete this.where.accelerationY;
     }
 
+    // There is a bug if the user provides neither an x or a y value
     update() {
         for (const prop in this.points) {
             if (prop[0] == 'x') this.points[prop] += this.velocityX;
@@ -60,8 +68,8 @@ class Mover {
         return {'what': this.what, 'where': currentWhere, 'how': currentHow};
     }
 
-    // currently only supports numbers - not strings or colors
-    // linear interpolation using map
+    // currently only supports numbers, arrays, and colors
+    // linear interpolation using lerp() function
     /*
     sample = [
         {frame: 0, value: 0},
@@ -78,9 +86,35 @@ class Mover {
 
         if (ib == 0) return values[0];
         else if (ib == -1) return values[values.length - 1];
-        else return map(this.framesAlive,
-            frames[ib-1], frames[ib],
-            values[ib-1], values[ib]);
+        else {
+            let startFrame = frames[ib-1];
+            let endFrame = frames[ib];
+
+            let startValue = values[ib-1];
+            let endValue = values[ib]; // check if types match??
+
+            let interpProgress = (this.framesAlive - startFrame) / (endFrame - startFrame);
+
+            // Number case -> return a simple interpolation
+            if (typeof(startValue) == typeof(endValue) && typeof(endValue) == 'number') {
+                return lerp(startValue, endValue, interpProgress);
+            }
+
+            // Array case -> interpolate every value
+            if (Array.isArray(startValue) && Array.isArray(endValue)) {
+                return startValue.map((sv, i) => lerp(sv, endValue[i], interpProgress));
+            }
+
+            // Color case -> Use lerpColor function
+            if ((typeof(startValue) == typeof(endValue) && typeof(endValue)  == 'object') &&
+                    (startValue.mode && endValue.mode)) { // p5.Colors object have mode param
+                return lerpColor(startValue, endValue, interpProgress);
+            }
+
+            // if we can't interpolate (e.g. string, obj) just return the
+            // starting value - the object will still change, just not smoothly
+            return startValue;
+        }
     }
 }
 

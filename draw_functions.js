@@ -16,7 +16,7 @@ class DrawFunctions {
         let x = fallbackToDefault(where.x, random(width));
         let y = fallbackToDefault(where.y, random(height));
 
-        let w = fallbackToDefault(how.w, random(10, 40));
+        let w = fallbackToDefault(how.w, 30);
         let h = fallbackToDefault(how.h, w);
         let start = fallbackToDefault(how.start, 0);
         let stop = fallbackToDefault(how.stop, HALF_PI);
@@ -41,7 +41,7 @@ class DrawFunctions {
         let x = fallbackToDefault(where.x, random(width));
         let y = fallbackToDefault(where.y, random(height-40)); // fix hardcoding
 
-        let d = fallbackToDefault(how.d, random(10, 40));
+        let d = fallbackToDefault(how.d, 30);
 
         circle(x, y, d);
     }
@@ -82,8 +82,8 @@ class DrawFunctions {
         let x = fallbackToDefault(where.x, random(width));
         let y = fallbackToDefault(where.y, random(height-40));
 
-        let w = fallbackToDefault(how.w, random(10, 40));
-        let h = fallbackToDefault(how.h, random(10, 40));
+        let w = fallbackToDefault(how.w, 30);
+        let h = fallbackToDefault(how.h, w);
         let tl = fallbackToDefault(how.tl, 0);
         let tr = fallbackToDefault(how.tr, tl);
         let br = fallbackToDefault(how.br, tl);
@@ -96,7 +96,7 @@ class DrawFunctions {
         let x = fallbackToDefault(where.x, random(width));
         let y = fallbackToDefault(where.y, random(height-40));
 
-        let s = fallbackToDefault(how.s, random(10, 40));
+        let s = fallbackToDefault(how.s, 30);
         let tl = fallbackToDefault(how.tl, 0);
         let tr = fallbackToDefault(how.tr, tl);
         let br = fallbackToDefault(how.br, tl);

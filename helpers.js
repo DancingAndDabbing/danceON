@@ -52,6 +52,7 @@ function scalePositionToVideo(options, position) {
 
 // This should not get called if we are in webcam mode
 function scalePoseToWindow(options, pose) {
+    if (options.webcam) return pose;
     let scaledPose = {keypoints:[]};
 
     pose.keypoints.forEach(k => {

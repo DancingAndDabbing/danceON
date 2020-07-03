@@ -16,13 +16,14 @@ function setContent(contentElements, tabTitles, contentList) {
         let h = document.createElement('h1');
         h.classList.add('title');
         h.innerHTML = tabTitles[i];
-        c.appendChild(h)
-        contentList[i].forEach((code) => {
+        c.appendChild(h);
+        contentList[i].forEach((code, j) => {
             let p = document.createElement('p');
             p.innerHTML = code.description;
             c.appendChild(p);
             c.appendChild(createCode(code.code));
-            c.appendChild(document.createElement('hr'));
+            if (j < contentList[i].length - 1) c.appendChild(document.createElement('hr'));
+
         });
     });
 }

@@ -16,7 +16,7 @@ let a1b =
         },
         how: {
             d: 30,
-            fill: 'rgba(255, 255, 255, 1)',
+            fill: color(0, 0, 255, 255),
             stroke: 0
         }
     },

@@ -95,10 +95,11 @@ class Poser {
 
         let fillVal = fallbackToDefault(bb.how.fill, 255);
         let strokeVal = fallbackToDefault(bb.how.stroke, 0);
+        let strokeWeightVal = fallbackToDefault(bb.how.strokeWeight, 1);
 
         fill(fillVal);
         stroke(strokeVal);
-        // strokeWeight
+        strokeWeight(strokeWeightVal);
 
         func.call(this, bb.where, bb.how);
 

@@ -2,6 +2,7 @@
 // STEM FROM DANCE | NYU - 2020
 
 // BUG - Webcam turns off, but I can't deactivate the light
+// BUG - Webcam seems to be off
 // https://stackoverflow.com/questions/11642926/stop-close-webcam-which-is-opened-by-navigator-getusermedia
 
 // ----- Global Options -----
