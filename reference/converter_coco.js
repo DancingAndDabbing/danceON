@@ -43,6 +43,13 @@ openPoseVersion.forEach((frame, i) => {
         let y = frame['part_candidates'][0][m[1]][1];
         let score = frame['part_candidates'][0][m[1]][2];
 
+        if (frame['part_candidates'][0][m[1]].length > 3) {
+          if (frame['part_candidates'][0][m[1]][5] > score) {
+            x = frame['part_candidates'][0][m[1]][3];
+            y = frame['part_candidates'][0][m[1]][4];
+          }
+        }
+
         let keypointStruct = {
             position: {x: x, y: y},
             score: score, part: part
