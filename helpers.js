@@ -71,3 +71,13 @@ function scalePoseToWindow(options, pose) {
 
     return scaledPose;
 }
+
+function muteVideo(options, video, optionalSet) {
+    if (optionalSet != undefined) options.muted = optionalSet;
+    else options.muted = !options.muted;
+
+    if (options.muted) video.volume(0.0);
+    else video.volume(1.0);
+
+    return;
+}

@@ -82,7 +82,7 @@ function mlText(options, prediction) {
     textSize(16);
     textAlign(RIGHT, TOP);
     textLeading(20);
-    stroke(255);
+    stroke(30);
     fill(255);
 
     let txt = "";

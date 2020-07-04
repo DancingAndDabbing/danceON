@@ -14,8 +14,15 @@
     <!-- ACE -->
     <script src="ace/ace.js"></script>
 
+    <!-- Style -->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
     <link rel="stylesheet" type="text/css" href="style/mystyles.css">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
 
 </head>
 <body>
@@ -161,7 +168,7 @@
     <div class="quickview-body">
         <div class="quickview-block">
             <div style="position:relative; padding-top: 95%; overflow:hidden;">
-                <iframe src="/danceON/doc" style="top: 0; left: 0; border:none; height:100%; position: absolute; width:100%;"></iframe>
+                <iframe src="/doc" style="top: 0; left: 0; border:none; height:100%; position: absolute; width:100%;"></iframe>
                 <!-- <iframe src="/danceON/doc" style="top: 0; left: 0; border:none; height:100%; position: absolute; width:100%;"></iframe> -->
             </div>
 
@@ -224,7 +231,7 @@
                     <div id='p5Canvas'></div>
                     <div id="analyzingNotifier" class="notification is-warning is-hidden" style="padding:0rem 2.5rem 0rem 3rem; margin: 0px 0px 8px 0px;">
                         <button class="button is-warning is-small is-loading"></button>
-                        <button class="button is-warning is-small" style="cursor:default;">estimating and classifying poses...</button>
+                        <button class="button is-warning is-small" style="cursor:default;">classifying poses...</button>
                     </div>
                     <div id="recordingNotifier" class="notification is-danger is-hidden" style="padding:0rem 2.5rem 0rem 3rem; margin: 0px 0px 8px 0px;">
                         <button class="button is-danger is-small is-loading"></button>
@@ -236,6 +243,17 @@
         </div>
     </div>
 </section>
+<footer class="footer">
+  <div class="content has-text-centered">
+    <p>
+        <strong>danceON</strong> by the <a target="_blank" href="https://www.kayladesportes.com/project/dab/">Dancing Across Boundaries! Team at NYU</a> and <a target="_blank" href="https://www.stemfromdance.org">STEM From Dance</a> with support from the National Science Foundation (<a target="_blank" href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1933961&HistoricalAwards=false">STEM+C 1933961</a>).
+    </p>
+    <p>
+        The <a  target="_blank" href="https://github.com/DancingAndDabbing/danceON">source code</a> is licensed
+        <a target="_blank" href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+    </p>
+  </div>
+</footer>
 
 <script src="lib/bulma-quickview.min.js"></script>
 

@@ -20,17 +20,18 @@ let options = {
     webcamToggle: 'webcamToggle',
     videoUpload: 'videoUpload',
     poseUpload: 'poseUpload',
-    videoLocation: 'assets/Balance001.mp4',
-    videoPoses: 'assets/Balance001.json',
+    videoLocation: 'assets/SFD1_trim.mp4',
+    videoPoses: 'assets/SFD1_trim.json',
     videoFramerate: 30, // For Yoav - always 30?
     videoWidth: 640,
     videoHeight: 360,
     videoScale: undefined,
     videoVerticalShift: 0,
     videoHorizontalShift: 0,
-    playing: false, // TODO - use this
+    playing: false, // true or false
+    muted: false,
     recording: false, // true or false
-    audioStream: undefined,
+    audioStream: undefined, // used for recording
     // frameNum?
 
     playbarHeight: 40,
@@ -228,7 +229,8 @@ function setup() {
         }
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
         else if ((!options.webcam) && playBar.overRecordButton()) openRecordingPrompt();
-        else {console.log(tmClassifier)}
+        else if ((!options.webcam) && playBar.overMuteButton()) muteVideo(options, video);
+        else { console.log(tmClassifier) }
         // other ideas include getting the coordinates
         // and getting the skeleton part
         return false; // prevent default
@@ -297,7 +299,7 @@ function draw() {
         if (options.skeleton && !options.recording) skeleton(options, scaledPose);
 
         try {
-            poser.execute(scaledPose, poseHistory); // check if any issues occur on return
+            poser.execute(scaledPose, poseHistory, prediction); // check if any issues occur on return
         } catch (e) {
             errorText(e);
             poser.callEventListenersIfStateChange('debugging');
@@ -389,6 +391,8 @@ function startRecording(options, video) {
     if (options.webcam) return; // don't support webcam recording
     poser.clearMovers(); // clear movers
     poseHistory = []; // clear poseHistory
+
+    muteVideo(options, video, false); // unmute if muted
 
     // Resize the canvas so that the play bar disappears
     // (This would otherwise show up in the video!)

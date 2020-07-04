@@ -21,8 +21,8 @@ function setVideoScale(options, video) {
         resizeCanvas(options.videoWidth, options.videoHeight + options.playbarHeight);
     }
     else {
-        options.videoWidth = 360;
-        options.videoHeight = 640;
+        options.videoWidth = 300;
+        options.videoHeight = 533;
         options.videoScale = options.videoWidth / (video.width);
         resizeCanvas(options.videoWidth, options.videoHeight + options.playbarHeight);
     }
