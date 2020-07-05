@@ -53,6 +53,8 @@ class DrawFunctions {
         let x2 = fallbackToDefault(where.x2, x1+random(-40, 40));
         let y2 = fallbackToDefault(where.y2, y1+random(-40, 40));
 
+        // ensure there is a stroke, regardless if unspecified
+        stroke(fallbackToDefault(how.stroke, 255));
         line(x1, y1, x2, y2);
     }
 
@@ -62,6 +64,8 @@ class DrawFunctions {
         let coordinate_vector = fallbackToDefault(where.coordinate_vector,
             createVector(x, y));
 
+        // ensure there is a stroke, regardless if unspecified
+        stroke(fallbackToDefault(how.stroke, 255));
         point(coordinate_vector);
     }
 
@@ -125,10 +129,12 @@ class DrawFunctions {
         let y = fallbackToDefault(where.y, height/2);
 
         let str = fallbackToDefault(how.str, 'Words, words, words.');
+        let tStyle = fallbackToDefault(how.textStyle, NORMAL);
         let tSize = fallbackToDefault(how.textSize, 32);
         let tAlign = fallbackToDefault(how.textAlign, [CENTER, CENTER]);
         let tFont = fallbackToDefault(how.textFont, 'Helvetica');
 
+        textStyle(tStyle);
         textSize(tSize);
         textAlign(...tAlign);
         textFont(tFont);

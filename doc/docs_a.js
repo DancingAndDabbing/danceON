@@ -2,38 +2,42 @@
 // in index.html
 
 // The A section of content
-let ATITLES = ['circle', 'ellipse', 'point', 'line', 'square'];
+let ATITLES = ['basic', 'all args', 'minimal', 'functions+variables'];
 
-let a1a = `{ what: 'circle' },`
+let a1 = `(pose) => [
 
-let a1b =
-`{
+];`
+
+let a2 = `(pose, poseHistory, tm) => [
+
+];`
+
+let a3 = `() => [];`;
+
+let a4 = `(pose, poseHistory, tm) => {
+
+    // define variables and functions
+    let myVariable = 100;
+
+    // return objects
+return [
+    {
         what: 'circle',
-        when: true,
         where: {
-            x: 30,
-            y: 30
+            x: myVariable,
+            y: myVariable,
         },
         how: {
-            d: 30,
-            fill: color(0, 0, 255, 255),
-            stroke: 0
+            d: myVariable,
         }
-    },
-`
-
-
-let a2 = '// not implemented';
-let a3 = '// not implemented';
-let a4 = '// not implemented';
-let a5 = '// not implemented';
+    }
+];}`
 
 // Must be a list of lists of code examples
 // Probably in the future this could include text and examples
 let ACODE = [
-    [{code:a1a, description: 'minimal'}, {code: a1b, description:'expanded'}],
-    [{code:a2, description: 'n/a'}],
-    [{code:a3, description: 'n/a'}],
-    [{code:a4, description: 'n/a'}],
-    [{code:a5, description: 'n/a'}],
+    [{code:a1, description: 'basic starter with pose object input.'}],
+    [{code:a2, description: 'starter with pose, poseHistory, and tm (teachable machine) inputs.'}],
+    [{code:a3, description: 'the bare minimum to work.'}],
+    [{code:a4, description: 'demonstration for how to declare functions and variables.'}],
 ];

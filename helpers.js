@@ -81,3 +81,10 @@ function muteVideo(options, video, optionalSet) {
 
     return;
 }
+
+async function modelLoader(url) {
+    let modelURL = url + 'model.json';
+    let metadataURL = url + 'metadata.json';
+
+    return tmPose.load(modelURL, metadataURL);
+}

@@ -262,11 +262,14 @@ function draw() {
         return false;
     }
 
+    // Draw the current frame of the video at the proper size
+    image(video, 0, 0, ...resizeVideo(options, video));
+
     // Detection and prediction for Video Mode (nonblocking)
     if (!options.webcam) {
         let frameNum = getFrame(options, video);
         let totalFrames = getTotalFrames(options, video);
-        let pp = tmClassifier.predictForVideo(options, video, frameNum);
+        let pp = tmClassifier.predictForVideo(options, canvas, video, frameNum);
 
         // One or both of these may return undefined if it has not been
         // calculated yet
@@ -281,9 +284,6 @@ function draw() {
         tmClassifier.predictForWebCam(options, video, setPoseInWebCamMode);
         // Draw something equivalent to the playbar at the bottom
     }
-
-    // Draw the current frame of the video at the proper size
-    image(video, 0, 0, ...resizeVideo(options, video));
 
     // Draw on top of the image using pose and prediction
     if (pose) {

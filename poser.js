@@ -19,8 +19,8 @@ class Poser {
         return;
     }
 
-    execute(pose, poseHistory) {
-        let newFuncList = this.declarations.func(pose, poseHistory);
+    execute(pose, poseHistory, tm) {
+        let newFuncList = this.declarations.func(pose, poseHistory, tm);
         if (!newFuncList.length) { // empty
             if (!this.usingOldCode) this.callEventListenersIfStateChange('starting');
             return;
@@ -94,12 +94,13 @@ class Poser {
         // Check to ensure it is a boolean or a function?
 
         let fillVal = fallbackToDefault(bb.how.fill, 255);
-        let strokeVal = fallbackToDefault(bb.how.stroke, 0);
         let strokeWeightVal = fallbackToDefault(bb.how.strokeWeight, 1);
 
         fill(fillVal);
-        stroke(strokeVal);
         strokeWeight(strokeWeightVal);
+
+        if (bb.how.stroke == undefined) noStroke();
+        else stroke(bb.how.stroke);
 
         func.call(this, bb.where, bb.how);
 

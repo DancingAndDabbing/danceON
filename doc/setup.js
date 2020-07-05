@@ -1,15 +1,50 @@
 // Appends code to the documentation page and makes the tabs interactive
 // docs_a.js is the current content created
 
+const ACTIVE_CLASS = 'is-active';
+
 // This finds existing tabs, but probably we'll want to generate them dynamically
 const ATABS = [...document.querySelectorAll('#aTabs li')];
 const ACONTENT = [...document.querySelectorAll('#aContent div')];
 
-const ACTIVE_CLASS = 'is-active';
+const BTABS = [...document.querySelectorAll('#bTabs li')];
+const BCONTENT = [...document.querySelectorAll('#bContent div')];
+
+const CTABS = [...document.querySelectorAll('#cTabs li')];
+const CCONTENT = [...document.querySelectorAll('#cContent div')];
+
+const DTABS = [...document.querySelectorAll('#dTabs li')];
+const DCONTENT = [...document.querySelectorAll('#dContent div')];
+
+const ETABS = [...document.querySelectorAll('#eTabs li')];
+const ECONTENT = [...document.querySelectorAll('#eContent div')];
+
+const FTABS = [...document.querySelectorAll('#fTabs li')];
+const FCONTENT = [...document.querySelectorAll('#fContent div')];
 
 setContent(ACONTENT, ATITLES, ACODE);
 setTabNames(ATABS, ATITLES);
 initTabs(ATABS, ACONTENT);
+
+setContent(BCONTENT, BTITLES, BCODE);
+setTabNames(BTABS, BTITLES);
+initTabs(BTABS, BCONTENT);
+
+setContent(CCONTENT, CTITLES, CCODE);
+setTabNames(CTABS, CTITLES);
+initTabs(CTABS, CCONTENT);
+
+setContent(DCONTENT, DTITLES, DCODE);
+setTabNames(DTABS, DTITLES);
+initTabs(DTABS, DCONTENT);
+
+setContent(ECONTENT, ETITLES, ECODE);
+setTabNames(ETABS, ETITLES);
+initTabs(ETABS, ECONTENT);
+
+setContent(FCONTENT, FTITLES, FCODE);
+setTabNames(FTABS, FTITLES);
+initTabs(FTABS, FCONTENT);
 
 function setContent(contentElements, tabTitles, contentList) {
     contentElements.forEach((c, i) => {

@@ -78,7 +78,8 @@ class TMClassifier {
         }
     }
 
-    predictForVideo(options, video, frame) {
+    // Bug! This still jumps around and skips frames
+    predictForVideo(options, canvas, video, frame) {
         if (!(options.videoLoaded && this.loaded)) return {pose:undefined, prediction:undefined};
         this.checkIfComplete(getTotalFrames(options, video));
         // We already have both the pose and the classification! Simply return
@@ -86,33 +87,24 @@ class TMClassifier {
             return {pose:this.poses[frame], prediction:this.predictions[frame]};
         }
 
-        // We have the frame (e.g. it was loaded as a JSON file)
-        // but we haven't classified it yet
-        if (this.poses[frame]) {
-            let self = this;
-            if (!self.framePredictionStates[frame]) {
-                self.framePredictionStates[frame] = 'triggered';
-                self.model.estimatePose(video.elt)
-                .then(v => self.model.predict(v.posenetOutput))
-                .then(p => self.predictions[frame] = p);
-            }
-            return {pose:this.poses[frame], prediction: undefined};
-        }
-
-        // We don't yet have anything - let's try not blocking
         else {
             let self = this;
             if (!self.framePredictionStates[frame]) {
                 self.framePredictionStates[frame] = 'triggered';
+                //let img = new Image();
+                //img.src = canvas.elt.toDataURL('image/png', 1);
+                //img.width = options.videoWidth;
+                //img.height = options.videoHeight;
+                //self.model.estimatePose(img)
                 self.model.estimatePose(video.elt)
                 .then(v => {
                     convertToML5Structure(v.pose);
-                    self.poses[frame] = v.pose;
+                    if (!self.poses[frame]) self.poses[frame] = v.pose;
                     return self.model.predict(v.posenetOutput)
-                })
-                .then(p => self.predictions[frame] = p);
+                }).then(p => self.predictions[frame] = p);
             }
-            return {pose:undefined, prediction:undefined};
+            if (self.poses[frame]) return {pose:this.poses[frame], prediction:undefined};
+            else return {pose:undefined, prediction:undefined};
         }
     }
 
