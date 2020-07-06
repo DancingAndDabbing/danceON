@@ -86,6 +86,11 @@ function setup() {
     // Dom Elements
     bulmaQuickview.attach();
     playBar = new PlayBar(options);
+    document.getElementById('fontSizeSelector').addEventListener('change', function(e) {
+        let options =  [ ...e.target.children ];
+        let selectedSize = options.filter(o => o.selected)[0].value;
+        changeEditorFontSize(selectedSize);
+    })
 
     // Check the cache and set starting code if it exists
     cacher = new Cacher();

@@ -20,3 +20,8 @@ declarations.setUseWorker(false);
 
 declarations.setMode("ace/mode/javascript");
 editor.setSession(declarations);
+
+// functions
+function changeEditorFontSize(size) {
+    document.getElementById('editor').style.fontSize=`${size}px`;
+}

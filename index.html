@@ -52,7 +52,8 @@
     <div class="modal-content">
         <div class="tile is-ancestor is-vertical is-clipped">
             <div class="tile">
-                <div class="tile is-5 is-vertical is-parent">
+                <!-- Top Row - Controls -->
+                <div class="tile is-4 is-parent">
                     <div class="tile is-child notification is-light">
                         <p class="subtitle">Overlays</p>
                         <div class="field">
@@ -67,9 +68,6 @@
                             <input id="ml" type="checkbox" name="ml" class="switch is-rounded is-outlined">
                             <label for="ml">classifier</label>
                         </div>
-                    </div>
-                    <div class="tile is-child notification is-light">
-                        <p class="subtitle">Settings</p>
                     </div>
                 </div>
                 <div class="tile is-parent">
@@ -111,7 +109,34 @@
                         </div>
                     </div>
                 </div>
+                <div class="tile is-parent">
+                    <div class="tile is-child notification is-light">
+                        <p class="subtitle">Settings</p>
+                        <div class="content">
+                            <div class="field">
+                                font size
+                                <div class="control has-icons-left">
+                                    <div class="select">
+                                        <select id="fontSizeSelector">
+                                            <option>12</option>
+                                            <option>14</option>
+                                            <option selected>16</option>
+                                            <option>18</option>
+                                            <option>24</option>
+                                            <option>36</option>
+                                        </select>
+                                    </div>
+                                    <div class="icon is-small is-left">
+                                        <i class="fas fa-text-height"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Bottom Row - Teachable Machine URL -->
             <div class="tile is-parent">
                 <div class="tile is-child notification is-light">
                     <p class="subtitle">Machine Learning Model</p>
