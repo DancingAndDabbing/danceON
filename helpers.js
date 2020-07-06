@@ -36,7 +36,7 @@ function getTotalFrames(options, video) {
 
 function goForwardOrBackward(options, video, howFar=1) {
     let currentTime = video.time();
-    let newTime = min(0, max(currentTime+howFar/options.videoFramerate, video.duration()));
+    let newTime = max(0, min(currentTime+howFar/options.videoFramerate, video.duration()));
     video.time(newTime);
 }
 

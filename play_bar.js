@@ -26,7 +26,7 @@ class PlayBar {
         if (this.playing) this.playPressed = true;
 
         this.barWidth = map(args.frameNum, 0, args.totalFrames, 0, this.maxBarWidth());
-        this.hoverFrame = floor(map(mouseX, this.buttonWidth*2, width,
+        this.hoverFrame = floor(map(mouseX, this.buttonWidth*3, width,
                                     0, args.totalFrames, true));
     }
 
