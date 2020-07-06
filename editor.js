@@ -1,6 +1,5 @@
 // Setup and variables for the Ace Editor
 
-//ace.config.set('themePath', '/ace');
 let editor = ace.edit("editor", {
     fontSize: 16,
     fontFamily: "Space Mono",
@@ -14,10 +13,6 @@ let fromSetValueCall = false;
 const STARTING_CODE = `(pose) => [
 
 ];`
-
-/*if (typeof(Storage) !== "undefined" && localStorage.getItem('userDeclarations')) {
-    startingCode = localStorage.getItem('userDeclarations');
-}*/
 
 let declarations = new ace.EditSession(STARTING_CODE);
 declarations.setUndoManager(new ace.UndoManager());

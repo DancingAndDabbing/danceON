@@ -8,12 +8,17 @@ class Poser {
         this.declarationsHistory = [this.declarations]; // history of working code
         this.codeChanged = true;
         this.usingOldCode = false;
+
         // We can bind custom events based on where the user has progressed
+        // All but the last event only get fired once on state change
+        // The last event supports cases when the user has working code and
+        // makes a change that is still working code
         this.events = {'starting': [],
                        'editing': [],
                        'debugging': [],
                        'running': [],
-                        '*': []};
+                        '*': [],
+                        'runningChange': []}; // any state change
         this.state = 'starting';
 
         return;
@@ -82,7 +87,11 @@ class Poser {
         });
 
         if (!this.usingOldCode) this.callEventListenersIfStateChange('running');
-        if (this.codeChanged) this.addWorkingCodeToHistory();
+        if (this.codeChanged) {
+            this.addWorkingCodeToHistory();
+            this.callEventListenersAnyWorkingChange();
+            this.codeChanged = false;
+        }
 
     }
 
@@ -110,7 +119,6 @@ class Poser {
 
     update(d) {
         // call on codemirror change
-        // I could append d to a history
         let func;
 
         try { func = new Function(`return ${d}`.trim())(); }
@@ -124,9 +132,6 @@ class Poser {
         this.declarations = {text: d, func: func};
         this.usingOldCode = false;
         this.codeChanged = true;
-        /*if (typeof(Storage) !== "undefined") {
-            localStorage.setItem('userDeclarations', d.trim());
-        }*/
     }
 
     addWorkingCodeToHistory() {
@@ -136,7 +141,6 @@ class Poser {
 
         this.declarationsHistory.unshift(workingDeclarations);
         this.declarationsHistory.length = min(this.declarationsHistory.length, 100);
-        this.codeChanged = false;
     }
 
     // Reverts back to the last working code and returns the current state
@@ -152,7 +156,12 @@ class Poser {
         this.events[eventType].push(eFunc);
     }
 
-    // Calls when state changes
+    // Call anytime the user changes code that works
+    callEventListenersAnyWorkingChange() {
+        this.events['runningChange'].forEach(f => f(this));
+    }
+
+    // Calls when state changes - does not call unless the state changes
     callEventListenersIfStateChange(newState) {
         if (this.state == newState) return;
         this.state = newState;

@@ -47,7 +47,7 @@ let options = {
 }
 
 
-// ----- Global Pose Variables -----
+// ----- Global Variables -----
 let canvas;
 
 let pose; // Current pose
@@ -61,6 +61,8 @@ let recorder; // For storing recording after button pressed
 let playBar; // Controls shown during video mode
 
 let poser; // Code API - This will all parsing/running of user code
+
+let cacher; // Used for saving code to local cache
 
 // -----                                       -----
 
@@ -85,14 +87,20 @@ function setup() {
     bulmaQuickview.attach();
     playBar = new PlayBar(options);
 
-    // Video and pose setup - calls functions in setup_script.js
+    // Check the cache and set starting code if it exists
+    cacher = new Cacher();
+    let storedDeclarations = cacher.retrieveDeclarations();
+    if (storedDeclarations) declarations.setValue(storedDeclarations);
+
+    // Pose setup - add event listeners based on user editing
     poser = new Poser();
     poser.addEventListener('*', (p) => setSteps(p.state));
     ['starting', 'running'].forEach(s => poser.addEventListener(s, (p) => disableRevertButton()));
     ['editing', 'debugging'].forEach(s => poser.addEventListener(s, (p) => disableRevertButton(false)));
-
+    poser.addEventListener('runningChange', p => cacher.saveDeclarations(p.declarations.text));
     //poser.addEventListener('*', (p) => console.log(p.state));
 
+    // Video setup
     video = startVideo(options);
     video.onended((elt) => stopRecording(elt, options));
     tmClassifier.onComplete(() => toggleAnalyzingNotifier(false)); // Callback
@@ -219,9 +227,10 @@ function setup() {
         fromSetValueCall = false;
     });
 
-    // Mouse Click Events on Canvas - Disable if recording
+    // Mouse Click Events on Canvas - Disabled if recording
     canvas.mouseClicked(() => {
-        // animate the cursor
+        // Play button click event - toggles the video and also toggles the
+        // 'analyzing' notifier if it hasn't finished yet
         if ((!options.webcam) && playBar.overPlayButton()) {
             playPauseVideo(undefined, undefined, function() {
                 if (!tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true);
