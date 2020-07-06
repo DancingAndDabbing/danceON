@@ -268,6 +268,7 @@ function setup() {
 
 function draw() {
     background(245);
+    strokeWeight(1); // set unless it gets overridden (happened once?)
 
     // Things still loading - don't try to draw or calculate anything
     if (!tmClassifier.loaded) {

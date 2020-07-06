@@ -32,6 +32,8 @@ class PlayBar {
 
     // Shapes to draw
     draw(args) {
+        push();
+        strokeWeight(1);
         this.drawBackdrop();
         if (this.options.webcam) return;
 
@@ -47,6 +49,7 @@ class PlayBar {
 
         if (!this.playPressed) this.userPrompt();
         if (this.overBar()) this.drawHoverText();
+        pop();
     }
 
     drawBackdrop() {
