@@ -22,6 +22,7 @@ let options = {
     poseUpload: 'poseUpload',
     videoLocation: 'assets/SFD1_trim.mp4',
     videoPoses: 'assets/SFD1_trim.json',
+    videoPredictions: 'assets/SFD1_predictions.json',
     videoFramerate: 30, // For Yoav - always 30?
     videoWidth: 640,
     videoHeight: 360,
@@ -64,14 +65,21 @@ let poser; // Code API - This will all parsing/running of user code
 
 let cacher; // Used for saving code to local cache
 
+let preloadedPredictions; // temporary solution to prevent load times on default video
+
 // -----                                       -----
 
 // ----- Main P5 Functions -----
 function preload() {
-    //preprocessedPoses = preloadJSON(options);
     tmClassifier = new TMClassifier();
     tmClassifier.loadJSON(options);
-    tmClassifier.loadModel(options);
+    // Temporary solution to prevent classifier loading with
+    // embedded video
+    preloadedPredictions =loadJSON(options.videoPredictions);
+    tmClassifier.loadModel(options, function() {
+        tmClassifier.predictions = preloadedPredictions.predictions;
+    });
+
 }
 
 function setup() {
@@ -244,7 +252,7 @@ function setup() {
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
         else if ((!options.webcam) && playBar.overRecordButton()) openRecordingPrompt();
         else if ((!options.webcam) && playBar.overMuteButton()) muteVideo(options, video);
-        else { console.log(tmClassifier) }
+        else { console.log(tmClassifier); }
         // other ideas include getting the coordinates
         // and getting the skeleton part
         return false; // prevent default
@@ -331,6 +339,19 @@ function draw() {
         cursorIcon();
         if (options.mousePosition) cursorPosition(options);
     }
+}
+
+// ----- Key Press Events -----
+function keyPressed() {
+    if (editor.isFocused() || options.webcam || options.recording || !options.videoLoaded) return;
+
+    if (keyCode == 32) playPauseVideo(); // spacebar
+    if (keyCode == RIGHT_ARROW) goForwardOrBackward(options, video, 1);
+    if (keyCode == LEFT_ARROW) goForwardOrBackward(options, video, -1);
+    if (keyCode == UP_ARROW) goForwardOrBackward(options, video, 10);
+    if (keyCode == DOWN_ARROW) goForwardOrBackward(options, video, -10);
+
+    return false;
 }
 
 

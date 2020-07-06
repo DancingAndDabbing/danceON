@@ -34,6 +34,12 @@ function getTotalFrames(options, video) {
     return floor(video.duration() * options.videoFramerate);
 }
 
+function goForwardOrBackward(options, video, howFar=1) {
+    let currentTime = video.time();
+    let newTime = min(0, max(currentTime+howFar/options.videoFramerate, video.duration()));
+    video.time(newTime);
+}
+
 function resizeVideo(options, video) {
     if (!options.webcam) return [
         video.width * options.videoScale,
