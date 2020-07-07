@@ -32,7 +32,7 @@ function setVideoScale(options, video) {
 function videoLoaded(options, video, callback) {
     setVideoScale(options, video);
     video.elt.muted = true;
-    video.elt.playsinline = true;
+    video.elt.playsInline = true;
     video.hide();
 
     options.videoLoaded = true;
