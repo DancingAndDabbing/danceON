@@ -414,6 +414,7 @@ function playPauseVideo(optionalValue, disableLoop, playCallback, pauseCallback)
         video.play();
     }
     else if (options.playing) {
+        video.elt.muted = false;
         video.loop();
         if (playCallback != undefined) playCallback();
     }

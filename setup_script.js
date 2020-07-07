@@ -3,7 +3,8 @@ function startVideo(options, callback) {
     let video;
 
     if (options.webcam) video = createCapture(VIDEO, () => webcamLoaded(options, video, callback));
-    else video = createVideo(options.videoLocation, () => videoLoaded(options, video, callback));
+    else {
+        video = createVideo(options.videoLocation, () => videoLoaded(options, video, callback))};
 
     video.hide();
 
@@ -32,6 +33,8 @@ function setVideoScale(options, video) {
 // On Load Events
 function videoLoaded(options, video, callback) {
     setVideoScale(options, video);
+    video.elt.muted = true;
+    video.elt.playsInline = true;
 
     options.videoLoaded = true;
     if (callback != undefined) callback();
