@@ -226,7 +226,18 @@ function setup() {
         let currentCode = poser.revertToPreviousCode();
         fromSetValueCall = true;
         declarations.setValue(currentCode.text);
-    })
+    });
+
+    // Code upload/download
+    document.getElementById('declarationsDownload')
+    .addEventListener('click', () => downloadDeclarations());
+
+    document.getElementById('declarationsUpload')
+    .addEventListener('change', (ev) => {
+        if (ev.target.value == '') return;
+        uploadDeclarations(ev.target.files[0]);
+    });
+
 
     // Editor/Poser API (declarations is an editor)
     poser.update(declarations.getValue());

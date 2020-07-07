@@ -137,8 +137,35 @@
                 </div>
             </div>
 
-            <!-- Bottom Row - Teachable Machine URL -->
-            <div class="tile is-parent">
+            <!-- Bottom Row -->
+            <div class="tile">
+                <div class="tile is-3 is-parent">
+                    <div class="tile is-child notification is-light">
+                        <p class="subtitle">Code</p>
+                        <div class="field">
+                            <div class="file is-primary">
+                                <label class="file-label">
+                                    <input id="declarationsUpload" accept=".js" class="file-input" type="file" name="upload code">
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">
+                                            Upload
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="button is-primary is-outlined" id="declarationsDownload">
+                            <span class="icon">
+                                <i class="fas fa-download"></i>
+                            </span>
+                            <span>Download</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="tile is-parent">
                 <div class="tile is-child notification is-light">
                     <p class="subtitle">Machine Learning Model</p>
                     <div class="field">
@@ -151,6 +178,7 @@
                         </p>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>

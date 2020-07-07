@@ -81,11 +81,16 @@ editor.completers = [poseCompleter];
 editor.commands.addCommand({
     name: "poseAutoCompleter",
     bindKey: { win: ".", mac: "." },
+    multiSelectAction: "forEach",
     exec: function () {
         let lastToken = getlastToken();
+        editor.insert(".");
+        if (editor.inMultiSelectMode) return;
+
+
         if (!lastToken) return;
 
-        editor.insert(".");
+
         if (lastToken === "pose") {
             poseAutoComplete = true;
             editor.completer.showPopup(editor);
@@ -100,11 +105,14 @@ editor.commands.addCommand({
 editor.commands.addCommand({
     name: "whatAutoCompleter",
     bindKey: { win: ":", mac: ":" },
+    multiSelectAction: "forEach",
     exec: function () {
         let lastToken = getlastToken();
+        editor.insert(":");
+
+        if (editor.inMultiSelectMode == true) return;
         if (!lastToken) return;
 
-        editor.insert(":");
         if (lastToken === "what") {
             whatAutoComplete = true;
             editor.completer.showPopup(editor);
@@ -141,7 +149,40 @@ function getlastToken() {
     return lastToken;
 }
 
-// change editor functions
+// editor settings functions
 function changeEditorFontSize(size) {
     document.getElementById('editor').style.fontSize=`${size}px`;
+}
+
+// Upload/Download
+function uploadDeclarations(newFile) {
+    newFile.text().then(t => {
+        fromSetValueCall = true;
+        declarations.setValue(t);
+    }).catch(e => {
+        console.log(e);
+        alert('Hmmmm. something wrong with the code you uploaded...');
+    });
+}
+
+function downloadDeclarations() {
+    try {
+        let currentDec = declarations.getValue();
+        let codeBlob = new Blob([currentDec], {type : 'text/js'});
+
+        let url = window.URL.createObjectURL(codeBlob);
+        let a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        // the filename you want
+        a.download = 'my_danceON_code.js';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+    } catch (e) {
+        console.log(e);
+        alert('Hmmm. Something wrong downloading your code!')
+    }
+
 }
