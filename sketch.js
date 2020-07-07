@@ -282,6 +282,8 @@ function draw() {
     }
     if (!options.webcam && !options.videoLoaded) {
         loadingText('video');
+        playBar.draw();
+        cursorIcon();
         return false;
     }
 

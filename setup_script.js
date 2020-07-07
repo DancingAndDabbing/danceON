@@ -6,8 +6,6 @@ function startVideo(options, callback) {
     else {
         video = createVideo(options.videoLocation, () => videoLoaded(options, video, callback))};
 
-    video.hide();
-
     return video;
 }
 
@@ -34,7 +32,8 @@ function setVideoScale(options, video) {
 function videoLoaded(options, video, callback) {
     setVideoScale(options, video);
     video.elt.muted = true;
-    video.elt.playsInline = true;
+    video.elt.playsinline = true;
+    video.hide();
 
     options.videoLoaded = true;
     if (callback != undefined) callback();
@@ -44,6 +43,7 @@ function videoLoaded(options, video, callback) {
 
 function webcamLoaded(options, video, callback) {
     setVideoScale(options, video);
+    video.hide();
 
     if (callback != undefined) callback();
 
