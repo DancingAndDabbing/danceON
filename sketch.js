@@ -324,11 +324,12 @@ function draw() {
         if (options.skeleton && !options.recording) skeleton(options, scaledPose);
 
         try {
+            push();
             poser.execute(scaledPose, poseHistory, prediction); // check if any issues occur on return
         } catch (e) {
             errorText(e);
             poser.callEventListenersIfStateChange('debugging');
-        }
+        } finally { pop(); }
     }
 
     // Draw movers here - they should keep going even if the current frame
@@ -417,7 +418,7 @@ function playPauseVideo(optionalValue, disableLoop, playCallback, pauseCallback)
     }
     else if (options.playing) {
         video.elt.muted = false;
-        video.elt.playsinline = false;
+        video.elt.playsiInline = true;
         video.loop();
         if (playCallback != undefined) playCallback();
     }

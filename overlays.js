@@ -3,6 +3,7 @@ function cursorIcon() {
     push();
 
     stroke(255);
+    strokeWeight(1);
     fill('rgba(30, 30, 30, 0.5)');
     circle(constrain(mouseX, 0, width), constrain(mouseY, 0, height), 6);
 
@@ -48,8 +49,10 @@ function errorText(e) {
     background('rgba(30, 30, 30, 0.9)');
     textAlign(CENTER);
     fill(255);
+    stroke(255);
+    strokeWeight(1);
     text('Hmmm...', width/2, height/2);
-    text(e, width/2, height/2 + 20);
+    text(e, 0, height/2 + 20, width);
     pop();
 }
 
@@ -83,6 +86,7 @@ function mlText(options, prediction) {
     textAlign(RIGHT, TOP);
     textLeading(20);
     stroke(30);
+    strokeWeight(1);
     fill(255);
 
     let txt = "";
