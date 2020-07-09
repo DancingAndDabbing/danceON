@@ -106,5 +106,28 @@ function setSteps(state) {
 }
 
 function disableRevertButton(disabled=true) {
-    document.getElementById('revertButton').disabled = disabled;
+    let revertButton = document.getElementById('revertButton');
+    let content = [
+        {text: "Revert Back!", icon: ["fas", "fa-history"]},
+        {text: "Code is Live!", icon: ["fas", "fa-check"]}
+    ]
+
+    revertButton.disabled = disabled;
+
+    revertButton.classList.toggle("is-success", disabled==true);
+    revertButton.classList.toggle("is-warning", disabled==false);
+
+    revertButton.innerHTML = '';
+
+    let span1 = document.createElement('span');
+    let span2 = document.createElement('span');
+    let ii = document.createElement('i');
+
+    span1.classList.add('icon');
+    content[disabled*1].icon.forEach(c => ii.classList.add(c));
+    span1.appendChild(ii);
+    span2.innerHTML = content[disabled*1].text;
+
+    revertButton.appendChild(span1);
+    revertButton.appendChild(span2);
 }

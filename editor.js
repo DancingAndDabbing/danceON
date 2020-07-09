@@ -102,7 +102,7 @@ editor.commands.addCommand({
             poseAutoComplete = true;
             editor.completer.showPopup(editor);
         }
-        else if (poseParts.map(p => 'pose.' + p.caption).includes(lastToken)) {
+        else if (poseParts.map(p => 'pose' + p.caption).includes(lastToken)) {
             posePositionAutoComplete = true;
             editor.completer.showPopup(editor);
         };
@@ -167,7 +167,11 @@ function getlastToken() {
     let session = editor.session;
 
     let curLine = (session.getDocument().getLine(pos.row)).trim();
-    let curTokens = curLine.slice(0, pos.column).split(/\s+/);
+    let noPuctuation = curLine.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+    let noExtraSpaces = noPuctuation.replace(/\s{2,}/g," ");
+
+    let curTokens = noExtraSpaces.slice(0, pos.column).split(/\s+/);
+    console.log(curTokens);
     let curCmd = curTokens[0];
     if (!curCmd) return false;
     let lastToken = curTokens[curTokens.length - 1];

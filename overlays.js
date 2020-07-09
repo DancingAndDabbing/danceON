@@ -49,8 +49,7 @@ function errorText(e) {
     background('rgba(30, 30, 30, 0.9)');
     textAlign(CENTER);
     fill(255);
-    stroke(255);
-    strokeWeight(1);
+    noStroke();
     text('Hmmm...', width/2, height/2);
     text(e, 0, height/2 + 20, width);
     pop();
