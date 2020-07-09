@@ -120,6 +120,22 @@ color: #994CC3\
 .ace-willie-custom .ace_punctuation.ace_operator {\
 color: #0C969B\
 }\
+.ace-willie-custom .ace_gutter-cell.ace_error {\
+background-image: unset;\
+background-position: unset;\
+background-repeat: no-repeat;\
+}\
+.ace-willie-custom .ace_gutter-cell.ace_error:before {\
+content: '!';\
+position: absolute;\
+display: inline-block;\
+left: 4px;\
+background-color: #D3423E;\
+border: 1px solid #D3423E;\
+border-radius: 2px;\
+color: white;\
+font-weight: 900;\
+}\
 .ace-willie-custom .ace_indent-guide {\
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHjy8NJ/AAjgA5fzQUmBAAAAAElFTkSuQmCC) right repeat-y\
 }";

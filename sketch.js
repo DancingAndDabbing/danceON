@@ -243,6 +243,7 @@ function setup() {
     poser.update(declarations.getValue());
     declarations.on('change', function(e) {
         let val = declarations.getValue();
+        parseAndShowErrors(val);
         if (val == '' && !fromSetValueCall && (declarations.curOp.command.name != 'paste')) {
             declarations.setValue(STARTING_CODE);
             return;
@@ -315,11 +316,9 @@ function draw() {
         playBar.update({playing: options.playing, frameNum: frameNum, totalFrames: totalFrames});
     }
 
-    // Detection and prediction for Webcam (blocking)
-    else {
-        tmClassifier.predictForWebCam(options, video, setPoseInWebCamMode);
-        // Draw something equivalent to the playbar at the bottom
-    }
+    // Detection and prediction for Webcam
+    // Sets values for pose/prediction when available - may lag behind image
+    else { tmClassifier.predictForWebCam(options, video, setPoseInWebCamMode);}
 
     // Draw on top of the image using pose and prediction
     if (pose) {
@@ -345,6 +344,8 @@ function draw() {
 
     // Draw movers here - they should keep going even if the current frame
     // does not have a pose
+
+    if (poser.state == 'editing' && !options.recording) warningText();
 
     playBar.draw();
 

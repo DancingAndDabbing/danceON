@@ -8,48 +8,55 @@ let editor = ace.edit("editor", {
 });
 
 // store pose parts for autocompletion
-let poseParts = [{caption: 'nose', value: 'nose'},
-    {caption: 'leftEye', value: 'leftEye'},
-    {caption: 'rightEye', value: 'rightEye'},
-    {caption: 'leftEar', value: 'leftEar'},
-    {caption: 'rightEar', value: 'rightEar'},
-    {caption: 'leftShoulder', value: 'leftShoulder'},
-    {caption: 'rightShoulder', value: 'rightShoulder'},
-    {caption: 'leftElbow', value: 'leftElbow'},
-    {caption: 'rightElbow', value: 'leftElbow'},
-    {caption: 'leftWrist', value: 'leftWrist'},
-    {caption: 'rightWrist', value: 'rightWrist'},
-    {caption: 'leftHip', value: 'leftHip'},
-    {caption: 'rightHip', value: 'rightHip'},
-    {caption: 'leftKnee', value: 'leftKnee'},
-    {caption: 'rightKnee', value: 'rightKnee'},
-    {caption: 'leftAnkle', value: 'leftAnkle'},
-    {caption: 'rightAnkle', value: 'rightAnkle'}];
-let posePartPositions = [{caption: 'x', value: 'x'}, {caption: 'y', value: 'y'}];
+let poseParts = [
+    {caption: 'nose', value: 'nose', meta: 'property'},
+    {caption: 'leftEye', value: 'leftEye', meta: 'property'},
+    {caption: 'rightEye', value: 'rightEye', meta: 'property'},
+    {caption: 'leftEar', value: 'leftEar', meta: 'property'},
+    {caption: 'rightEar', value: 'rightEar', meta: 'property'},
+    {caption: 'leftShoulder', value: 'leftShoulder', meta: 'property'},
+    {caption: 'rightShoulder', value: 'rightShoulder', meta: 'property'},
+    {caption: 'leftElbow', value: 'leftElbow', meta: 'property'},
+    {caption: 'rightElbow', value: 'leftElbow', meta: 'property'},
+    {caption: 'leftWrist', value: 'leftWrist', meta: 'property'},
+    {caption: 'rightWrist', value: 'rightWrist', meta: 'property'},
+    {caption: 'leftHip', value: 'leftHip', meta: 'property'},
+    {caption: 'rightHip', value: 'rightHip', meta: 'property'},
+    {caption: 'leftKnee', value: 'leftKnee', meta: 'property'},
+    {caption: 'rightKnee', value: 'rightKnee', meta: 'property'},
+    {caption: 'leftAnkle', value: 'leftAnkle', meta: 'property'},
+    {caption: 'rightAnkle', value: 'rightAnkle', meta: 'property'}
+];
+
+let posePartPositions = [
+    {caption: 'x', value: 'x', meta: 'property'},
+    {caption: 'y', value: 'y', meta: 'property'}
+];
+
 let whatToDrawWords = [
-    {caption: 'circle', value: " 'circle',"},
-    {caption: 'line', value: " 'line',"},
-    {caption: 'point', value: " 'point',"},
-    {caption: 'ellipse', value: " 'ellipse',"},
-    {caption: 'square', value: " 'square',"},
-    {caption: 'rect', value: " 'rect',"},
-    {caption: 'arc', value: " 'arc',"},
-    {caption: 'circle', value: " 'circle',"},
-    {caption: 'quad', value: " 'quad',"},
-    {caption: 'triangle', value: " 'triangle',"},
-    {caption: 'text', value: " 'text',"},
-]
+    {caption: 'circle', value: " 'circle',", meta: 'string'},
+    {caption: 'line', value: " 'line',", meta: 'string'},
+    {caption: 'point', value: " 'point',", meta: 'string'},
+    {caption: 'ellipse', value: " 'ellipse',", meta: 'string'},
+    {caption: 'square', value: " 'square',", meta: 'string'},
+    {caption: 'rect', value: " 'rect',", meta: 'string'},
+    {caption: 'arc', value: " 'arc',", meta: 'string'},
+    {caption: 'circle', value: " 'circle',", meta: 'string'},
+    {caption: 'quad', value: " 'quad',", meta: 'string'},
+    {caption: 'triangle', value: " 'triangle',", meta: 'string'},
+    {caption: 'text', value: " 'text',", meta: 'string'},
+];
 
 let wordList = [
-    {caption:'pose', value:'pose'},
-    {caption:'fill', value:'fill: color(255, 255, 255, 255),'},
-    {caption:'stroke', value:'stroke: color(255, 255, 255, 255),'},
-    {caption:'strokeWeight', value:'strokeWeight: 1,'},
-    {caption: 'what', value: 'what'},
-    {caption: 'where', value: 'where: {},'},
-    {caption: 'when', value: 'when: true,'},
-    {caption: 'how', value: 'how: {},'},
-    {caption: 'start', value: 'start: {},'},
+    {caption:'pose', value:'pose', meta: 'object'},
+    {caption:'fill', value:'fill: color(255, 255, 255, 255),', meta: 'property'},
+    {caption:'stroke', value:'stroke: color(255, 255, 255, 255),', meta: 'property'},
+    {caption:'strokeWeight', value:'strokeWeight: 1,', meta: 'property'},
+    {caption: 'what', value: 'what', meta: 'property'},
+    {caption: 'where', value: 'where: {},', meta: 'property'},
+    {caption: 'when', value: 'when: true,', meta: 'property'},
+    {caption: 'how', value: 'how: {},', meta: 'property'},
+    {caption: 'start', value: 'start: {},', meta: 'property'},
 ];
 
 let poseAutoComplete = false;
@@ -66,7 +73,7 @@ let poseCompleter = {
             return {
                 caption: word.caption,
                 value: word.value,
-                score: 100
+                meta: word.meta
             };
         });
         poseAutoComplete = false;
@@ -130,12 +137,31 @@ const STARTING_CODE = `(pose) => [
 
 let declarations = new ace.EditSession(STARTING_CODE);
 declarations.setUndoManager(new ace.UndoManager());
-declarations.setUseWorker(false);
+declarations.setUseWorker(false); // default jshint not great
 
 declarations.setMode("ace/mode/javascript");
 editor.setSession(declarations);
 
-// interaction functions
+function parseAndShowErrors(currentCode) {
+    // If we can't use webworkers - then we'll have to do the parsing
+    let errAnnotations = [];
+    try {
+        let tree = esprima.parseScript(currentCode, { tolerant: true });
+        tree.errors.forEach(err => errAnnotations.push(createErrorAnnotation(err)));
+    } catch (e) {
+        errAnnotations.push(createErrorAnnotation(e));
+    } finally { declarations.setAnnotations(errAnnotations); }
+}
+
+function createErrorAnnotation(errMess) {
+    return {
+        row: errMess.lineNumber - 1,
+        column: errMess.column,
+        text: errMess.description,
+        type: "error"
+    }
+}
+
 function getlastToken() {
     let pos = editor.selection.getCursor();
     let session = editor.session;

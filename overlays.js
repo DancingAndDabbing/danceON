@@ -56,6 +56,20 @@ function errorText(e) {
     pop();
 }
 
+function warningText() {
+    push();
+    textAlign(CENTER);
+
+    noStroke();
+    fill('rgba(244, 85, 37, 0.9)')
+    rect(0, 3*(height/4) - 30, width, 40);
+
+    fill(255);
+    textSize(24);
+    text('Warning: Using Old Code...', width/2, 3*(height/4));
+    pop();
+}
+
 function skeleton(options, pose) {
     push();
     textAlign(CENTER);
