@@ -171,7 +171,7 @@ function getlastToken() {
     let noExtraSpaces = noPuctuation.replace(/\s{2,}/g," ");
 
     let curTokens = noExtraSpaces.slice(0, pos.column).split(/\s+/);
-    console.log(curTokens);
+    //console.log(curTokens);
     let curCmd = curTokens[0];
     if (!curCmd) return false;
     let lastToken = curTokens[curTokens.length - 1];

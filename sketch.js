@@ -2,7 +2,6 @@
 // STEM FROM DANCE | NYU - 2020
 
 // BUG - Webcam turns off, but I can't deactivate the light
-// BUG - Webcam seems to be off
 // https://stackoverflow.com/questions/11642926/stop-close-webcam-which-is-opened-by-navigator-getusermedia
 
 // ----- Global Options -----
@@ -204,6 +203,7 @@ function setup() {
     // Teachable Machine Link paste
     document.getElementById(options.mlInput).addEventListener('input', (ev) => {
         let txt = ev.target.value;
+        console.log('here');
 
         // Error cases
         if (txt == '') return changeTMLinkInput('empty'); // dom manipulation
@@ -322,7 +322,8 @@ function draw() {
 
     // Draw on top of the image using pose and prediction
     if (pose) {
-        let scaledPose = scalePoseToWindow(options, pose);
+        let scaledPoseUnfilled = scalePoseToWindow(options, pose);
+        let scaledPose = fillInEmptyPoints(scaledPoseUnfilled, poseHistory);
 
         // Only add to history if the video is not paused, or we are
         // using the webcam
@@ -359,7 +360,8 @@ function draw() {
 
 // ----- Key Press Events -----
 function keyPressed() {
-    if (editor.isFocused() || options.webcam || options.recording || !options.videoLoaded) return;
+    let settingsOverlay = document.getElementById('settings').classList.contains("is-active");
+    if (settingsOverlay || editor.isFocused() || options.webcam || options.recording || !options.videoLoaded) return;
 
     if (keyCode == 32) playPauseVideo(); // spacebar
     if (keyCode == RIGHT_ARROW) goForwardOrBackward(options, video, 1);

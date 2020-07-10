@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="overscroll-behavior-x: none;">
+<html class="has-navbar-fixed-top" lang="en" style="overscroll-behavior-x: none;">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
 <title>danceON!</title>
@@ -18,10 +18,14 @@
     <!-- ESPrima -->
     <script src="https://unpkg.com/esprima@~4.0/dist/esprima.js"></script>
 
+    <!-- Rough -->
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+
     <!-- Style -->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
     <link rel="stylesheet" type="text/css" href="style/mystyles.css">
-    <!--<link rel="stylesheet" type="text/css" href="../sass-dance/css/mystyles.css">-->
+    <!-- <link rel="stylesheet" type="text/css" href="../sass-dance/css/mystyles.css"> -->
+
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
@@ -30,21 +34,28 @@
 
 </head>
 <body>
-<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+<nav style="box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);" class="navbar is-light is-fixed-top" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <li class="is-family-code navbar-item is-size-3 title_text">() => [<i><b>danceON</b></i>]</li>
+        <li class="is-family-code navbar-item is-size-4 title_text">() => [<i><b>danceON</b></i>]</li>
+        <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
     </div>
-    <div class="navbar-end">
-        <div class="navbar-item">
-            <div class="buttons">
-                <button id="settingsButton" onclick="openSettings()" class="button is-light is-inverted is-outlined">
-                    <span class="icon"><i class="fas fa-sliders-h"></i></span>
-                    <span>Controls</span>
-                </button>
-                <button class="button button is-light is-inverted is-outlined" data-show="quickview" data-target="quickviewDefault">
-                    <span class="icon"><i class="far fa-file-code"></i></span>
-                    <span>Reference</span>
-                </button>
+    <div class="navbar-menu" id="navMenu">
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <button id="settingsButton" onclick="openSettings()" class="button is-light">
+                        <span class="icon"><i class="fas fa-sliders-h"></i></span>
+                        <span>Controls</span>
+                    </button>
+                    <button class="button button is-light" data-show="quickview" data-target="quickviewDefault">
+                        <span class="icon"><i class="far fa-file-code"></i></span>
+                        <span>Reference</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -58,7 +69,7 @@
             <div class="tile">
                 <!-- Top Row - Controls -->
                 <div class="tile is-4 is-parent">
-                    <div class="tile is-child notification is-light">
+                    <div class="tile is-child notification is-light box">
                         <p class="subtitle">Overlays</p>
                         <div class="field">
                             <input id="mousePosition" type="checkbox" name="mousePosition" class="switch is-rounded is-outlined">
@@ -75,7 +86,7 @@
                     </div>
                 </div>
                 <div class="tile is-parent">
-                    <div class="tile is-child notification is-light">
+                    <div class="tile is-child notification is-light box">
                         <p class="subtitle">Video Sources</p>
                         <div class="content">
                             <div class="buttons has-addons">
@@ -114,7 +125,7 @@
                     </div>
                 </div>
                 <div class="tile is-parent">
-                    <div class="tile is-child notification is-light">
+                    <div class="tile is-child notification is-light box">
                         <p class="subtitle">Settings</p>
                         <div class="content">
                             <div class="field">
@@ -143,7 +154,7 @@
             <!-- Bottom Row -->
             <div class="tile">
                 <div class="tile is-3 is-parent">
-                    <div class="tile is-child notification is-light">
+                    <div class="tile is-child notification is-light box">
                         <p class="subtitle">Code</p>
                         <div class="field">
                             <div class="file is-primary">
@@ -169,7 +180,7 @@
                     </div>
                 </div>
                 <div class="tile is-parent">
-                <div class="tile is-child notification is-light">
+                <div class="tile is-child notification is-light box">
                     <p class="subtitle">Machine Learning Model</p>
                     <div class="field">
                         <p class="control has-icons-left">
@@ -301,18 +312,31 @@
     </div>
 </section>
 <footer class="footer">
-  <div class="content has-text-centered">
-    <p>
-        <strong>danceON</strong> by the <a target="_blank" href="https://www.kayladesportes.com/project/dab/">Dancing Across Boundaries! Team at NYU</a> and <a target="_blank" href="https://www.stemfromdance.org">STEM From Dance</a> with support from the National Science Foundation (<a target="_blank" href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1933961&HistoricalAwards=false">STEM+C 1933961</a>).
-    </p>
-    <p>
-        The <a  target="_blank" href="https://github.com/DancingAndDabbing/danceON">source code</a> is licensed
-        <a target="_blank" href="http://opensource.org/licenses/mit-license.php">MIT</a>.
-    </p>
+  <div class="container">
+      <div class="columns">
+          <div class="column is-narrow has-text-centered">
+              <svg width="250" height="90" id="roughLogo" style="cursor:pointer;"></svg>
+          </div>
+          <div class="column">
+              <div class="content">
+                  <p>
+                      <strong>danceON</strong> by the <a target="_blank" href="https://www.kayladesportes.com/project/dab/">Dancing Across Boundaries! Team at NYU</a> and <a target="_blank" href="https://www.stemfromdance.org">STEM From Dance</a> with support from the National Science Foundation (<a target="_blank" href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1933961&HistoricalAwards=false">STEM+C 1933961</a>).
+                  </p>
+                  <p>
+                      The <a  target="_blank" href="https://github.com/DancingAndDabbing/danceON">source code</a> is licensed
+                      <a target="_blank" href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+                  </p>
+              </div>
+
+          </div>
+      </div>
   </div>
 </footer>
 
+<script src="topnav_handler.js"></script>
 <script src="lib/bulma-quickview.min.js"></script>
+
+<script src="rough_logo.js"></script>
 
 <script src="helpers.js"></script>
 <script src="cacher.js"></script>

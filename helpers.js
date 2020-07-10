@@ -94,3 +94,23 @@ async function modelLoader(url) {
 
     return tmPose.load(modelURL, metadataURL);
 }
+
+// Good example around frame 260
+function fillInEmptyPoints(pose, poseHistory) {
+    //return pose;
+    if (poseHistory.length == 0) return pose;
+    let filledInPose = {};
+    pose.keypoints.forEach((p) => {
+        filledInPose[p.part] = {
+            x: sanitize(p.position.x, poseHistory[0][p.part].x),
+            y: sanitize(p.position.y, poseHistory[0][p.part].y),
+            confidence: p.score
+        }
+    });
+    return filledInPose;
+}
+
+function sanitize(val, def) {
+    if (isNaN(val)) return def;
+    else return val;
+}
