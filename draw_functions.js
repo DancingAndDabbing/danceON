@@ -142,4 +142,39 @@ class DrawFunctions {
         pop();
     }
 
+    // -- General Shape Functions --
+    shape(where, how) {
+        let kind = fallbackToDefault(how.kind, undefined);
+        if (how.close) close = CLOSE;
+        let close = fallbackToDefault(how.close, false);
+
+        let vertices = [];
+
+        // Figure out the highest number x/y param
+        let numPairs = Math.max(...Object.keys(where)
+            .map(k => Number(k.substr(1))) // remove the x or y
+            .filter(n => n)); // filter out
+        if (numPairs == undefined) numPairs = 0;
+
+        // Generate a list of vertices if and only if both x and y vertices are present
+        for (var i = 1; i <= numPairs; i++) {
+            if (where[`x${i}`] != undefined && where[`y${i}`] != undefined) {
+                vertices.push([where[`x${i}`], where[`y${i}`]])
+            }
+        }
+
+        if (!vertices.length) {
+            vertices.push([random(width), random(height)]);
+            vertices.push([random(width), random(height)]);
+            vertices.push([random(width), random(height)]);
+        }
+
+        push();
+        beginShape(kind);
+        vertices.forEach(v => vertex(...v));
+        endShape(close);
+        pop();
+
+    }
+
 }
