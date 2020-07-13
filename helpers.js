@@ -99,13 +99,21 @@ async function modelLoader(url) {
 function fillInEmptyPoints(pose, poseHistory) {
     //return pose;
     if (poseHistory.length == 0) return pose;
-    let filledInPose = {};
+    let filledInPose = {keypoints: []};
     pose.keypoints.forEach((p) => {
         filledInPose[p.part] = {
             x: sanitize(p.position.x, poseHistory[0][p.part].x),
             y: sanitize(p.position.y, poseHistory[0][p.part].y),
             confidence: p.score
         }
+        filledInPose.keypoints.push({
+            position: {
+                x: filledInPose[p.part].x,
+                y: filledInPose[p.part].y,
+            },
+            part: p.part,
+            score: p.score
+        });
     });
     return filledInPose;
 }
