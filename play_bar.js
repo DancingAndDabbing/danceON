@@ -38,7 +38,7 @@ class PlayBar {
         if (this.options.webcam) return;
 
         this.drawPlayButton();
-        this.drawMuteButton();
+        //this.drawMuteButton();
         this.drawRecordButton();
 
         this.drawDivider(this.buttonWidth);

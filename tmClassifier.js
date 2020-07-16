@@ -82,6 +82,9 @@ class TMClassifier {
     predictForVideo(options, canvas, video, frame) {
         if (!(options.videoLoaded && this.loaded)) return {pose:undefined, prediction:undefined};
         this.checkIfComplete(getTotalFrames(options, video));
+        if (this.poses[frame]) return {pose:this.poses[frame], prediction:undefined};
+        else return {pose:undefined, prediction:undefined};
+        return {pose:this.poses[frame], prediction:this.predictions[frame]};
         // We already have both the pose and the classification! Simply return
         if (this.poses[frame] && this.predictions[frame]) {
             return {pose:this.poses[frame], prediction:this.predictions[frame]};
