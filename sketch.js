@@ -40,10 +40,11 @@ let options = {
     modelURL: 'https://teachablemachine.withgoogle.com/models/Lp16aC0Y2/',
 
     // UI Overlay toggles
-    toggles: ['mousePosition', 'skeleton', 'ml'],
+    toggles: ['mousePosition', 'skeleton', 'ml', 'teachableMachineOn'],
     mousePosition: false,
     skeleton: false,
-    ml: false
+    ml: false,
+    teachableMachineOn: true,
 }
 
 
@@ -77,6 +78,7 @@ function preload() {
     preloadedPredictions =loadJSON(options.videoPredictions);
     tmClassifier.loadModel(options, function() {
         tmClassifier.predictions = preloadedPredictions.predictions;
+        tmClassifier.gotAllFrames = true;
     });
 
 }
@@ -122,7 +124,7 @@ function setup() {
         if (!options.webcam) return;
         options.webcam = false;
         handleVideoToggle(() => {
-            if (!tmClassifier.gotAllFrames) {
+            if (!tmClassifier.gotAllFrames || !options.teachableMachineOn) {
                 toggleAnalyzingNotifier(true);
             }
         });
@@ -160,7 +162,7 @@ function setup() {
 
         try {
             handleVideoToggle(() => { // callback after video loads
-                toggleAnalyzingNotifier(true);
+                if (options.teachableMachineOn) toggleAnalyzingNotifier(true);
                 tmClassifier.resetForNewVideo();
                 options.videoLoaded = true;
                 updateVideoFileText(newFileURL);
@@ -173,7 +175,7 @@ function setup() {
             options.videoLocation = oldVideoLocation;
             handleVideoToggle(() => {
                 if (!tmClassifier.gotAllFrames) {
-                    toggleAnalyzingNotifier(true);
+                    if (options.teachableMachineOn) toggleAnalyzingNotifier(true);
                     playPauseVideo(true);
                 }
                 options.videoLoaded = true;
@@ -203,7 +205,6 @@ function setup() {
     // Teachable Machine Link paste
     document.getElementById(options.mlInput).addEventListener('input', (ev) => {
         let txt = ev.target.value;
-        console.log('here');
 
         // Error cases
         if (txt == '') return changeTMLinkInput('empty'); // dom manipulation
@@ -220,6 +221,12 @@ function setup() {
                 options.modelURL = oldModelURL;
             })
         );
+    });
+
+    // Teachable Machine Toggle Button (enable or disable the GUI notifier)
+    document.getElementById('teachableMachineOn').addEventListener('change', e => {
+        if (e.target.checked && !tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true);
+        else toggleAnalyzingNotifier(false);
     });
 
     document.getElementById('revertButton').addEventListener('click', () => {
@@ -258,7 +265,7 @@ function setup() {
         // 'analyzing' notifier if it hasn't finished yet
         if ((!options.webcam) && playBar.overPlayButton()) {
             playPauseVideo(undefined, undefined, function() {
-                if (!tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true);
+                if (!tmClassifier.gotAllFrames && !options.teachableMachineOn) toggleAnalyzingNotifier(true);
             });
         }
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());

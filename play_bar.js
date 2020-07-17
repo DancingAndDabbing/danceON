@@ -38,7 +38,7 @@ class PlayBar {
         if (this.options.webcam) return;
 
         this.drawPlayButton();
-        //this.drawMuteButton();
+        this.drawMuteButton();
         this.drawRecordButton();
 
         this.drawDivider(this.buttonWidth);
@@ -108,10 +108,10 @@ class PlayBar {
         vertex(this.buttonWidth + 16, this.options.videoHeight+14);
 
         vertex(this.buttonWidth + 22, this.options.videoHeight+8);
-        vertex(this.buttonWidth + 22, height-8);
+        vertex(this.buttonWidth + 22, this.options.videoHeight+32);
 
-        vertex(this.buttonWidth + 16, height-14);
-        vertex(this.buttonWidth + 6, height-14);
+        vertex(this.buttonWidth + 16, this.options.videoHeight+26);
+        vertex(this.buttonWidth + 6, this.options.videoHeight+26);
         endShape(CLOSE);
 
         noFill();
@@ -126,9 +126,9 @@ class PlayBar {
 
         // draw a 'waveform' if not
         else {
-            arc(this.buttonWidth+6, height - 20, 40, 40, -QUARTER_PI/2, QUARTER_PI/2);
-            arc(this.buttonWidth+10, height - 20, 40, 40, -QUARTER_PI/1.5, QUARTER_PI/1.5);
-            arc(this.buttonWidth+14, height - 20, 40, 40, -QUARTER_PI/1.2, QUARTER_PI/1.2);
+            arc(this.buttonWidth+6, this.options.videoHeight + 20, 40, 40, -QUARTER_PI/2, QUARTER_PI/2);
+            arc(this.buttonWidth+10, this.options.videoHeight + 20, 40, 40, -QUARTER_PI/1.5, QUARTER_PI/1.5);
+            arc(this.buttonWidth+14, this.options.videoHeight + 20, 40, 40, -QUARTER_PI/1.2, QUARTER_PI/1.2);
         }
 
         pop();
