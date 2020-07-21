@@ -94,9 +94,7 @@ editor.commands.addCommand({
         editor.insert(".");
         if (editor.inMultiSelectMode) return;
 
-
         if (!lastToken) return;
-
 
         if (lastToken === "pose") {
             poseAutoComplete = true;

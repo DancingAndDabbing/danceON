@@ -36,6 +36,11 @@ function videoLoaded(options, video, callback) {
     video.hide();
 
     options.videoLoaded = true;
+
+    // fix the size of the editor in case the video size changes
+    // this prevents a bug in which we lose the horizontal scrollbar
+    options.editor.resize(true);
+
     if (callback != undefined) callback();
 
     console.log('Video Loaded!');
@@ -45,6 +50,7 @@ function webcamLoaded(options, video, callback) {
     setVideoScale(options, video);
     video.hide();
 
+    options.editor.resize(true);
     if (callback != undefined) callback();
 
     console.log('Webcam Loaded!');

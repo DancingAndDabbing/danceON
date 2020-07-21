@@ -34,6 +34,8 @@ let options = {
     audioStream: undefined, // used for recording
     // frameNum?
 
+    editor: editor,
+
     playbarHeight: 40,
 
     mlInput: 'mlInput',
@@ -408,7 +410,7 @@ function handleVideoToggle(callback=undefined) {
     video.onended((elt) => stopRecording(elt, options));
 }
 
-function handleWebCamToggle() {
+function handleWebCamToggle(callback=undefined) {
     options.playing = false;
     options.videoLoaded = false; // make this consistent with video source
 
@@ -421,6 +423,7 @@ function handleWebCamToggle() {
     video = startVideo(options, () => {
         toggleAnalyzingNotifier(false);
         options.videoLoaded = true;
+        if (callback != undefined) callback();
     });
 }
 
