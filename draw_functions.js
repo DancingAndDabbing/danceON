@@ -142,32 +142,14 @@ class DrawFunctions {
         pop();
     }
 
-    // -- General Shape Functions --
+    // -- Generic Shape Functions --
     shape(where, how) {
         let kind = fallbackToDefault(how.kind, undefined);
-        if (how.close) close = CLOSE;
         let close = fallbackToDefault(how.close, false);
+        if (how.close) close = CLOSE;
+        else close = undefined;
 
-        let vertices = [];
-
-        // Figure out the highest number x/y param
-        let numPairs = Math.max(...Object.keys(where)
-            .map(k => Number(k.substr(1))) // remove the x or y
-            .filter(n => n)); // filter out
-        if (numPairs == undefined) numPairs = 0;
-
-        // Generate a list of vertices if and only if both x and y vertices are present
-        for (var i = 1; i <= numPairs; i++) {
-            if (where[`x${i}`] != undefined && where[`y${i}`] != undefined) {
-                vertices.push([where[`x${i}`], where[`y${i}`]])
-            }
-        }
-
-        if (!vertices.length) {
-            vertices.push([random(width), random(height)]);
-            vertices.push([random(width), random(height)]);
-            vertices.push([random(width), random(height)]);
-        }
+        let vertices = generateVertices(where);
 
         push();
         beginShape(kind);
@@ -176,5 +158,51 @@ class DrawFunctions {
         pop();
 
     }
+
+    curve(where, how) {
+        let close = fallbackToDefault(how.close, false);
+        if (how.close) close = CLOSE;
+        else close = undefined;
+
+        let tightness = fallbackToDefault(how.tightness, 0.0);
+
+        let vertices = generateVertices(where);
+
+        push();
+        curveTightness(tightness);
+        beginShape();
+        vertices.forEach(v => curveVertex(...v));
+        endShape(close);
+        pop();
+    }
+
+}
+
+// Used to create a list of vertices useful in drawing shapes and curves
+// {x1:2, x2:2, y1:1.1, y2:2.2, y3:3.3} -> [[1, 1.1], [2, 2.2]]
+function generateVertices(where) {
+    let vertices = [];
+
+    // Figure out the highest number x/y param
+    let numPairs = Math.max(...Object.keys(where)
+        .map(k => Number(k.substr(1))) // remove the x or y
+        .filter(n => n)); // filter out
+    if (numPairs == undefined) numPairs = 0;
+
+    // Generate a list of vertices if and only if both x and y vertices are present
+    for (var i = 1; i <= numPairs; i++) {
+        if (where[`x${i}`] != undefined && where[`y${i}`] != undefined) {
+            vertices.push([where[`x${i}`], where[`y${i}`]])
+        }
+    }
+
+    if (!vertices.length) {
+        vertices.push([random(width), random(height)]);
+        vertices.push([random(width), random(height)]);
+        vertices.push([random(width), random(height)]);
+        vertices.push([random(width), random(height)]);
+    }
+
+    return vertices;
 
 }
