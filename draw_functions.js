@@ -176,6 +176,23 @@ class DrawFunctions {
         pop();
     }
 
+    // -- Custom Shape Functions --
+    heart(where, how) {
+        let x = fallbackToDefault(where.x, random(width));
+        let y = fallbackToDefault(where.y, random(height));
+        let d = fallbackToDefault(how.d, 30);
+
+        let xHeart = heartVals.x.map(v => v*d + x);
+        let yHeart = heartVals.y.map(v => v*d + y);
+
+
+        push();
+        beginShape();
+        xHeart.forEach((xVal, i) => vertex(xVal, yHeart[i]));
+        endShape();
+        pop();
+    }
+
 }
 
 // Used to create a list of vertices useful in drawing shapes and curves
@@ -205,4 +222,11 @@ function generateVertices(where) {
 
     return vertices;
 
+}
+
+// Custom data for createing a heart
+const heartVals = {
+    x: Array.from(new Array(628)).map((v, i) => (1/32) * 16 * Math.pow(Math.sin(i/10), 3)),
+    y: Array.from(new Array(628)).map((v, i) =>
+        (-1/32)*(13 * Math.cos(i/10) - 5*Math.cos(2*(i/10)) - 2*Math.cos(3*(i/10))- Math.cos(4*(i/10))))
 }

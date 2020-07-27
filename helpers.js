@@ -15,6 +15,15 @@ function historySubset(pHistory, limb, param, start=0, end=1, interval=1) {
 
 function inRange(x, min, max) { return ((x-min)*(x-max) <= 0); }
 
+// Array Generators
+function repeatOne(howMany=1) {
+    return Array.from(new Array(howMany)).map((v, i) => 1);
+}
+
+function countTo(howMany=1) {
+    return Array.from(new Array(howMany)).map((v, i) => i);
+}
+
 // Internal Helper Functions
 function getFrame(options, video) {
     if (!video) return 0;

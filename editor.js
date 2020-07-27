@@ -45,6 +45,9 @@ let whatToDrawWords = [
     {caption: 'quad', value: " 'quad',", meta: 'string'},
     {caption: 'triangle', value: " 'triangle',", meta: 'string'},
     {caption: 'text', value: " 'text',", meta: 'string'},
+    {caption: 'shape', value: " 'shape',", meta: 'string'},
+    {caption: 'curve', value: " 'curve',", meta: 'string'},
+    {caption: 'heart', value: " 'heart',", meta: 'string'},
 ];
 
 let wordList = [
