@@ -126,8 +126,8 @@ function setup() {
         if (!options.webcam) return;
         options.webcam = false;
         handleVideoToggle(() => {
-            if (!tmClassifier.gotAllFrames || !options.teachableMachineOn) {
-                toggleAnalyzingNotifier(true);
+            if (!tmClassifier.gotAllFrames) {
+                toggleAnalyzingNotifier(true, options);
             }
         });
     });
@@ -164,7 +164,7 @@ function setup() {
 
         try {
             handleVideoToggle(() => { // callback after video loads
-                if (options.teachableMachineOn) toggleAnalyzingNotifier(true);
+                toggleAnalyzingNotifier(true, options);
                 tmClassifier.resetForNewVideo();
                 options.videoLoaded = true;
                 updateVideoFileText(newFileURL);
@@ -177,7 +177,7 @@ function setup() {
             options.videoLocation = oldVideoLocation;
             handleVideoToggle(() => {
                 if (!tmClassifier.gotAllFrames) {
-                    if (options.teachableMachineOn) toggleAnalyzingNotifier(true);
+                    toggleAnalyzingNotifier(true, options);
                     playPauseVideo(true);
                 }
                 options.videoLoaded = true;
@@ -227,7 +227,7 @@ function setup() {
 
     // Teachable Machine Toggle Button (enable or disable the GUI notifier)
     document.getElementById('teachableMachineOn').addEventListener('change', e => {
-        if (e.target.checked && !tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true);
+        if (e.target.checked && !tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true, options);
         else toggleAnalyzingNotifier(false);
     });
 
@@ -267,7 +267,7 @@ function setup() {
         // 'analyzing' notifier if it hasn't finished yet
         if ((!options.webcam) && playBar.overPlayButton()) {
             playPauseVideo(undefined, undefined, function() {
-                if (!tmClassifier.gotAllFrames && !options.teachableMachineOn) toggleAnalyzingNotifier(true);
+                if (!tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true, options);
             });
         }
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());

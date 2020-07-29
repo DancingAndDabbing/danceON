@@ -43,8 +43,12 @@ function toggleRecordingNotifier(visible=true) {
 
 }
 
-function toggleAnalyzingNotifier(visible=true) {
-    if (visible) document.getElementById("analyzingNotifier").classList.remove("is-hidden");
+function toggleAnalyzingNotifier(visible=true, options) {
+    let tmAnalyzingOn;
+    if (options) tmAnalyzingOn = options.teachableMachineOn;
+    else tmAnalyzingOn = true;
+
+    if (visible && tmAnalyzingOn) document.getElementById("analyzingNotifier").classList.remove("is-hidden");
     else document.getElementById("analyzingNotifier").classList.add("is-hidden");
 
 }
