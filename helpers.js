@@ -128,6 +128,6 @@ function fillInEmptyPoints(pose, poseHistory) {
 }
 
 function sanitize(val, def) {
-    if (isNaN(val)) return def;
+    if (isNaN(val) || val == 0) return def;
     else return val;
 }
