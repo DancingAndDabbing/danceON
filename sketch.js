@@ -19,9 +19,9 @@ let options = {
     webcamToggle: 'webcamToggle',
     videoUpload: 'videoUpload',
     poseUpload: 'poseUpload',
-    videoLocation: 'assets/SFD1_trim.mp4',
-    videoPoses: 'assets/SFD1_trim.json',
-    videoPredictions: 'assets/SFD1_predictions.json',
+    videoLocation: 'assets/SFD_Nov.mp4',
+    videoPoses: 'assets/SFD_Nov.json',
+    videoPredictions: 'assets/SFD_Nov_predictions.json',
     videoFramerate: 30, // For Yoav - always 30?
     videoWidth: 640,
     videoHeight: 360,
@@ -273,7 +273,7 @@ function setup() {
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
         else if ((!options.webcam) && playBar.overRecordButton()) openRecordingPrompt();
         else if ((!options.webcam) && playBar.overMuteButton()) muteVideo(options, video);
-        else { console.log(tmClassifier); }
+        else { console.log(JSON.stringify(tmClassifier.predictions)); }
         // other ideas include getting the coordinates
         // and getting the skeleton part
         return false; // prevent default

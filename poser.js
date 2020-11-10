@@ -24,6 +24,8 @@ class Poser {
         return;
     }
 
+
+    // Shannon's idea - when could be an object, not just a boolean
     execute(pose, poseHistory, tm) {
         let newFuncList = this.declarations.func(pose, poseHistory, tm);
         if (!newFuncList.length) { // empty
