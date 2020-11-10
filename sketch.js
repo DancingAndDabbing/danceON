@@ -273,7 +273,7 @@ function setup() {
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
         else if ((!options.webcam) && playBar.overRecordButton()) openRecordingPrompt();
         else if ((!options.webcam) && playBar.overMuteButton()) muteVideo(options, video);
-        else { console.log(JSON.stringify(tmClassifier.predictions)); }
+        else { console.log(tmClassifier); }
         // other ideas include getting the coordinates
         // and getting the skeleton part
         return false; // prevent default
