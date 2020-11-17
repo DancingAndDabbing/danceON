@@ -4,6 +4,9 @@
 const ACTIVE_CLASS = 'is-active';
 
 // This finds existing tabs, but probably we'll want to generate them dynamically
+const ST_TABS = [...document.querySelectorAll('#stTabs li')];
+const ST_CONTENT = [...document.querySelectorAll('#stContent div')];
+
 const ATABS = [...document.querySelectorAll('#aTabs li')];
 const ACONTENT = [...document.querySelectorAll('#aContent div')];
 
@@ -21,6 +24,10 @@ const ECONTENT = [...document.querySelectorAll('#eContent div')];
 
 const FTABS = [...document.querySelectorAll('#fTabs li')];
 const FCONTENT = [...document.querySelectorAll('#fContent div')];
+
+setContent(ST_CONTENT, ST_TITLES, ST_CODE);
+setTabNames(ST_TABS, ST_TITLES);
+initTabs(ST_TABS, ST_CONTENT);
 
 setContent(ACONTENT, ATITLES, ACODE);
 setTabNames(ATABS, ATITLES);

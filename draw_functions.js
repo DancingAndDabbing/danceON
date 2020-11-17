@@ -106,7 +106,9 @@ class DrawFunctions {
         let br = fallbackToDefault(how.br, tl);
         let bl = fallbackToDefault(how.bl, tl);
 
-        square(x, y, s, s, tl, tr, br, bl);
+        // p5 square has been buggy - it complains when side is passed twice,
+        // but does not work otherwise.
+        rect(x, y, s, s, tl, tr, br, bl);
     }
 
     triangle(where, how) {
