@@ -52,8 +52,8 @@ let whatToDrawWords = [
 
 let wordList = [
     {caption:'pose', value:'pose', meta: 'object'},
-    {caption:'fill', value:'fill: color(255, 255, 255, 255),', meta: 'property'},
-    {caption:'stroke', value:'stroke: color(255, 255, 255, 255),', meta: 'property'},
+    {caption:'fill', value:'fill: "white",', meta: 'property'},
+    {caption:'stroke', value:'stroke: "white",', meta: 'property'},
     {caption:'strokeWeight', value:'strokeWeight: 1,', meta: 'property'},
     {caption: 'what', value: 'what', meta: 'property'},
     {caption: 'where', value: 'where: {},', meta: 'property'},

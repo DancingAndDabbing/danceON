@@ -2,7 +2,7 @@
 // in index.html
 
 // The A section of content
-let ST_TITLES = ['Step 1', 'Step 2', 'Step 3', 'Step 4'];
+let ST_TITLES = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5'];
 
 let st1 = `(pose) => [
     {
@@ -17,16 +17,26 @@ let st2 = `(pose) => [
             x: 200,
             y: 200
         },
+    }
+];`
+
+let st3 = `(pose) => [
+    {
+        what: 'circle',
+        where: {
+            x: 200,
+            y: 200
+        },
         how: {
             d: 40,
-            fill: color(255, 255, 255, 0),
-            stroke: color(255, 255, 255, 255),
+            fill: "purple",
+            stroke: "white",
             strokeWeight: 4,
         },
     }
 ];`
 
-let st3 = `(pose) => [
+let st4 = `(pose) => [
     {
         what: 'circle',
         where: {
@@ -35,18 +45,18 @@ let st3 = `(pose) => [
         },
         how: {
             d: 40,
-            fill: color(255, 255, 255, 0),
-            stroke: color(255, 255, 255, 255),
+            fill: "purple",
+            stroke: "white",
             strokeWeight: 4,
         },
     }
 ];`;
 
-let st4 = `(pose) => [
+let st5 = `(pose) => [
     {
         what: 'square',
         where: { x: 0, y: 0 },
-        how: { fill: color(0, 0,0, 255), s: 1000 },
+        how: { fill: "black", s: 1000 },
     },
     {
         what: 'circle',
@@ -56,8 +66,8 @@ let st4 = `(pose) => [
         },
         how: {
             d: 40,
-            fill: color(255, 255, 255, 0),
-            stroke: color(255, 255, 255, 255),
+            fill: "black",
+            stroke: "white",
             strokeWeight: 4,
 
         },
@@ -96,7 +106,7 @@ let st4 = `(pose) => [
         },
         how: {
             strokeWeight: 4,
-            stroke: color(255, 255, 255, 255),
+            stroke: "white",
         },
     },
     {
@@ -121,7 +131,7 @@ let st4 = `(pose) => [
         },
         how: {
             strokeWeight: 4,
-            stroke: color(255, 255, 255, 255),
+            stroke: "white",
         },
     },
 ];`
@@ -130,7 +140,8 @@ let st4 = `(pose) => [
 // Probably in the future this could include text and examples
 let ST_CODE = [
     [{code:st1, description: 'just a circle. who knows where it goes?'}],
-    [{code:st2, description: 'humble circle. not much more, but it knows what it is and where it wants to be.'}],
-    [{code:st3, description: 'circle that moves as we do!'}],
-    [{code:st4, description: 'whole stick figure.'}],
+    [{code:st2, description: 'circle, but less crazy.'}],
+    [{code:st3, description: 'humble circle. not much more, but it knows what it is and where it wants to be.'}],
+    [{code:st4, description: 'circle that moves as we do!'}],
+    [{code:st5, description: 'whole stick figure.'}],
 ];

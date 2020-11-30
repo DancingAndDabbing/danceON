@@ -341,8 +341,6 @@ function draw() {
             if (poseHistory.length >= 1000) poseHistory.pop();
         }
 
-        if (options.skeleton && !options.recording) skeleton(options, scaledPose);
-
         try {
             push();
             poser.execute(scaledPose, poseHistory, prediction); // check if any issues occur on return
@@ -350,6 +348,8 @@ function draw() {
             errorText(e);
             poser.callEventListenersIfStateChange('debugging');
         } finally { pop(); }
+
+        if (options.skeleton && !options.recording) skeleton(options, scaledPose);
     }
 
     // Draw movers here - they should keep going even if the current frame
