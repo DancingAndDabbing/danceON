@@ -7,10 +7,18 @@ function fallbackToDefault(val, def) {
 }
 
 // pose history subset
-function historySubset(pHistory, limb, param, start=0, end=1, interval=1) {
+function pastParts(pHistory, limb, param, start=0, end=1, interval=1) {
+    if (pHistory.length == 0) return pose[limb][param];
     return pHistory.slice(start, end)
                    .filter((p, i) => i % interval === 0)
                    .map(p => p[limb][param])
+}
+
+function pastPose(pHistory, frames=0) {
+    // bad practice!! But prevents a debugging error at the beginning
+    if (pHistory.length == 0) return pose;
+
+    else return pHistory[Math.min(pHistory.length - 1, frames)];
 }
 
 function inRange(x, min, max) { return ((x-min)*(x-max) <= 0); }

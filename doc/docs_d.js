@@ -28,9 +28,17 @@ let d2 = `(pose, poseHistory) => [
     {
         what: 'circle',
         where: {
+            // get the pose from 30 frames or 1 second ago
+            x: pastPose(poseHistory, 30).nose.x,
+            y: pastPose(poseHistory, 30).nose.y,
+        },
+    },
+    {
+        what: 'circle',
+        where: {
             // look to the last 30 frames
-            x: historySubset(poseHistory, 'leftWrist', 'x', 0, 30, 1),
-            y: historySubset(poseHistory, 'leftWrist', 'y', 0, 30, 1)
+            x: pastParts(poseHistory, 'leftWrist', 'x', 0, 30, 1),
+            y: pastParts(poseHistory, 'leftWrist', 'y', 0, 30, 1)
         },
     },
 ];`;
