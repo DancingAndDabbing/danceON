@@ -57,9 +57,9 @@ let blazePoseParts = [
     {caption: 'leftKnee', value: 'leftKnee', meta: 'property'},
     {caption: 'rightKnee', value: 'rightKnee', meta: 'property'},
     {caption: 'leftAnkle', value: 'leftAnkle', meta: 'property'},
-    {caption: 'rightAnkle', value: 'rightAnkle', meta: 'property'}
+    {caption: 'rightAnkle', value: 'rightAnkle', meta: 'property'},
     {caption: 'leftHeel', value: 'leftHeel', meta: 'property'},
-    {caption: 'rightHeel', value: 'rightHeel', meta: 'property'}
+    {caption: 'rightHeel', value: 'rightHeel', meta: 'property'},
     {caption: 'leftToe', value: 'leftToe', meta: 'property'},
     {caption: 'rightToe', value: 'rightToe', meta: 'property'}
 ];
