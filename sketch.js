@@ -73,11 +73,11 @@ let preloadedPredictions; // temporary solution to prevent load times on default
 
 // ----- Main P5 Functions -----
 function preload() {
-    tmClassifier = new TMClassifier();
-    tmClassifier.loadJSON(options);
+    tmClassifier = new BlazeDetector();
+    //tmClassifier.loadJSON(options);
     // Temporary solution to prevent classifier loading with
     // embedded video
-    preloadedPredictions =loadJSON(options.videoPredictions);
+    //preloadedPredictions =loadJSON(options.videoPredictions);
     tmClassifier.loadModel(options, function() {
         tmClassifier.predictions = preloadedPredictions.predictions;
         tmClassifier.gotAllFrames = true;
@@ -315,12 +315,12 @@ function draw() {
     if (!options.webcam) {
         let frameNum = getFrame(options, video);
         let totalFrames = getTotalFrames(options, video);
-        let pp = tmClassifier.predictForVideo(options, canvas, video, frameNum);
-
+        tmClassifier.predictForVideo(options, canvas, video, frameNum, setPoseInWebCamMode);
+        //console.log(pp); // Returning undefined
         // One or both of these may return undefined if it has not been
         // calculated yet
-        pose = pp.pose;
-        prediction = pp.prediction;
+        //pose = pp.pose;
+        //prediction = pp.prediction;
 
         playBar.update({playing: options.playing, frameNum: frameNum, totalFrames: totalFrames});
     }

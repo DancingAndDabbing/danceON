@@ -11,9 +11,10 @@
 // quantBytes: 2,
 // multiplier: 0.50
 
-class TMClassifier {
+class BlazeDetector {
     constructor() {
         this.model = undefined;
+        this.detector = undefined;
 
         // Using objects instead of lists given the asyncronous nature
         // of running the classifier
@@ -55,7 +56,18 @@ class TMClassifier {
     // Still causes one "video element has not loaded" data yet error
     async loadModel(options, onSuccess, onError) {
         this.loaded = false;
-        let modelURL = options.modelURL + 'model.json';
+        this.model = poseDetection.SupportedModels.BlazePose;
+
+        let detectorConfig = {
+            runtime: 'tfjs',
+            enableSmoothing: true,
+            modelType: 'full'
+        };
+
+        this.detector = await poseDetection.createDetector(this.model, detectorConfig);
+        this.loaded = true;
+
+        /*let modelURL = options.modelURL + 'model.json';
         let metadataURL = options.modelURL + 'metadata.json';
 
         try {
@@ -75,14 +87,46 @@ class TMClassifier {
             if (this.model) this.loaded = true;
             if (onError != undefined) onError();
             alert("Something wrong with the link. We'll try to use the previous one.");
-        }
+        }*/
     }
 
     // Bug! This still jumps around and skips frames
-    predictForVideo(options, canvas, video, frame) {
+    predictForVideo(options, canvas, video, frame, callback) {
         let self = this;
+        self.checkIfComplete(getTotalFrames(options, video));
 
-        if (!(options.videoLoaded && this.loaded)) return {pose:undefined, prediction:undefined};
+        if (!(options.videoLoaded && self.loaded)) {
+            callback({pose:undefined, prediction:undefined});
+            return;
+        }
+
+        if (this.poses[frame]) {
+            this.poses.frame
+            callback({pose: this.poses[frame], prediction: this.predictions[frame]});
+            return;
+         }
+
+        self.detector.estimatePoses(video.elt)
+        .then(v => {
+            let newPose = convertToML5Structure(v[0]); // copy and rearrange
+            this.poses[frame] = newPose;
+            this.predictions[frame] = {className:'Nope', probability:0};
+            callback({pose: this.poses[frame], prediction: this.predictions[frame]})
+        })
+
+        // We already have both the pose and the classification!
+        // Or we have disabled teachable machine in which case we will also return here
+        // Simply return
+
+
+        /*if ((this.poses[frame] && this.predictions[frame]) || !options.teachableMachineOn) {
+            return {pose:this.poses[frame], prediction:this.predictions[frame]};
+        }
+        else {
+            self.detector.estimatePoses(video.elt).then
+        }*/
+
+        /*if (!(options.videoLoaded && self.loaded)) return {pose:undefined, prediction:undefined};
         this.checkIfComplete(getTotalFrames(options, video));
 
 
@@ -109,21 +153,27 @@ class TMClassifier {
             }
             if (self.poses[frame]) return {pose:this.poses[frame], prediction:undefined};
             else return {pose:undefined, prediction:undefined};
-        }
+        }*/
     }
 
     // Blocking - this function will not return until the pose and prediction
     // have run. In other words we will not continue through the draw loop
     // until we have all the data we need.
-    async predictForWebCam(options, video, callback) {
+    predictForWebCam(options, video, callback) {
         if (!(options.videoLoaded && this.loaded)) return;
+        this.detector.estimatePoses(video.elt)
+        .then(v => {
+            let newPose = convertToML5Structure(v[0]); // copy and rearrange
+            callback({pose: newPose, prediction: {className:'Nope', probability:0}})
+        })
+        /*if (!(options.videoLoaded && this.loaded)) return;
         let { pose, posenetOutput } = await this.model.estimatePose(video.elt);
         if (!(options.videoLoaded && this.loaded)) return;
         let prediction = await this.model.predict(posenetOutput);
         if (!(options.videoLoaded && this.loaded)) return;
 
         convertToML5Structure(pose);
-        callback({pose: pose, prediction: prediction});
+        callback({pose: pose, prediction: prediction});*/
     }
 
     // How to alter state when the user uploads a new video, classifier
@@ -170,13 +220,28 @@ class TMClassifier {
     }
 }
 
+// Make a copy of the pose and add in keypoints as their own objects
 function convertToML5Structure(pose) {
     if (!pose) return;
+    let newPose = {keypoints: [], score: pose.score};
+
+
     pose.keypoints.forEach((kp, i) => {
-        pose[kp.part] = {
+        newPose.keypoints.push({
+            part: kp.name,
+            score: kp.score, // posenet used confidence rather than score...
+            position: {
+                x: kp.x,
+                y: kp.y,
+                z: kp.z
+            }
+        });
+        newPose[kp.name] = {
+            x: kp.x,
+            y: kp.y,
+            z: kp.z,
             confidence: kp.score,
-            x: kp.position.x,
-            y: kp.position.y
-        }
+        };
     });
+    return newPose;
 }

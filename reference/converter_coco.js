@@ -7,6 +7,7 @@
 // Output - New JSON file in PoseNet style
 
 const fs = require('fs');
+const dataName = 'pose_keypoints_2d'; // part_candidates
 
 // mapping from posenet to open pose
 //  mappings[i] = PoseNet keypoint index
@@ -34,19 +35,20 @@ let poseNetVersion = [];
 
 openPoseVersion.forEach((frame, i) => {
     let newPoseFrame = [{'pose': {'keypoints': []}}];
+    console.log(i);
 
     mappings.forEach((m, j) => {
         let part = m[0];
 
         // Only works for single person estimation
-        let x = frame['part_candidates'][0][m[1]][0];
-        let y = frame['part_candidates'][0][m[1]][1];
-        let score = frame['part_candidates'][0][m[1]][2];
+        let x = frame[dataName][0][m[1]][0];
+        let y = frame[dataName][0][m[1]][1];
+        let score = frame[dataName][0][m[1]][2];
 
-        if (frame['part_candidates'][0][m[1]].length > 3) {
-          if (frame['part_candidates'][0][m[1]][5] > score) {
-            x = frame['part_candidates'][0][m[1]][3];
-            y = frame['part_candidates'][0][m[1]][4];
+        if (frame[dataName][0][m[1]].length > 3) {
+          if (frame[dataName][0][m[1]][5] > score) {
+            x = frame[dataName][0][m[1]][3];
+            y = frame[dataName][0][m[1]][4];
           }
         }
 
