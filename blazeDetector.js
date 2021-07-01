@@ -59,10 +59,18 @@ class BlazeDetector {
         this.model = poseDetection.SupportedModels.BlazePose;
 
         let detectorConfig = {
-            runtime: 'tfjs',
-            enableSmoothing: true,
-            modelType: 'full'
+            // tfjs runtime
+            // runtime: 'tfjs',
+            // mediapipe below
+            runtime: 'mediapipe',
+            solutionPath: 'base/node_modules/@mediapipe/pose',
         };
+        //
+        // let detectorConfig = {
+        //     enableSmoothing: true,
+        //     modelType: 'full'
+        //   };
+
 
         this.detector = await poseDetection.createDetector(this.model, detectorConfig);
         this.loaded = true;
@@ -93,6 +101,8 @@ class BlazeDetector {
     // Bug! This still jumps around and skips frames
     predictForVideo(options, canvas, video, frame, callback) {
         let self = this;
+        let estimationConfig = {enableSmoothing: true};
+
         self.checkIfComplete(getTotalFrames(options, video));
 
         if (!(options.videoLoaded && self.loaded)) {
@@ -106,7 +116,7 @@ class BlazeDetector {
             return;
          }
 
-        self.detector.estimatePoses(video.elt)
+        self.detector.estimatePoses(video.elt, estimationConfig)
         .then(v => {
             let newPose = convertToML5Structure(v[0]); // copy and rearrange
             this.poses[frame] = newPose;
@@ -161,7 +171,8 @@ class BlazeDetector {
     // until we have all the data we need.
     predictForWebCam(options, video, callback) {
         if (!(options.videoLoaded && this.loaded)) return;
-        this.detector.estimatePoses(video.elt)
+        let estimationConfig = {enableSmoothing: true};
+        this.detector.estimatePoses(video.elt, estimationConfig)
         .then(v => {
             let newPose = convertToML5Structure(v[0]); // copy and rearrange
             callback({pose: newPose, prediction: {className:'Nope', probability:0}})

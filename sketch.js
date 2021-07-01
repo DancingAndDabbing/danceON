@@ -91,6 +91,7 @@ function setup() {
         options.videoHeight + options.playbarHeight);
     canvas.parent('p5Canvas');
     noCursor();
+    frameRate(30);
     background(245);
     loadingText('video and classifier');
 
