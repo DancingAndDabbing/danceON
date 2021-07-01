@@ -1,7 +1,9 @@
+// Unused - Maybe unnecessary with blazeDetector
+
 // This code was an attempt at using web workers but I ran into problems
 // accessing the video, tmPose object and classifier object
 
-// Basically I need help figuring out the best way to 
+// Basically I need help figuring out the best way to
 
 importScripts('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js',
     'https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js', 'helpers.js');

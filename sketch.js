@@ -47,6 +47,10 @@ let options = {
     skeleton: false,
     ml: false,
     teachableMachineOn: true,
+
+    // Copy points from one list to the other depending on which ones to use
+    keyPointsToUse: ['nose',  'left_eye', 'right_eye', 'left_ear', 'right_ear', 'mouth_left', 'mouth_right', 'left_shoulder', 'right_shoulder', 'left_elbow', 'right_elbow', 'left_wrist', 'right_wrist', 'left_pinky', 'right_pinky', 'left_index', 'right_index', 'left_thumb', 'right_thumb', 'left_hip', 'right_hip', 'left_knee', 'right_knee', 'left_ankle', 'right_ankle', 'left_heel', 'right_heel', 'left_foot_index', 'right_foot_index'],
+    keyPointsNotToUse: ['left_eye_inner', 'left_eye_outer', 'right_eye_inner', 'right_eye_outer']
 }
 
 
@@ -56,7 +60,7 @@ let canvas;
 let pose; // Current pose
 let poseHistory = []; // Recent history of poses
 
-let tmClassifier; // Teachable Machine classifier
+let blazeDetector; // Teachable Machine classifier
 let prediction; // Current prediction
 
 let video; // Video source - either preloaded or webcam
@@ -73,14 +77,14 @@ let preloadedPredictions; // temporary solution to prevent load times on default
 
 // ----- Main P5 Functions -----
 function preload() {
-    tmClassifier = new BlazeDetector();
-    //tmClassifier.loadJSON(options);
+    blazeDetector = new BlazeDetector();
+    //blazeDetector.loadJSON(options);
     // Temporary solution to prevent classifier loading with
     // embedded video
-    //preloadedPredictions =loadJSON(options.videoPredictions);
-    tmClassifier.loadModel(options, function() {
-        tmClassifier.predictions = preloadedPredictions.predictions;
-        tmClassifier.gotAllFrames = true;
+    preloadedPredictions =loadJSON(options.videoPredictions);
+    blazeDetector.loadModel(options, function() {
+        blazeDetector.predictions = preloadedPredictions.predictions;
+        blazeDetector.gotAllFrames = true;
     });
 
 }
@@ -120,14 +124,14 @@ function setup() {
     // Video setup
     video = startVideo(options);
     video.onended((elt) => stopRecording(elt, options));
-    tmClassifier.onComplete(() => toggleAnalyzingNotifier(false)); // Callback
+    blazeDetector.onComplete(() => toggleAnalyzingNotifier(false)); // Callback
 
     // Toggle between Webcam and Video
     select(`#${options.videoToggle}`).mouseClicked(() => {
         if (!options.webcam) return;
         options.webcam = false;
         handleVideoToggle(() => {
-            if (!tmClassifier.gotAllFrames) {
+            if (!blazeDetector.gotAllFrames) {
                 toggleAnalyzingNotifier(true, options);
             }
         });
@@ -166,7 +170,7 @@ function setup() {
         try {
             handleVideoToggle(() => { // callback after video loads
                 toggleAnalyzingNotifier(true, options);
-                tmClassifier.resetForNewVideo();
+                blazeDetector.resetForNewVideo();
                 options.videoLoaded = true;
                 updateVideoFileText(newFileURL);
                 updatePoseFileText("", false);
@@ -177,7 +181,7 @@ function setup() {
             console.log(err);
             options.videoLocation = oldVideoLocation;
             handleVideoToggle(() => {
-                if (!tmClassifier.gotAllFrames) {
+                if (!blazeDetector.gotAllFrames) {
                     toggleAnalyzingNotifier(true, options);
                     playPauseVideo(true);
                 }
@@ -199,7 +203,7 @@ function setup() {
         let oldPoseLocation = options.videoPoses;
         options.videoPoses = URL.createObjectURL(ev.target.files[0]);
 
-        tmClassifier.loadJSON(options,
+        blazeDetector.loadJSON(options,
             (() => updatePoseFileText(newFileURL)), // Success handler
             (() => options.videoPoses = oldPoseLocation) // Fail handler
         );
@@ -217,7 +221,7 @@ function setup() {
         changeTMLinkInput('loading');
         let oldModelURL = options.modelURL;
         options.modelURL = txt;
-        tmClassifier.loadModel(options,
+        blazeDetector.loadModel(options,
             (() => changeTMLinkInput('success')), // success callback
             (() => {
                 changeTMLinkInput('error');
@@ -228,7 +232,7 @@ function setup() {
 
     // Teachable Machine Toggle Button (enable or disable the GUI notifier)
     document.getElementById('teachableMachineOn').addEventListener('change', e => {
-        if (e.target.checked && !tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true, options);
+        if (e.target.checked && !blazeDetector.gotAllFrames) toggleAnalyzingNotifier(true, options);
         else toggleAnalyzingNotifier(false);
     });
 
@@ -268,13 +272,13 @@ function setup() {
         // 'analyzing' notifier if it hasn't finished yet
         if ((!options.webcam) && playBar.overPlayButton()) {
             playPauseVideo(undefined, undefined, function() {
-                if (!tmClassifier.gotAllFrames) toggleAnalyzingNotifier(true, options);
+                if (!blazeDetector.gotAllFrames) toggleAnalyzingNotifier(true, options);
             });
         }
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
         else if ((!options.webcam) && playBar.overRecordButton()) openRecordingPrompt();
         else if ((!options.webcam) && playBar.overMuteButton()) muteVideo(options, video);
-        else { console.log(tmClassifier); }
+        else { console.log(blazeDetector); }
         // other ideas include getting the coordinates
         // and getting the skeleton part
         return false; // prevent default
@@ -293,7 +297,7 @@ function draw() {
     strokeWeight(1); // set unless it gets overridden (happened once?)
 
     // Things still loading - don't try to draw or calculate anything
-    if (!tmClassifier.loaded) {
+    if (!blazeDetector.loaded) {
         push();
         stroke(200);
         strokeWeight(2);
@@ -316,7 +320,7 @@ function draw() {
     if (!options.webcam) {
         let frameNum = getFrame(options, video);
         let totalFrames = getTotalFrames(options, video);
-        tmClassifier.predictForVideo(options, canvas, video, frameNum, setPoseInWebCamMode);
+        blazeDetector.predictForVideo(options, canvas, video, frameNum, setPoseInWebCamMode);
         //console.log(pp); // Returning undefined
         // One or both of these may return undefined if it has not been
         // calculated yet
@@ -328,7 +332,7 @@ function draw() {
 
     // Detection and prediction for Webcam
     // Sets values for pose/prediction when available - may lag behind image
-    else { tmClassifier.predictForWebCam(options, video, setPoseInWebCamMode);}
+    else { blazeDetector.predictForWebCam(options, video, setPoseInWebCamMode);}
 
     // Draw on top of the image using pose and prediction
     if (pose) {

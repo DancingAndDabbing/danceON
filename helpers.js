@@ -70,26 +70,34 @@ function scalePositionToVideo(options, position) {
     return {
         x: position.x * options.videoScale,
         y: position.y * options.videoScale
+        // does z need to get scaled
     }
 }
 
 // This should not get called if we are in webcam mode
 function scalePoseToWindow(options, pose) {
     if (options.webcam) return pose;
-    let scaledPose = {keypoints:[]};
+    let scaledPose = {keypoints:[], score: pose.score};
 
-    pose.keypoints.forEach(k => {
-        let sp = scalePositionToVideo(options, k.position);
+    // Very similar code from convertToML5Structure in blazeDetector
+    // Should be refactored?
+    pose.keypoints.forEach((kp, i) => {
+        let sp = scalePositionToVideo(options, kp.position);
         scaledPose.keypoints.push({
-            position: {x: sp.x, y: sp.y},
-            score: k.score,
-            part: k.part
+            part: kp.part, // function from helpers
+            score: kp.score, // posenet used confidence rather than score...
+            position: {
+                x: sp.x,
+                y: sp.y,
+                z: kp.z  // does z need to get scaled??
+            }
         });
-        scaledPose[k.part] = {
+        scaledPose[kp.part] = {
             x: sp.x,
             y: sp.y,
-            confidence: k.score
-        }
+            z: kp.z,
+            confidence: kp.score
+        };
     });
 
     return scaledPose;
@@ -103,6 +111,11 @@ function muteVideo(options, video, optionalSet) {
     else video.volume(1.0);
 
     return;
+}
+
+function underscore_to_camelCase(old_word) {
+    let newWord = old_word.replace(/_([a-z])/g, (m, w) => w.toUpperCase());
+    return newWord;
 }
 
 async function modelLoader(url) {

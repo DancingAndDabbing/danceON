@@ -1,4 +1,7 @@
+// DEPRECATED IN THIS VERSION - REPLACED WITH blazeDetector
+
 // Teachable Machine classifier class - handles pose detection and prediction
+
 
 // Potential Bugs
 // If the user uploads a new JSON file before video, we won't know whether they
