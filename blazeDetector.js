@@ -40,8 +40,11 @@ class BlazeDetector {
     }
 
     // Successful load of JSON should overwrite anything currently in poses
+    // This uses the old structure we created from OpenPose
     loadJSON(options, onSuccess, onError) {
         let self = this;
+
+        // loadJSON is a p5 function
         loadJSON(options.videoPoses, (loaded) => {
             try {
                 let poseList = loaded.data;
@@ -59,6 +62,42 @@ class BlazeDetector {
                 alert("Something wrong with the file. We'll still use the previous one.");
             }
         });
+    }
+
+    loadBlazeJSON(options, onSuccess, onError) {
+        let self = this;
+        loadJSON(options.videoPoses, (loaded) => {
+            try {
+                let poseList = loaded.data;
+                let newPoses = {};
+                poseList.forEach( (p, i) => newPoses[i] = p );
+
+                // If we've made it this far, we can update self
+                self.resetForNewJSON();
+                self.poses = newPoses;
+
+                if (onSuccess != undefined) onSuccess();
+            } catch(err) {
+                console.log(err);
+                if (onError != undefined) onError();
+                alert("Something wrong with the file. We'll still use the previous one.");
+            }
+        });
+    }
+
+    // May or may not be useful
+    downloadJSON() {
+        let exportObj = {"data":[]};
+        for (let k in this.poses) {
+            exportObj.data.push(this.poses[k]);
+        }
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+        let downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "poseData" + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     }
 
     // Still causes one "video element has not loaded" data yet error
@@ -136,17 +175,14 @@ class BlazeDetector {
     }
 
     // Callback Function Handling for Completing Classification
+    // Ignores predictions for now
     checkIfComplete(totalFrames) {
         if (this.gotAllFrames || (this.gotAllFramesCallBack == undefined)) return;
         let poLength = Object.keys(this.poses).length;
-        let preLength = Object.keys(this.predictions).length;
         //console.log(poLength, preLength, totalFrames);
 
         // Sometimes these lengths can vary by a little due to rendering weirdness
-        if (inRange(poLength - preLength, -2, 2) &&
-            inRange(poLength - totalFrames, -2, 2) &&
-            inRange(preLength - totalFrames, -2, 2)) {
-
+        if (inRange(poLength - totalFrames, -2, 2)) {
             this.gotAllFrames = true;
             this.gotAllFramesCallBack();
         }

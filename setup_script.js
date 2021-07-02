@@ -4,7 +4,8 @@ function startVideo(options, callback) {
 
     if (options.webcam) video = createCapture(VIDEO, () => webcamLoaded(options, video, callback));
     else {
-        video = createVideo(options.videoLocation, () => videoLoaded(options, video, callback))};
+        video = createVideo(options.videoLocation, () => videoLoaded(options, video, callback))
+    };
 
     return video;
 }

@@ -20,7 +20,7 @@ let options = {
     videoUpload: 'videoUpload',
     poseUpload: 'poseUpload',
     videoLocation: 'assets/SFD_Nov.mp4',
-    videoPoses: 'assets/SFD_Nov.json',
+    videoPoses: 'assets/SFD_Nov_Blaze.json',
     videoPredictions: 'assets/SFD_Nov_predictions.json',
     videoFramerate: 30, // For Yoav - always 30?
     videoWidth: 640,
@@ -78,7 +78,7 @@ let preloadedPredictions; // temporary solution to prevent load times on default
 // ----- Main P5 Functions -----
 function preload() {
     blazeDetector = new BlazeDetector();
-    //blazeDetector.loadJSON(options);
+    blazeDetector.loadBlazeJSON(options);
     // Temporary solution to prevent classifier loading with
     // embedded video
     preloadedPredictions =loadJSON(options.videoPredictions);
@@ -279,7 +279,10 @@ function setup() {
         else if ((!options.webcam) && playBar.overBar()) changeFrame(playBar.getFrame());
         else if ((!options.webcam) && playBar.overRecordButton()) openRecordingPrompt();
         else if ((!options.webcam) && playBar.overMuteButton()) muteVideo(options, video);
-        else { console.log(blazeDetector); }
+        else {
+            console.log(blazeDetector);
+            // blazeDetector.downloadJSON;
+        }
         // other ideas include getting the coordinates
         // and getting the skeleton part
         return false; // prevent default
@@ -304,7 +307,7 @@ function draw() {
         strokeWeight(2);
         for (i = 0; i < 20; i++) {line(random(width), random(height), random(width), random(height));}
         pop();
-        loadingText('classifier');
+        loadingText('pose detector');
         return false;
     }
     if (!options.webcam && !options.videoLoaded) {
