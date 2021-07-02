@@ -79,14 +79,7 @@ let preloadedPredictions; // temporary solution to prevent load times on default
 function preload() {
     blazeDetector = new BlazeDetector();
     blazeDetector.loadBlazeJSON(options);
-    // Temporary solution to prevent classifier loading with
-    // embedded video
-    preloadedPredictions =loadJSON(options.videoPredictions);
-    blazeDetector.loadModel(options, function() {
-        blazeDetector.predictions = preloadedPredictions.predictions;
-        blazeDetector.gotAllFrames = true;
-    });
-
+    blazeDetector.loadModel(options); // previously attached predictions here
 }
 
 function setup() {

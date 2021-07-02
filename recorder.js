@@ -4,14 +4,19 @@
 // https://stackoverflow.com/questions/39302814/mediastream-capture-canvas-and-audio-simultaneously
 // TODO: Refactoring - This should really be a class
 
+// Looked into mp4 export from the browser and does not seem easily doable
+// with MediaRecorder
+
 let chunks = [];
+let audioContext;
+let sourceNode;
 
 function record(options, recorder, canvas) {
     // Set up media contexts - necessary for recording
-    let audioContext = new AudioContext();
+    if (audioContext == undefined) audioContext = new AudioContext();
     let dest = audioContext.createMediaStreamDestination();
     options.audioStream = dest.stream;
-    let sourceNode = audioContext.createMediaElementSource(video.elt);
+    sourceNode = sourceNode || audioContext.createMediaElementSource(video.elt);
     sourceNode.connect(dest);
 
     let canvasStream = canvas.elt.captureStream(options.videoFramerate);
