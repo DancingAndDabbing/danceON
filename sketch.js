@@ -244,6 +244,7 @@ function setup() {
     .addEventListener('change', (ev) => {
         if (ev.target.value == '') return;
         uploadDeclarations(ev.target.files[0]);
+        ev.target.value = null; // allows file to be reuploaded
     });
 
 
