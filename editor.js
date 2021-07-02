@@ -8,67 +8,21 @@ let editor = ace.edit("editor", {
 });
 
 // store pose parts for autocompletion
-let poseParts = [
-    {caption: 'nose', value: 'nose', meta: 'property'},
-    {caption: 'leftEye', value: 'leftEye', meta: 'property'},
-    {caption: 'rightEye', value: 'rightEye', meta: 'property'},
-    {caption: 'leftEar', value: 'leftEar', meta: 'property'},
-    {caption: 'rightEar', value: 'rightEar', meta: 'property'},
-    {caption: 'leftShoulder', value: 'leftShoulder', meta: 'property'},
-    {caption: 'rightShoulder', value: 'rightShoulder', meta: 'property'},
-    {caption: 'leftElbow', value: 'leftElbow', meta: 'property'},
-    {caption: 'rightElbow', value: 'leftElbow', meta: 'property'},
-    {caption: 'leftWrist', value: 'leftWrist', meta: 'property'},
-    {caption: 'rightWrist', value: 'rightWrist', meta: 'property'},
-    {caption: 'leftHip', value: 'leftHip', meta: 'property'},
-    {caption: 'rightHip', value: 'rightHip', meta: 'property'},
-    {caption: 'leftKnee', value: 'leftKnee', meta: 'property'},
-    {caption: 'rightKnee', value: 'rightKnee', meta: 'property'},
-    {caption: 'leftAnkle', value: 'leftAnkle', meta: 'property'},
-    {caption: 'rightAnkle', value: 'rightAnkle', meta: 'property'}
-];
+// The key parts are generated from a list of names in helpers
+let poseParts = keyPointsToUse.map(kp => {
+    return {
+        caption: underscore_to_camelCase(kp),
+        value: underscore_to_camelCase(kp),
+        meta: 'property'
+    }
+});
 
-let blazePoseParts = [
-    {caption: 'nose', value: 'nose', meta: 'property'},
-    {caption: 'leftEyeInner', value: 'leftEyeInner', meta: 'property'},
-    {caption: 'leftEye', value: 'leftEye', meta: 'property'},
-    {caption: 'leftEyeOuter', value: 'leftEyeOuter', meta: 'property'},
-    {caption: 'rightEyeInner', value: 'rightEyeInner', meta: 'property'},
-    {caption: 'rightEye', value: 'rightEye', meta: 'property'},
-    {caption: 'rightEyeOuter', value: 'rightEyeOuter', meta: 'property'},
-    {caption: 'leftEar', value: 'leftEar', meta: 'property'},
-    {caption: 'rightEar', value: 'rightEar', meta: 'property'},
-    {caption: 'leftMouth', value: 'leftEar', meta: 'property'},
-    {caption: 'rightMouth', value: 'rightEar', meta: 'property'},
-    {caption: 'leftShoulder', value: 'leftShoulder', meta: 'property'},
-    {caption: 'rightShoulder', value: 'rightShoulder', meta: 'property'},
-    {caption: 'leftElbow', value: 'leftElbow', meta: 'property'},
-    {caption: 'rightElbow', value: 'leftElbow', meta: 'property'},
-    {caption: 'leftWrist', value: 'leftWrist', meta: 'property'},
-    {caption: 'rightWrist', value: 'rightWrist', meta: 'property'},
-    {caption: 'leftPinky', value: 'leftPinky', meta: 'property'},
-    {caption: 'rightPinky', value: 'rightPinky', meta: 'property'},
-    {caption: 'leftIndex', value: 'leftIndex', meta: 'property'},
-    {caption: 'rightIndex', value: 'rightIndex', meta: 'property'},
-    {caption: 'leftThumb', value: 'leftThumb', meta: 'property'},
-    {caption: 'rightThumb', value: 'rightThumb', meta: 'property'},
-    {caption: 'leftHip', value: 'leftHip', meta: 'property'},
-    {caption: 'rightHip', value: 'rightHip', meta: 'property'},
-    {caption: 'leftKnee', value: 'leftKnee', meta: 'property'},
-    {caption: 'rightKnee', value: 'rightKnee', meta: 'property'},
-    {caption: 'leftAnkle', value: 'leftAnkle', meta: 'property'},
-    {caption: 'rightAnkle', value: 'rightAnkle', meta: 'property'},
-    {caption: 'leftHeel', value: 'leftHeel', meta: 'property'},
-    {caption: 'rightHeel', value: 'rightHeel', meta: 'property'},
-    {caption: 'leftToe', value: 'leftToe', meta: 'property'},
-    {caption: 'rightToe', value: 'rightToe', meta: 'property'}
-];
-
-// To get old pose parts from blaze parts use indices [0,2,5,7,8,11,12,13,14,15,16,23,24,25,26,27,28]
+// To get old pose parts from blaze parts use indices
 
 let posePartPositions = [
     {caption: 'x', value: 'x', meta: 'property'},
-    {caption: 'y', value: 'y', meta: 'property'}
+    {caption: 'y', value: 'y', meta: 'property'},
+    //{caption: 'z', value: 'z', meta: 'property'}
 ];
 
 let whatToDrawWords = [

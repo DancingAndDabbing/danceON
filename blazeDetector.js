@@ -6,6 +6,24 @@ class BlazeDetector {
         this.model = undefined;
         this.detector = undefined;
 
+        // Set Detector Config up here
+        // swap between 'mediapipe' and 'tfjs'
+        // Make sure the loaded files in index.html match
+        this.runtimeSource = 'tfjs';
+        this.detectorConfig = {
+            'tfjs': {
+                runtime: 'tfjs',
+                enableSmoothing: true,
+                modelType: 'full'
+            },
+            'mediapipe': {
+                runtime: 'mediapipe',
+                solutionPath: 'base/node_modules/@mediapipe/pose',
+                enableSmoothing: true,
+                modelType: 'full'
+            }
+        }[this.runtimeSource];
+
         // Using objects instead of lists given the asyncronous nature
         // of running the classifier
         this.framePredictionStates = {};
@@ -48,28 +66,13 @@ class BlazeDetector {
         this.loaded = false;
         this.model = poseDetection.SupportedModels.BlazePose;
 
-        let detectorConfig = {
-            // tfjs runtime
-            // runtime: 'tfjs',
-            // mediapipe below
-            runtime: 'mediapipe',
-            solutionPath: 'base/node_modules/@mediapipe/pose',
-            //enableSmoothing: true
-        };
-        //
-        // let detectorConfig = {
-        //     enableSmoothing: true,
-        //     modelType: 'full'
-        //   };
-
-
-        this.detector = await poseDetection.createDetector(this.model, detectorConfig);
+        this.detector = await poseDetection.createDetector(
+            this.model, this.detectorConfig);
         this.loaded = true;
     }
 
-
     predictForVideo(options, canvas, video, frame, callback) {
-        let self = this; // necessary for callbacks I think
+        let self = this; // necessary for .then callbacks I think
         self.checkIfComplete(getTotalFrames(options, video));
 
         // return undefined object if nothing is loaded yet
@@ -87,7 +90,7 @@ class BlazeDetector {
         // If we don't have a pose part, run the detector
         self.detector.estimatePoses(video.elt) // estimationConfig?
         .then(v => {
-            let newPose = convertToML5Structure(v[0]); // copy and rearrange
+            let newPose = convertToML5Structure(v[0], keyPointsToUse); // copy and rearrange
             self.poses[frame] = newPose;
             self.predictions[frame] = {className:'Nope', probability:0}; // fake
             callback({pose: self.poses[frame], prediction: self.predictions[frame]})
@@ -102,9 +105,9 @@ class BlazeDetector {
             return;
         }
 
-        this.detector.estimatePoses(video.elt, {enableSmoothing: true})
+        this.detector.estimatePoses(video.elt)
         .then(v => {
-            let newPose = convertToML5Structure(v[0]); // similar code called in scalePoseToWindow
+            let newPose = convertToML5Structure(v[0], keyPointsToUse); // similar code called in scalePoseToWindow
             callback({pose: newPose, prediction: {className:'Nope', probability:0}})
         })
     }
@@ -156,25 +159,27 @@ class BlazeDetector {
 
 // Make a copy of the pose and add in keypoints as their own objects
 // Uses the old PoseNet structure with all its weirdness.
-// Also changes to camel case
-function convertToML5Structure(pose) {
+// Also changes to camel case and filters out points we aren't using
+function convertToML5Structure(pose, keypointFilter) {
     if (!pose) return;
     let newPose = {keypoints: [], score: pose.score};
 
-    pose.keypoints.forEach((kp, i) => {
+    pose.keypoints
+    .filter((kp) => keypointFilter.includes(kp.name))
+    .forEach((kp, i) => {
         newPose.keypoints.push({
             part: underscore_to_camelCase(kp.name), // function from helpers
             score: kp.score, // posenet used confidence rather than score...
             position: {
                 x: kp.x,
                 y: kp.y,
-                z: kp.z
+                //z: kp.z
             }
         });
         newPose[underscore_to_camelCase(kp.name)] = {
             x: kp.x,
             y: kp.y,
-            z: kp.z,
+            //z: kp.z,
             confidence: kp.score,
         };
     });

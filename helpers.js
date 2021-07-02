@@ -1,4 +1,20 @@
 // Useful Functions for developers and users
+// This file gets loaded first
+
+// Key points we are using and not using from blaze poze
+// Copy from one list to the other if you want to change
+// Old indices [0,2,5,7,8,11,12,13,14,15,16,23,24,25,26,27,28]
+const keyPointsToUse = ['nose',  'left_eye', 'right_eye', 'left_ear',
+                        'right_ear', 'mouth_left', 'mouth_right', 'left_shoulder',
+                        'right_shoulder', 'left_elbow', 'right_elbow',
+                        'left_wrist', 'right_wrist', 'left_pinky', 'right_pinky',
+                        'left_index', 'right_index', 'left_thumb', 'right_thumb',
+                        'left_hip', 'right_hip', 'left_knee', 'right_knee',
+                        'left_ankle', 'right_ankle', 'left_heel', 'right_heel',
+                        'left_foot_index', 'right_foot_index'];
+const keyPointsNotToUse = ['left_eye_inner', 'left_eye_outer',
+                           'right_eye_inner', 'right_eye_outer'];
+
 
 // External Helper Functions
 function fallbackToDefault(val, def) {
@@ -80,7 +96,7 @@ function scalePoseToWindow(options, pose) {
     let scaledPose = {keypoints:[], score: pose.score};
 
     // Very similar code from convertToML5Structure in blazeDetector
-    // Should be refactored?
+    // Should be refactored to speed up performance?
     pose.keypoints.forEach((kp, i) => {
         let sp = scalePositionToVideo(options, kp.position);
         scaledPose.keypoints.push({
@@ -89,17 +105,16 @@ function scalePoseToWindow(options, pose) {
             position: {
                 x: sp.x,
                 y: sp.y,
-                z: kp.z  // does z need to get scaled??
+                //z: kp.position.z  // does z need to get scaled??
             }
         });
         scaledPose[kp.part] = {
             x: sp.x,
             y: sp.y,
-            z: kp.z,
+            //z: kp.position.z,
             confidence: kp.score
         };
     });
-
     return scaledPose;
 }
 

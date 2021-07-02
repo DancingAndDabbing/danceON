@@ -42,7 +42,7 @@ let options = {
     modelURL: 'https://teachablemachine.withgoogle.com/models/Lp16aC0Y2/',
 
     // UI Overlay toggles
-    toggles: ['mousePosition', 'skeleton', 'ml', 'teachableMachineOn'],
+    toggles: ['mousePosition', 'skeleton'], // 'ml', 'teachableMachineOn'
     mousePosition: false,
     skeleton: false,
     ml: false,
@@ -209,32 +209,33 @@ function setup() {
         );
     });
 
+    // All of this is commented, but may be reused if we reimpliment Teachable Machine
     // Teachable Machine Link paste
-    document.getElementById(options.mlInput).addEventListener('input', (ev) => {
-        let txt = ev.target.value;
-
-        // Error cases
-        if (txt == '') return changeTMLinkInput('empty'); // dom manipulation
-        if (!txt.startsWith("https://teachablemachine.withgoogle.com/models/")) return changeTMLinkInput('error');
-
-        // We might have good link
-        changeTMLinkInput('loading');
-        let oldModelURL = options.modelURL;
-        options.modelURL = txt;
-        blazeDetector.loadModel(options,
-            (() => changeTMLinkInput('success')), // success callback
-            (() => {
-                changeTMLinkInput('error');
-                options.modelURL = oldModelURL;
-            })
-        );
-    });
+    // document.getElementById(options.mlInput).addEventListener('input', (ev) => {
+    //     let txt = ev.target.value;
+    //
+    //     // Error cases
+    //     if (txt == '') return changeTMLinkInput('empty'); // dom manipulation
+    //     if (!txt.startsWith("https://teachablemachine.withgoogle.com/models/")) return changeTMLinkInput('error');
+    //
+    //     // We might have good link
+    //     changeTMLinkInput('loading');
+    //     let oldModelURL = options.modelURL;
+    //     options.modelURL = txt;
+    //     blazeDetector.loadModel(options,
+    //         (() => changeTMLinkInput('success')), // success callback
+    //         (() => {
+    //             changeTMLinkInput('error');
+    //             options.modelURL = oldModelURL;
+    //         })
+    //     );
+    // });
 
     // Teachable Machine Toggle Button (enable or disable the GUI notifier)
-    document.getElementById('teachableMachineOn').addEventListener('change', e => {
-        if (e.target.checked && !blazeDetector.gotAllFrames) toggleAnalyzingNotifier(true, options);
-        else toggleAnalyzingNotifier(false);
-    });
+    // document.getElementById('teachableMachineOn').addEventListener('change', e => {
+    //     if (e.target.checked && !blazeDetector.gotAllFrames) toggleAnalyzingNotifier(true, options);
+    //     else toggleAnalyzingNotifier(false);
+    // });
 
     document.getElementById('revertButton').addEventListener('click', () => {
         let currentCode = poser.revertToPreviousCode();

@@ -4,26 +4,21 @@
 <meta charset="utf-8">
 <title>danceON!</title>
 <head>
+
+
     <!-- p5 -->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
 
     <!-- MediaPipe -->
+    <!-- Currently Giving TypeError: t.Pose is not a constructor -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils_3d@0.1.1624665424/control_utils_3d.js" crossorigin="anonymous"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.5/control_utils.js" crossorigin="anonymous"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.4.1624666670/pose.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script> -->
 
     <!-- TensorFlow -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>-->
-    <!--<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
-
-
 
     <!-- ACE -->
     <script src="ace/ace.js"></script>
@@ -93,10 +88,10 @@
                             <input id="skeleton" type="checkbox" name="skeleton" class="switch is-rounded is-outlined">
                             <label for="skeleton">skeleton</label>
                         </div>
-                        <div class="field">
+                        <!-- <div class="field">
                             <input id="ml" type="checkbox" name="ml" class="switch is-rounded is-outlined">
                             <label for="ml">classifier</label>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="tile is-parent">
@@ -194,7 +189,7 @@
                     </div>
                 </div>
                 <div class="tile is-parent">
-                <div class="tile is-child notification is-light box">
+                <!-- <div class="tile is-child notification is-light box">
                     <p class="subtitle">Machine Learning Model</p>
                     <div class="field">
                         <p class="control has-icons-left">
@@ -209,7 +204,7 @@
                         <input id="teachableMachineOn" type="checkbox" checked name="teachableMachineOn" class="switch is-rounded is-outlined">
                         <label for="teachableMachineOn">Use Teachable Machine and Posenet for videos</label>
                     </div>
-                </div>
+                </div> -->
             </div>
             </div>
         </div>
@@ -315,9 +310,9 @@
             <div class="column is-narrow">
                 <div style="">
                     <div id='p5Canvas'></div>
-                    <div id="analyzingNotifier" class="notification is-warning is-hidden" style="padding:0rem 2.5rem 0rem 3rem; margin: 0px 0px 8px 0px;">
+                    <div id="analyzingNotifier" class="notification is-warning is-hidden" style="padding:0rem 2rem 0rem 3rem; margin: 0px 0px 0px 0px;">
                         <button class="button is-warning is-small is-loading"></button>
-                        <button class="button is-warning is-small" style="cursor:default;">classifying poses...</button>
+                        <button class="button is-warning is-small" style="cursor:default;">detecting poses as video plays</button>
                     </div>
                     <div id="recordingNotifier" class="notification is-danger is-hidden" style="padding:0rem 2.5rem 0rem 3rem; margin: 0px 0px 8px 0px;">
                         <button class="button is-danger is-small is-loading"></button>
