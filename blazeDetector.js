@@ -183,7 +183,8 @@ class BlazeDetector {
         document.querySelector('#notifyText').innerText = 'pose frames detected: '+poLength+' of '+totalFrames;
 
         // Sometimes these lengths can vary by a little due to rendering weirdness
-        if (inRange(poLength - totalFrames, -0.01*totalFrames, 0.01*totalFrames)) {
+        // Also, just allow it to stop if it gets to within 2% of all frames?
+        if (inRange(poLength - totalFrames, -0.02*totalFrames, 0.02*totalFrames)) {
             this.gotAllFrames = true;
             this.gotAllFramesCallBack();
         }
