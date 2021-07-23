@@ -14,13 +14,13 @@ class BlazeDetector {
             'tfjs': {
                 runtime: 'tfjs',
                 enableSmoothing: true,
-                modelType: 'full'
+                modelType: 'lite'
             },
             'mediapipe': {
                 runtime: 'mediapipe',
                 solutionPath: 'base/node_modules/@mediapipe/pose',
                 enableSmoothing: true,
-                modelType: 'full'
+                modelType: 'lite'
             }
         }[this.runtimeSource];
 
@@ -179,10 +179,11 @@ class BlazeDetector {
     checkIfComplete(totalFrames) {
         if (this.gotAllFrames || (this.gotAllFramesCallBack == undefined)) return;
         let poLength = Object.keys(this.poses).length;
-        //console.log(poLength, preLength, totalFrames);
+        // console.log(poLength, totalFrames);
+        document.querySelector('#analyzingNotifier').innerText = 'Pose frames detected: '+poLength+' of '+totalFrames;
 
         // Sometimes these lengths can vary by a little due to rendering weirdness
-        if (inRange(poLength - totalFrames, -2, 2)) {
+        if (inRange(poLength - totalFrames, -0.01*totalFrames, 0.01*totalFrames)) {
             this.gotAllFrames = true;
             this.gotAllFramesCallBack();
         }
