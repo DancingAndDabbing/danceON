@@ -14,13 +14,13 @@ class BlazeDetector {
             'tfjs': {
                 runtime: 'tfjs',
                 enableSmoothing: true,
-                modelType: 'lite'
+                modelType: 'full'
             },
             'mediapipe': {
                 runtime: 'mediapipe',
                 solutionPath: 'base/node_modules/@mediapipe/pose',
                 enableSmoothing: true,
-                modelType: 'lite'
+                modelType: 'full'
             }
         }[this.runtimeSource];
 
@@ -179,12 +179,10 @@ class BlazeDetector {
     checkIfComplete(totalFrames) {
         if (this.gotAllFrames || (this.gotAllFramesCallBack == undefined)) return;
         let poLength = Object.keys(this.poses).length;
-        // console.log(poLength, totalFrames);
-        document.querySelector('#notifyText').innerText = 'pose frames detected: '+poLength+' of '+totalFrames;
+        //console.log(poLength, preLength, totalFrames);
 
         // Sometimes these lengths can vary by a little due to rendering weirdness
-        // Also, just allow it to stop if it gets to within 2% of all frames?
-        if (inRange(poLength - totalFrames, -0.02*totalFrames, 0.02*totalFrames)) {
+        if (inRange(poLength - totalFrames, -2, 2)) {
             this.gotAllFrames = true;
             this.gotAllFramesCallBack();
         }

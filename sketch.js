@@ -22,7 +22,7 @@ let options = {
     videoLocation: 'assets/SFD_Nov.mp4',
     videoPoses: 'assets/SFD_Nov_Blaze.json',
     videoPredictions: 'assets/SFD_Nov_predictions.json',
-    videoFramerate: 30, // For Yoav - always 30?
+    videoFramerate: 30,
     videoWidth: 640,
     videoHeight: 360,
     videoScale: undefined,
@@ -73,6 +73,8 @@ let cacher; // Used for saving code to local cache
 
 let preloadedPredictions; // temporary solution to prevent load times on default video
 
+let dayChanger; // For changing code each day during installation
+
 // -----                                       -----
 
 // ----- Main P5 Functions -----
@@ -105,6 +107,10 @@ function setup() {
     cacher = new Cacher();
     let storedDeclarations = cacher.retrieveDeclarations();
     if (storedDeclarations) declarations.setValue(storedDeclarations);
+
+    // Day Changer for changing code
+    dayChanger = new DayChanger(declarations, fromSetValueCall);
+    //dayChanger.startInterval();
 
     // Pose setup - add event listeners based on user editing
     poser = new Poser();
@@ -253,12 +259,14 @@ function setup() {
     declarations.on('change', function(e) {
         let val = declarations.getValue();
         parseAndShowErrors(val);
+
+        // if empty - use starter code
         if (val == '' && !fromSetValueCall && (declarations.curOp.command.name != 'paste')) {
             declarations.setValue(STARTING_CODE);
             return;
         };
         poser.update(val);
-        fromSetValueCall = false;
+        fromSetValueCall = false; // user has made a change
     });
 
     // Mouse Click Events on Canvas - Disabled if recording
@@ -373,13 +381,19 @@ function draw() {
 // ----- Key Press Events -----
 function keyPressed() {
     let settingsOverlay = document.getElementById('settings').classList.contains("is-active");
-    if (settingsOverlay || editor.isFocused() || options.webcam || options.recording || !options.videoLoaded) return;
+    if (settingsOverlay || editor.isFocused() || options.recording || !options.videoLoaded) return;
+
+    if (isFinite(event.key)) return dayChanger.setCodeOnUserInput(parseInt(event.key));
+
+    if (options.webcam) return;
 
     if (keyCode == 32) playPauseVideo(); // spacebar
     if (keyCode == RIGHT_ARROW) goForwardOrBackward(options, video, 1);
     if (keyCode == LEFT_ARROW) goForwardOrBackward(options, video, -1);
     if (keyCode == UP_ARROW) goForwardOrBackward(options, video, 10);
     if (keyCode == DOWN_ARROW) goForwardOrBackward(options, video, -10);
+
+
 
     return false;
 }
