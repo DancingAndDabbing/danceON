@@ -20,7 +20,7 @@ danceON is built on the following libraries and resources:
 * [Ace Editor](https://ace.c9.io)
 * Syntax theme is custom, but based on [Night Owl Theme by Sarah Drasner](https://marketplace.visualstudio.com/items?itemName=sdras.night-owl)
 * [Bulma](https://bulma.io): CSS Framework
-* [Space Mono](https://fonts.google.com/specimen/Space+Mono): Logo and editor font.
+* [Space Mono](https://fonts.google.com/specimen/Space+Mono): Logo and editor font
 
 
 ## Example Code
