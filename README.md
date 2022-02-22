@@ -24,7 +24,7 @@ danceON is built on the following libraries and resources:
 
 
 ## Example Code
-danceON uses a declarative syntax for binding shapes and animations to body parts. The following example shows off some of danceON's syntax. Many more examples are embedded in the application itself
+danceON uses a declarative syntax for binding shapes and animations to body parts. The following example shows off some of danceON's syntax. Many more examples are embedded in the application itself.
 
 
 ```javascript
