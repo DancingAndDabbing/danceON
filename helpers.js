@@ -49,7 +49,7 @@ function countTo(howMany=1) {
 }
 
 function every(seconds=1) {
-    return parseInt(frameCount % (seconds * 30)) == 1
+    return parseInt(frameCount % (seconds * 30)) == 0;
 }
 
 // Internal Helper Functions
