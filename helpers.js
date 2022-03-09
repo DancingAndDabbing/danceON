@@ -48,6 +48,10 @@ function countTo(howMany=1) {
     return Array.from(new Array(howMany)).map((v, i) => i);
 }
 
+function every(seconds=1) {
+    return parseInt(frameCount % (seconds * 30)) == 1
+}
+
 // Internal Helper Functions
 function getFrame(options, video) {
     if (!video) return 0;
