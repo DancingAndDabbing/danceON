@@ -1,6 +1,8 @@
 // Useful Functions for developers and users
 // This file gets loaded first
 
+const { json } = require("express/lib/response");
+
 // Key points we are using and not using from blaze poze
 // Copy from one list to the other if you want to change
 // Old indices [0,2,5,7,8,11,12,13,14,15,16,23,24,25,26,27,28]
@@ -14,9 +16,105 @@ const keyPointsToUse = ['nose',  'left_eye', 'right_eye', 'left_ear',
                         'left_foot_index', 'right_foot_index'];
 const keyPointsNotToUse = ['left_eye_inner', 'left_eye_outer',
                            'right_eye_inner', 'right_eye_outer'];
+// Search logic
+
+//    const titleList = document.getElementsByClassName('.title-query').innerHTML;
+//    const descList = document.getElementsByClassName('.desc-query').innerHTML;
+//    const searchBar = document.getElementById('searchBar');
+//    let hpCharacters = [];
+    
+//    searchBar.addEventListener('keyup', (e) => {
+//        const searchString = e.target.value.toLowerCase();
+    
+//        const filteredCharacters = titleList.filter((title) => {
+//            return (
+//                title.toLowerCase().includes(searchString) ||
+//                character.house.toLowerCase().includes(searchString)
+//            );
+//        });
+//        displayCharacters(filteredCharacters);
+//    });
+    
+//    const loadCharacters = async () => {
+//        try {
+//            const res = await fetch('https://hp-api.herokuapp.com/api/characters');
+//            hpCharacters = await res.json();
+//            displayCharacters(hpCharacters);
+//        } catch (err) {
+//            console.error(err);
+//        }
+//    };
+    
+//    const displayCharacters = (characters) => {
+//        const htmlString = characters
+//            .map((character) => {
+//                return `
+//                <li class="character">
+//                    <h2>${character.name}</h2>
+//                    <p>House: ${character.house}</p>
+//                    <img src="${character.image}"></img>
+//                </li>
+//            `;
+//            })
+//            .join('');
+//        charactersList.innerHTML = htmlString;
+//    };
+    
+//    loadCharacters();
+
+// search example
+// document.querySelector("searchBar").addEventListener('click', (e)
+// async function searchExample(data) {
+
+// }
+// post example to db
+async function saveExample(data) {
+    // console.log(data);
+    // Default options are marked with *
+    const url = '/examples';
+    var tag = ""
+    if(document.getElementById('easy').checked) {
+        tag = "easy"
+      }else if(document.getElementById('medium').checked) {
+        tag = "medium"
+      } else {
+        tag = "tough"
+      }
+    // let jsonData = {
+    //     "test":"test",
+    //     "test1":"test1",
+    //     "test2":"test2",
+    //     "test3":"test3"
+    // }  
+    let jsonData = {
+        "code": data,
+        "desc": document.querySelector("#desc1").innerHTML,
+        "title": document.querySelector("#title1").innerHTML,
+        "tag": tag,
+    }
+    // console.log("Json Data: ",jsonData);
+
+    //
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: jsonData // body data type must match "Content-Type" header
+    })
+    .then(res =>{
+        document.querySelector(".save").innerHTML = "Saved";
+        console.log("input");
+        console.log(res);
+    })
+    .catch (err => { console.log("ouput");
+    console.log(err); })
+}
 
 
-// External Helper Functions
 function fallbackToDefault(val, def) {
     if (val === undefined) return def;
     else return val;

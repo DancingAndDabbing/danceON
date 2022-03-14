@@ -381,7 +381,7 @@ function keyPressed() {
     if (keyCode == UP_ARROW) goForwardOrBackward(options, video, 10);
     if (keyCode == DOWN_ARROW) goForwardOrBackward(options, video, -10);
 
-    return false;
+    return true;
 }
 
 

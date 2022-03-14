@@ -1,0 +1,46 @@
+* {
+  margin:0px;
+  padding:0px;
+  box-sizing:border-box;
+}
+
+.container {
+  width:500px;
+  margin:20px auto;
+  box-shadow:0px 0px 10px #CCC;
+}
+
+div.widget-search { overflow:auto; }
+
+div.widget-search
+	input {
+		padding:7px 4px;
+		float:left;
+}
+div.widget-search
+	button {
+		padding:7px 5px;
+		width: 25%;
+		float: none;
+		display: inline-block;
+}
+div.widget-search
+	input:nth-child(1) { 
+		width:75%; 
+		background-color:#EEEEEE;
+		border:1px solid #CCC;
+}
+
+body {
+    background: #f7f7f7 !important;
+}
+
+
+
+
+
+
+@keyframes grow{
+  0% { transform:scale(1)}
+  50% { transform:scale(1.2)}
+}

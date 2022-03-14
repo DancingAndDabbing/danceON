@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Examples</title>
+    <link rel="stylesheet" type="text/css" href="style/mystyle.css">
+    <!--  -->
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css'>
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://dansup.github.io/bulma-templates/css/cards.css">
+  </head>
+  <body>
+    <div class="container">
+        <!-- <div class="widget-search">
+            <form action="/examples:query" method="get">
+                <input type="text" placeholder="Search examples here" />
+                <button type="submit" name="submit">Search</button>
+            </form>
+        </div> -->
+        <!--------------------------->
+        <div style = "height:200px;"></div>
+        <div class="box">
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="searchBar input has-text-centered" type="search" placeholder="Search">
+            </div>
+            <div class="control">
+              <a class="button is-info">Search</a>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+            <p>Number of examples found <%= examples%></p>
+            <%let count = examples;%>
+            <%while (count !=0){%>
+                <div class="row columns">
+                    <%for (var i =0; i<4; i++){%>
+                        <%count = count-1;%>
+                    <div class="column is-one-quarter">
+                      <div class="card large">
+                        <div class="card-image">
+                          <figure class="image">
+                            <img src="./assets/sample.jpg" alt="Image">
+                            <p class = "title-query"><%=titleArr.pop()%></p>
+                            <p class = "desc-query"><%=descriptionArr.pop()%></p>
+                          </figure>
+                        </div>
+                      </div>
+                    </div>
+                    <%if (count ==0){%>
+                        <%    break;%>
+                        <%}%>
+                        <%}%>
+                </div>
+                    
+                <%}%>
+          <!-- <div class="row columns">
+            <div class="column is-one-quarter">
+              <div class="card large">
+                <div class="card-image">
+                  <figure class="image">
+                    <img src="./assets/sample.jpg" alt="Image">
+                    <p>Testing this area</p>
+                  </figure>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-one-quarter">
+              <div class="card large">
+                <div class="card-image">
+                  <figure class="image">
+                    <img src="./assets/sample.jpg" alt="Image">
+                  </figure>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-one-quarter">
+              <div class="card large">
+                <div class="card-image">
+                  <figure class="image">
+                    <img src="./assets/sample.jpg" alt="Image">
+                  </figure>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-one-quarter">
+              <div class="card large">
+                <div class="card-image">
+                  <figure class="image">
+                    <img src="./assets/sample.jpg" alt="Image">
+                  </figure>
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        
+      </div>
+  </body>
+</html>

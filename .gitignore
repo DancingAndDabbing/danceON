@@ -2,3 +2,5 @@
 assets/ignore
 reference/ignore
 ace-full
+node_modules
+package-lock.json

@@ -6,8 +6,7 @@
 <head>
 
 
-    <!-- p5 -->
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+    
 
     <!-- MediaPipe -->
     <!-- Currently Giving TypeError: t.Pose is not a constructor -->
@@ -30,6 +29,9 @@
     <!-- Rough -->
     <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
 
+    <!-- p5 -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+    
     <!-- Style -->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
     <link rel="stylesheet" type="text/css" href="style/mystyles.css">
@@ -64,6 +66,12 @@
                         <span class="icon"><i class="far fa-file-code"></i></span>
                         <span>Reference</span>
                     </button>
+                    <a href="/examples">
+                        <button class="button button is-light" data-show="quickview" data-target="quickviewDefault">
+                            <span class="icon"><i class="far fa-file-code"></i></span>
+                            <span>Examples</span>
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -304,8 +312,27 @@
                             </span>
                         </li>
                     </ul>
-
                 </div>
+                <form style = "position: relative;padding-left: 50px;z-index: 1000 !important;">
+    
+                    <label for="title1">Title:</label>
+                    <input type="text" id="title1" name="title"><br>
+                
+                    <label for="desc1">Desc:</label>
+                    <textarea type="text" id="desc1" name="desc"></textarea><br>
+                
+                    <input type="radio" id="easy" name="tag" value="easy">
+                    <label for="easy">Easy</label><br>
+                
+                    <input type="radio" id="medium" name="tag" value="medium">
+                    <label for="medium">Medium</label><br>
+                
+                    <input type="radio" id="tough" name="tag" value="tough">
+                    <label for="tough">Tough</label><br>
+                
+                    <!-- <button class ="save" onclick = "saveExample(editor.getValue())">Save Example</button> -->
+                    <button class ="save" onclick = "saveExample(declarations.getValue())">Save Example</button>
+                </form>    
             </div>
             <div class="column is-narrow">
                 <div style="">
@@ -323,6 +350,7 @@
             </div>
         </div>
     </div>
+    
 </section>
 <footer class="footer">
   <div class="container">
@@ -365,5 +393,12 @@
 <script src="setup_script.js"></script>
 <script src="overlays.js"></script>
 <script src="sketch.js"></script>
+<script>
+    window.addEventListener('load', function () {
+        const titleInputEl = document.getElementById("desc1")
+    titleInputEl.addEventListener("keydown", (e) => { console.log("key pressed on title", e )});
+    console.log("hello");
+    });
+    </script>
 </body>
 </html>
