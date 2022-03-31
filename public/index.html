@@ -6,7 +6,8 @@
 <head>
 
 
-    
+    <!-- p5 -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
 
     <!-- MediaPipe -->
     <!-- Currently Giving TypeError: t.Pose is not a constructor -->
@@ -29,9 +30,6 @@
     <!-- Rough -->
     <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
 
-    <!-- p5 -->
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
-    
     <!-- Style -->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
     <link rel="stylesheet" type="text/css" href="style/mystyles.css">
@@ -66,7 +64,7 @@
                         <span class="icon"><i class="far fa-file-code"></i></span>
                         <span>Reference</span>
                     </button>
-                    <a href="/examples">
+                    <a href="/examples/list">
                         <button class="button button is-light" data-show="quickview" data-target="quickviewDefault">
                             <span class="icon"><i class="far fa-file-code"></i></span>
                             <span>Examples</span>
@@ -313,6 +311,7 @@
                         </li>
                     </ul>
                 </div>
+                <button onclick="onDelete(getdbid())">Delete Example</button>
                 <form style = "position: relative;padding-left: 50px;z-index: 1000 !important;">
     
                     <label for="title1">Title:</label>
@@ -395,9 +394,16 @@
 <script src="sketch.js"></script>
 <script>
     window.addEventListener('load', function () {
-        const titleInputEl = document.getElementById("desc1")
-    titleInputEl.addEventListener("keydown", (e) => { console.log("key pressed on title", e )});
-    console.log("hello");
+        let dbid = getdbid();
+        console.log(dbid);
+        if (dbid){
+            getExample(dbid).then(function (res){
+                console.log(res.examples)
+                uploadDeclarationsFromDB(res.examples)})
+            .catch(err => {console.log(err)});
+            // let dbcode = example.examples;
+            // uploadDeclarationsFromDB(dbcode)
+        }
     });
     </script>
 </body>

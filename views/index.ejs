@@ -32,26 +32,45 @@
           </div>
         </div>
         <div class="section">
+    <% include('../public/helpers.js') %>
+
             <p>Number of examples found <%= examples%></p>
-            <%let count = examples;%>
+            <% let count = exampleList.length;%>
+            <!-- <% function viewExample(example) {%>
+              <%  console.log("Open examples: ", example)%>
+              <% const id = example._id%>
+              <% window.location.href = `http://localhost:3000/?id=${id}`%>
+              <%}%> -->
+
+            <% viewExample = function(example) {
+              const id = example._id;
+              window.location.href = `http://localhost:3000?id=${id}`;
+            } %>
+            
             <%while (count !=0){%>
+              <!-- add a tag with relevant id for code -->
                 <div class="row columns">
-                    <%for (var i =0; i<4; i++){%>
+                    <%for (var i =0; i<4 && count>=0; i++){%>
                         <%count = count-1;%>
-                    <div class="column is-one-quarter">
+                    <div class="column is-one-quarter" onclick="viewExample(exampleList[count])">
+                      
+
+                      
                       <div class="card large">
                         <div class="card-image">
                           <figure class="image">
-                            <img src="./assets/sample.jpg" alt="Image">
-                            <p class = "title-query"><%=titleArr.pop()%></p>
-                            <p class = "desc-query"><%=descriptionArr.pop()%></p>
+                            <img src="http://localhost:3000/assets/sample.jpg" alt="Image">
+                            <p class = "title-query"><%=exampleList[count].title%></p>
+                            <p class = "desc-query"><%=exampleList[count].description%></p>
                           </figure>
                         </div>
                       </div>
+
+                    
                     </div>
-                    <%if (count ==0){%>
+                    <!-- <%if (count ==0){%>
                         <%    break;%>
-                        <%}%>
+                        <%}%> -->
                         <%}%>
                 </div>
                     
@@ -102,4 +121,6 @@
         
       </div>
   </body>
+  <footer>
+  </footer>
 </html>

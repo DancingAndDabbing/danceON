@@ -8,10 +8,11 @@ const mongoose = require('mongoose'); // Create and connect DB
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
 const { title } = require('process');
+const ObjectId = mongoose.Types.ObjectId;
 app.use(cors());;
 app.use('./api/v1',routes);
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
-// app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(express.static("public2"));
 const dbUrl = "mongodb://127.0.0.1:27017/danceonDB"
@@ -38,41 +39,31 @@ app.get('/', function(req, res) {
 
 // GET /examples
 var examplesLen = 0
-app.get('/examples', function(req, res) {
-    console.log("examples page opened");
+app.get('/examples/list', function(req, res) {
+    res.sendFile(path.join(__dirname, '/public2/index.html'));
+    // Example.find(function(err,examples){
+    //      if (err){
+    //          console.log(err)
+    //      } else{
+    //          res.sendFile(path.join(__dirname, '/public2/index.html'));
+    //         //  res.render('index', {examples : examples.length, exampleList:examples})
+    //         //  console.log(examples.length)
+    //      }
+    // });
+});
+app.get('/examples/files', function(req, res) {
     Example.find(function(err,examples){
          if (err){
              console.log(err)
          } else{
-             let descriptionArr = [];
-             let titleArr = [];
-             examplesLen = examples.length
-             examples.forEach(function (obj){
-                descriptionArr.push(obj.description);
-                titleArr.push(obj.title);
-             })
-             res.render('index', {examples : examplesLen,descriptionArr:descriptionArr,titleArr:titleArr })
-             console.log(examples.length)
+             res.send(examples);
          }
     });
-    
-
-    // dbConn.then(function(db) {
-    //     db.collection('examples').find({}).toArray().then(function(examples) {
-            
-    //         res.status(200).json(examples);
-    //     });
-    // });
-    // res.sendFile(path.join(__dirname, '/public2/index.html'));
 });
 
 // POST /examples
 app.post('/examples', async function (req, res) {
-    console.log(req.body.desc);
-    console.log(req.body.title);
-    console.log(req.body.tag);
-    console.log(req.body.code);
-    console.log(req.body);
+
 
     var data = await Example.create({
             authorName: "Naren", 
@@ -84,8 +75,30 @@ app.post('/examples', async function (req, res) {
             tags:req.body.tag,
             examples: req.body.code
     });
+    console.log(data)
     res.status(200).send(data);
 });
+app.get('/examples', function(req, res) {
+    Example.findOne({_id: ObjectId(req.query.dbID)},function(err,example){
+        if (err){
+            console.log(err)
+        } else{
+            res.send(example)
+        }
+   });
+})
+
+app.delete('/examples', function(req, res) {
+    console.log(req.query.dbID)
+    Example.deleteOne({_id: ObjectId(req.query.dbID)},function(err,example){
+        if (err){
+            console.log(err)
+        } else{
+            res.send('deleted')
+        }
+   });
+})
+
 
 app.listen(port, ()=>{
     console.log(`The server is listening on port ${port}`)

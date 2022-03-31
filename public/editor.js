@@ -127,7 +127,7 @@ let fromSetValueCall = false;
 const STARTING_CODE = `(pose) => [
 
 ];`
-
+// document and editsession
 let declarations = new ace.EditSession(STARTING_CODE);
 declarations.setUndoManager(new ace.UndoManager());
 declarations.setUseWorker(false); // default jshint not great
@@ -186,6 +186,12 @@ function uploadDeclarations(newFile) {
         console.log(e);
         alert('Hmmmm. something wrong with the code you uploaded...');
     });
+}
+
+function uploadDeclarationsFromDB(dbCode) {
+    editor.getSession().setValue(dbCode)
+
+    // declarations.setValue(dbCode);
 }
 
 function downloadDeclarations() {

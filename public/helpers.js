@@ -1,7 +1,6 @@
 // Useful Functions for developers and users
 // This file gets loaded first
 
-const { json } = require("express/lib/response");
 
 // Key points we are using and not using from blaze poze
 // Copy from one list to the other if you want to change
@@ -67,6 +66,28 @@ const keyPointsNotToUse = ['left_eye_inner', 'left_eye_outer',
 // async function searchExample(data) {
 
 // }
+function getdbid(){
+    console.log(window.location.href)
+    let params = (new URL(window.location.href)).searchParams;
+    console.log(params)
+    let dbid = params.get("id");
+    console.log(dbid)
+    return dbid
+}
+
+async function onDelete(dbid){
+    await deleteExample(dbid)
+    window.location.href = 'http://localhost:3000/examples/list'
+}
+
+// open example
+function viewExample(example) {
+    console.log("Open examples: ", example)
+    const id = example._id
+    window.location.href = `http://localhost:3000/?id=${id}`
+}
+
+
 // post example to db
 async function saveExample(data) {
     // console.log(data);
@@ -88,14 +109,14 @@ async function saveExample(data) {
     // }  
     let jsonData = {
         "code": data,
-        "desc": document.querySelector("#desc1").innerHTML,
-        "title": document.querySelector("#title1").innerHTML,
+        "desc": document.querySelector("#desc1").value,
+        "title": document.querySelector("#title1").value,
         "tag": tag,
     }
-    // console.log("Json Data: ",jsonData);
+    console.log("Json Data: ",jsonData);
 
     //
-    const response = await fetch(url, {
+    fetch(url, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -103,7 +124,7 @@ async function saveExample(data) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: jsonData // body data type must match "Content-Type" header
+      body: JSON.stringify(jsonData) // body data type must match "Content-Type" header
     })
     .then(res =>{
         document.querySelector(".save").innerHTML = "Saved";
@@ -113,6 +134,67 @@ async function saveExample(data) {
     .catch (err => { console.log("ouput");
     console.log(err); })
 }
+
+async function getExample(dbID) {
+    return new Promise(resolve => {
+    let url = '/examples'
+    let jsonData = {
+        "dbID": dbID,
+    }
+    console.log("Json Data: ",jsonData);
+    url = url + '?' + new URLSearchParams(jsonData)
+    //
+    fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    //   body: JSON.stringify(jsonData) // body data type must match "Content-Type" header
+    })
+    .then(async res =>{
+        const f =  await res.json()
+        console.log(f)
+        resolve(f)
+    })
+    .catch (err => { 
+      console.log("ouput");
+      console.log(err)
+      resolve(err)
+    })
+    })
+    
+}
+
+async function deleteExample(dbID){
+    console.log(dbID)
+    let url = '/examples'
+    let jsonData = {
+        "dbID": dbID,
+    }
+    console.log("Json Data: ",jsonData);
+    url = url + '?' + new URLSearchParams(jsonData)
+    console.log(url)
+    fetch(url, {
+      method: 'DELETE',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    //   body: JSON.stringify(jsonData) // body data type must match "Content-Type" header
+    })
+    .then(res =>{
+        console.log("input");
+        console.log(res);
+    })
+    .catch (err => { console.log("ouput");
+    console.log(err); })
+}
+
 
 
 function fallbackToDefault(val, def) {
