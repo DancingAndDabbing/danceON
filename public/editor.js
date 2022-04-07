@@ -189,6 +189,7 @@ function uploadDeclarations(newFile) {
 }
 
 function uploadDeclarationsFromDB(dbCode) {
+    fromSetValueCall = true;
     editor.getSession().setValue(dbCode)
 
     // declarations.setValue(dbCode);
