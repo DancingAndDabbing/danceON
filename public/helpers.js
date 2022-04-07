@@ -67,11 +67,8 @@ const keyPointsNotToUse = ['left_eye_inner', 'left_eye_outer',
 
 // }
 function getdbid(){
-    console.log(window.location.href)
     let params = (new URL(window.location.href)).searchParams;
-    console.log(params)
     let dbid = params.get("id");
-    console.log(dbid)
     return dbid
 }
 
@@ -141,7 +138,6 @@ async function getExample(dbID) {
     let jsonData = {
         "dbID": dbID,
     }
-    console.log("Json Data: ",jsonData);
     url = url + '?' + new URLSearchParams(jsonData)
     //
     fetch(url, {
@@ -156,7 +152,6 @@ async function getExample(dbID) {
     })
     .then(async res =>{
         const f =  await res.json()
-        console.log(f)
         resolve(f)
     })
     .catch (err => { 
