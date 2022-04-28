@@ -48,38 +48,6 @@ function createCard(title, description, src="http://localhost:3000/assets/sample
 const div = document.createElement('div');
 div.innerHTML = htmlContent;
 return div;
-    // let div1 = document.createElement('div');
-    
-    // let div2 = document.createElement('div');
-    
-    // let div3 = document.createElement('div');
-    // let fig = document.createElement('figure');
-    // let img = document.createElement('img');
-    // let titleEl = document.createElement('p');
-    // let descriptionEl = document.createElement('p');
-    // let a = document.createElement('a');
-    // let url = `http://localhost:3000/?id=${id}`;
-    // a.href = url;
-    // div1.classList.add('is-one-quarter','column');
-    
-    // div2.classList.add('card','large');
-    
-    // div3.classList.add('card-image');
-    // fig.classList.add('image');
-    // titleEl.classList.add('title-query');
-    // titleEl.innerHTML = title;
-    // descriptionEl.classList.add('desc-query')
-    // descriptionEl.innerHTML = description;
-    // img.src = src;
-
-    // fig.appendChild(img);
-    // fig.appendChild(titleEl);
-    // fig.appendChild(descriptionEl);
-    // a.appendChild(fig);
-    // div3.appendChild(a);
-    // div2.appendChild(div3);
-    // div1.appendChild(div2);
-    // return div1;
     
 }
 

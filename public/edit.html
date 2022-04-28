@@ -169,12 +169,12 @@
           <div class="columns">
             <div class = "column is-one-third"></div>
             <div class = "column is-one-third">
-              <form class="box" method="post" action="/signup">
+              <form class="box">
                 
                 <div class="field">
                   <label class="label">Username</label>
                   <div class="control has-icons-left has-icons-right">
-                    <input class="input is-success" type="text" placeholder="Text input" name="uname" id ="uname" required>
+                    <input class="input is-success" type="text" placeholder="Text input" name="uname" required>
                     <span class="icon is-small is-left">
                       <i class="fas fa-user"></i>
                     </span>
@@ -188,7 +188,7 @@
                 <div class="field">
                   <label class="label">Password</label>
                   <div class="control has-icons-left has-icons-right">
-                    <input class="input is-success" type="text" placeholder="Text input" name="psw" id = "psw" required>
+                    <input class="input is-success" type="text" placeholder="Text input" name="psw" required>
                     <span class="icon is-small is-left">
                       <i class="fas fa-user"></i>
                     </span>
@@ -199,7 +199,7 @@
                 </div>
                 <div class="field is-grouped">
                   <div class="control">
-                    <button class="button is-link">Submit</button>
+                    <button class="button is-link" onclick = "signup()">Submit</button>
                   </div>
                   <div class="control">
                     <button class="button is-link is-light">Cancel</button>
@@ -568,25 +568,45 @@
                   </li>
                 </ul>
               </div>
-              <!-- <button onclick="onDelete(getdbid())">Delete Example</button>
-                  <form style = "position: relative;padding-left: 50px;z-index: 1000 !important;">
-      
-                      <label for="title1">Title:</label>
-                      <input type="text" id="title1" name="title"><br>
-                  
-                      <label for="desc1">Desc:</label>
-                      <textarea type="text" id="desc1" name="desc"></textarea><br>
-                  
-                      <input type="radio" id="easy" name="tag" value="easy">
-                      <label for="easy">Easy</label><br>
-                  
-                      <input type="radio" id="medium" name="tag" value="medium">
-                      <label for="medium">Medium</label><br>
-                  
-                      <input type="radio" id="tough" name="tag" value="tough">
-                      <label for="tough">Tough</label><br>
-                      <button class ="save" onclick = "saveExample(declarations.getValue())">Save Example</button>
-                  </form>     -->
+                <form class = "box">
+                    <div class = "field">
+                        <label for="title1" class="label">Title:</label>
+                        <div class="control">
+                            <input class="input is-success" type="text" placeholder="Text input" name="title" id="title1">
+                        </div>
+                    </div>
+
+                    <div class = "field">
+                        <label for="desc1" class="label">Description:</label>
+                        <div class="control">
+                            <input class="input is-success" type="text" placeholder="Text input" name="desc" id="desc1">
+                        </div>
+                    </div>
+                    <div class = "field">
+                        <div class="control">
+                            <label for="easy" class="radio">
+                              <input type="radio" name="tag" value="easy" id="easy">
+                              Easy
+                            </label>
+                            <label for="medium" class="radio">
+                              <input type="radio" name="answer" value="medium" id="medium">
+                              Medium
+                            </label>
+                            <label for="tough" class="radio">
+                                <input type="radio" name="answer" value="tough" id="tough">
+                                Tough
+                              </label>
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                          <button class="button is-link" onclick = "saveExample(declarations.getValue())">Save example</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-link is-light" onclick="onDelete(getdbid())">Delete example</button>
+                        </div>
+                      </div>
+                </form>
             </div>
             <div class="column is-narrow">
               <div style="">
@@ -678,19 +698,6 @@
         </div>
       </footer>
     </div>
-    <div>
-        <!-- <iframe
-          id="egID"
-          name="iframe_a"
-          class="hidden"
-          style="
-          position: absolute;
-            border: none;
-            height: 100%;
-            width: 100%;
-          "
-        ></iframe> -->
-      </div>
 
     <script src="topnav_handler.js"></script>
     <script src="lib/bulma-quickview.min.js"></script>
