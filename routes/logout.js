@@ -5,7 +5,8 @@ const passport = require('passport');
 const User = require('../models/userSchema');
 
 router.get('/', function(req, res) {
-    res.send("You are logged out")
+    req.logout();
+    res.redirect('/');
 })
 
 module.exports = router;

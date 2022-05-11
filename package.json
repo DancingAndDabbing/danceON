@@ -9,6 +9,7 @@
     "lib": "lib"
   },
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,9 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/DancingAndDabbing/danceON/issues"
+  },
+  "engines": {
+    "node": "16.13.2"
   },
   "homepage": "https://github.com/DancingAndDabbing/danceON#readme",
   "dependencies": {

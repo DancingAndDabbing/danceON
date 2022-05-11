@@ -41,38 +41,63 @@ const keyPointsNotToUse = [
   "right_eye_inner",
   "right_eye_outer",
 ];
-
+//Search bar functionality
+let exampleDivs;
+let searchBar = document.getElementById("search");
+searchBar.addEventListener("input", function (event) {
+  const value = event.target.value.toLowerCase();
+  [...exampleDivs].forEach((div) => {
+    const title = div.querySelector(".card-header-title").innerHTML.toLowerCase();
+    const description = div.querySelector(".content").innerHTML.toLowerCase();
+    // const tags = div.querySelector(".tags").innerHTML.toLowerCase();
+    if (title.includes(value) || description.includes(value)) {
+      div.style.display = "";
+    } else {
+      div.style.display = "none";
+    }
+  }
+  );
+  
+});
+// example card template
 function createCard(
   title,
   description,
-  src = "http://localhost:3000/assets/sample.jpg",
+  src,
   id
 ) {
 const htmlContent = `
-<div class = "card">
+<div class = "card" style = "width:240px">
   <div class = "card-header">
       <p class="card-header-title">${title}</p>
   </div>
-  <a href="http://localhost:3000/?id=${id}">
-    <div class="card-image">
-      <figure class="image is-4by3">
-          <img src="${src}" alt="Placeholder image">
-      </figure>
+  <div class = "container">
+    <a href="http://localhost:3000/?id=${id}">
+      <div class="" style="">
+        <div class="image is-3by4" id ="egImage" style ="background-image:url(${src});">
+            
+        </div>
+    </div>
+    <div class = "card-content">
+        <div class="content">
+        ${description} 
+        </div>
+    </div>
+    </a>
   </div>
-  <div class = "card-content">
-      <div class="content">
-      ${description} 
-      </div>
-  </div>
-  </a>
 </div>
 `
+
   const div = document.createElement("div");
   div.innerHTML = htmlContent;
+  div.style.flexGrow = "0";
   return div;
 }
+
 let res = null
 let data = null
+
+// load examples in the example modal
 async function loadPage() {
   if (res == null || data == null) {
     res = await fetch("http://localhost:3000/examples/files");
@@ -80,89 +105,64 @@ async function loadPage() {
     data = await res.json();
 
     let rootDiv = document.getElementById("exampleID");
-    
     let count = data.length - 1;
-    let i = 1;
-    let rowDiv = document.createElement("div");
-    rowDiv.classList.add("columns");
     while (count >= 0) {
+      let imageURL = data[count].image;
+      if (imageURL === undefined){
+          imageURL = "http://localhost:3000/assets/sample.jpg";
+      }
       let card = createCard(
         data[count].title,
         data[count].description,
-        "http://localhost:3000/assets/sample.jpg",
+        imageURL,
         data[count]._id
-      );
-      
-      card.classList.add("column","is-one-third");
-      rowDiv.appendChild(card);
-      
-      if (i % 3 === 0) {
-          rootDiv.appendChild(rowDiv);
-          rowDiv = document.createElement("div");
-          rowDiv.classList.add("columns");
-      }
+      );    
+      card.classList.add("column");
+      rootDiv.appendChild(card);
       count--;
-      i++;
     }
+    exampleDivs = rootDiv.children;
   }
 }
 
-function getStatus() {
-  var url = "/user";
-  fetch(url, {
-    method: "GET",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => {
-      res.json();
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log("ouput");
-      console.log(err);
-    });
-}
-
+// show modal frame
 function showframe(id) {
   let modal = document.getElementById(id);
   modal.classList.add("is-active");
   loadPage();
 }
 
+// hide modal frame
 function hideframe(id) {
   let modal = parent.document.getElementById(id);
   modal.classList.remove("is-active");
 }
 
+// get current snapshot of the defaultCanvas0 canvas
+function getCanvasSnapshot() {
+  let canvas = document.getElementById("defaultCanvas0");
+  let dataURL = canvas.toDataURL("image/png");
+  return dataURL;
+}
+// get the db id from the url if it exists
 function getdbid() {
   let params = new URL(window.location.href).searchParams;
   let dbid = params.get("id");
   return dbid;
 }
-
+// delete the example
 async function onDelete(dbid) {
   await deleteExample(dbid);
   window.location.href = "http://localhost:3000/examples/list";
 }
 
-// open example
-function viewExample(example) {
-  console.log("Open examples: ", example);
-  const id = example._id;
-  window.location.href = `http://localhost:3000/?id=${id}`;
-}
-
-// post example to db
+// save example to db
 async function saveExample(data) {
-  // console.log(data);
-  // Default options are marked with *
+
+  // call snapshot function
+  let snapshot = getCanvasSnapshot();
+
+
   const url = "/examples";
   var tag = "";
   if (document.getElementById("easy").checked) {
@@ -172,17 +172,12 @@ async function saveExample(data) {
   } else {
     tag = "tough";
   }
-  // let jsonData = {
-  //     "test":"test",
-  //     "test1":"test1",
-  //     "test2":"test2",
-  //     "test3":"test3"
-  // }
   let jsonData = {
     code: data,
     desc: document.querySelector("#desc1").value,
     title: document.querySelector("#title1").value,
     tag: tag,
+    image: snapshot,
   };
   console.log("Json Data: ", jsonData);
 
@@ -207,7 +202,7 @@ async function saveExample(data) {
       console.log(err);
     });
 }
-
+// get an example from the db
 async function getExample(dbID) {
   return new Promise((resolve) => {
     let url = "/examples";
@@ -237,7 +232,7 @@ async function getExample(dbID) {
       });
   });
 }
-
+// delete example from db
 async function deleteExample(dbID) {
   console.log(dbID);
   let url = "/examples";

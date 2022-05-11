@@ -375,7 +375,7 @@ function keyPressed() {
     let settingsOverlay = document.getElementById('settings').classList.contains("is-active");
     if (settingsOverlay || editor.isFocused() || options.webcam || options.recording || !options.videoLoaded) return;
 
-    if (keyCode == 32) playPauseVideo(); // spacebar
+    // if (keyCode == 32) playPauseVideo(); // spacebar
     if (keyCode == RIGHT_ARROW) goForwardOrBackward(options, video, 1);
     if (keyCode == LEFT_ARROW) goForwardOrBackward(options, video, -1);
     if (keyCode == UP_ARROW) goForwardOrBackward(options, video, 10);

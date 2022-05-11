@@ -5,7 +5,8 @@ const exampleSchema = new mongoose.Schema({
     description: String,
     title: String,
     tags: String,
-    examples: String
+    examples: String,
+    image: String
 });
 
 const Example = mongoose.model("Example",exampleSchema);

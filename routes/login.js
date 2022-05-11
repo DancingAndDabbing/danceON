@@ -1,22 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-router.post('/login', function(req, res) {
+const User = require('../models/userSchema');
+router.post('/', async function(req, res) {
+    console.log(req.body.uname);
     User.findOne({username: req.body.uname}, function(err, user){
         if (err){
             console.log(err)
-            res.sendFile(path.join(__dirname, '/public/index.html'));
+            res.sendFile(path.join(__dirname,'..', '/public/index.html'));
         } else{
+            console.log(user)
             if (user){
                 // if login successful
-                if (user.password === req.body.psw){
-                    res.sendFile(path.join(__dirname, '/public/edit-index.html'));
-                } else{
-                    res.sendFile(path.join(__dirname, '/public/index.html'));
-                }
+                req.login(user, function(err){
+                    if (err){
+                        console.log(err)
+                        res.redirect('/');
+                    } else{
+                        res.redirect('/edit');
+                    }
+                })
             } else{
-                console.log("I am the culprit")
-                res.sendFile(path.join(__dirname, '/public/index.html'));
+                res.redirect('/');
+                // res.sendFile(path.join(__dirname,'..', '/public/index.html'));
             }
         }
     });

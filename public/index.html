@@ -136,13 +136,6 @@
                     Login
                   </button>
                   <button
-                    class="button button is-light"
-                    id = "auth-logout"
-                    onclick="logout()"
-                  >
-                    Logout
-                  </button>
-                  <button
                     class="button button is-light js-modal-trigger"
                     id = "auth-signup"
                     data-target="signup"
@@ -156,8 +149,13 @@
             </div>
           </section>
           <div class="modal-body eg-body has-background-light">
+            <div class="field has-addons">
+              <div class="control">
+                <input class="input" type="text" placeholder="Search examples" id ="search">
+              </div>
+            </div>
             <div class="container is-clipped">
-              <div class="card-container" id="exampleID"></div>
+              <div class="card-container columns is-centered is-multiline" id="exampleID"></div>
             </div>
           </div>
         </div>
@@ -165,7 +163,7 @@
       <!-- signup modal -->
       <div class="modal" id = "signup">
         <div class="modal-background" onclick="hideframe('signup')"></div>
-        <div class="modal-content">
+        <div class="modal-content is-clipped">
           <div class="columns">
             <div class = "column is-one-third"></div>
             <div class = "column is-one-third">
@@ -217,16 +215,16 @@
       <!-- login modal -->
       <div class="modal" id = "login">
         <div class="modal-background" onclick="hideframe('login')"></div>
-        <div class="modal-content">
+        <div class="modal-content is-clipped">
           <div class="columns">
             <div class = "column is-one-third"></div>
             <div class = "column is-one-third">
-              <form class="box">
+              <form class="box" method = "post" action="/login">
                 
                 <div class="field">
                   <label class="label">Username</label>
                   <div class="control has-icons-left has-icons-right">
-                    <input class="input is-success" type="text" placeholder="Text input" value="bulma">
+                    <input class="input is-success" type="text" placeholder="Text input" value="bulma" name="uname" id ="uname" required>
                     <span class="icon is-small is-left">
                       <i class="fas fa-user"></i>
                     </span>
@@ -239,7 +237,7 @@
                 <div class="field">
                   <label class="label">Password</label>
                   <div class="control has-icons-left has-icons-right">
-                    <input class="input is-success" type="text" placeholder="Text input" value="bulma">
+                    <input class="input is-success" type="text" placeholder="Text input" value="bulma" name="psw" id = "psw" required>
                     <span class="icon is-small is-left">
                       <i class="fas fa-user"></i>
                     </span>
@@ -568,25 +566,6 @@
                   </li>
                 </ul>
               </div>
-              <!-- <button onclick="onDelete(getdbid())">Delete Example</button>
-                  <form style = "position: relative;padding-left: 50px;z-index: 1000 !important;">
-      
-                      <label for="title1">Title:</label>
-                      <input type="text" id="title1" name="title"><br>
-                  
-                      <label for="desc1">Desc:</label>
-                      <textarea type="text" id="desc1" name="desc"></textarea><br>
-                  
-                      <input type="radio" id="easy" name="tag" value="easy">
-                      <label for="easy">Easy</label><br>
-                  
-                      <input type="radio" id="medium" name="tag" value="medium">
-                      <label for="medium">Medium</label><br>
-                  
-                      <input type="radio" id="tough" name="tag" value="tough">
-                      <label for="tough">Tough</label><br>
-                      <button class ="save" onclick = "saveExample(declarations.getValue())">Save Example</button>
-                  </form>     -->
             </div>
             <div class="column is-narrow">
               <div style="">
@@ -628,7 +607,8 @@
           </div>
         </div>
       </section>
-      <footer class="footer">
+      
+      <footer class="footer" id = "test1">
         <div class="container">
           <div class="columns">
             <div class="column is-narrow has-text-centered">
@@ -722,8 +702,7 @@
             .catch((err) => {
               console.log(err);
             });
-          // let dbcode = example.examples;
-          // uploadDeclarationsFromDB(dbcode)
+          // js function call that shows my delete button only if author is
         }
       });
     </script>

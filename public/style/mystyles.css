@@ -8973,3 +8973,11 @@ iframe.hidden
       color: #00d1b2; }
   .eg-body .eg-body-link.is-active {
     color: #00d1b2; }
+
+#egImage {
+  /* width: 100%;
+  height: 200px; */
+  position: relative;
+  background-position: center;
+  background-size: cover;
+}
