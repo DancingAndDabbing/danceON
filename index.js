@@ -4,6 +4,7 @@ const mongoService = require("./services/mongoservice").mongoService
 const app = express();
 const bodyParser = require("body-parser"); // to parse request response body in user friendly way
 const session = require('express-session');
+const MemoryStore = require('memorystore')(session)
 const passport = require('passport');
 const cors = require('cors');
 // var morgan = require('morgan')
@@ -12,8 +13,14 @@ app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit:'50mb',extended:false}));
 app.use(session({
+    cookie: {
+        maxAge: 86400000
+    },
+    store: new MemoryStore({
+        checkPeriod: 86400000
+    }),
     secret: process.env.SECRET,
-    resave: true,
+    resave: false,
     saveUninitialized: true,
 }));
 app.use(passport.initialize());
