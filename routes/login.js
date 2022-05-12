@@ -28,9 +28,11 @@ const passport = require('passport');
 //         }
 //     });
 // });
-router.post('/',function(req, res,){
+router.post('/',async function(req, res,){
 
     passport.authenticate('local', function (err, user, info) {
+        console.log(err);
+        console.log(info);
         if (err) {
             return res.status(500).json({
                 err: err
