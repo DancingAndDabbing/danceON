@@ -15,7 +15,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const Example = require('../models/exampleModel');
 
 router.post('/', async function (req, res) {
-    console.log(req.user);
+    // console.log(req.user);
     let ts = Date.now();
     let date_ob = new Date(ts);
     let date = date_ob.getDate();
@@ -23,7 +23,7 @@ router.post('/', async function (req, res) {
     let year = date_ob.getFullYear();
     let time = date_ob.getUTCHours() + "-"+date_ob.getUTCMinutes()+"-"+date_ob.getUTCMilliseconds()
     let createDate =  year + "-" + month + "-" + date+"T"+time;
-    console.log(req.body.image);
+    // console.log(req.body.image);
     var data = await Example.create({
             authorName:req.user.username, 
             createDate: createDate, 

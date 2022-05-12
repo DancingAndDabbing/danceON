@@ -178,7 +178,7 @@ async function saveExample(data) {
     tag: tag,
     image: snapshot,
   };
-  console.log("Json Data: ", jsonData);
+  // console.log("Json Data: ", jsonData);
 
   //
   fetch(url, {
