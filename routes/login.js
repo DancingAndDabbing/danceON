@@ -28,25 +28,27 @@ const passport = require('passport');
 //         }
 //     });
 // });
-router.post('/',passport.authenticate('local', function (err, user, info) {
-    if (err) {
-        return res.status(500).json({
-            err: err
-            });
-            }
-    if (!user) {
-        return res.status(404).json({err: info});
-    }
-    req.login(user, function(err){
-        if (err){
-            console.log(err)
-            res.redirect('/');
-        } else{
-            res.redirect('/edit');
+router.post('/',function(req, res, next){
+
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            return res.status(500).json({
+                err: err
+                });
+                }
+        if (!user) {
+            return res.status(404).json({err: info});
         }
-    })
-}));
-        
+        req.login(user, function(err){
+            if (err){
+                console.log(err)
+                res.redirect('/');
+            } else{
+                res.redirect('/edit');
+            }
+        })
+    });
+})
 
 
 
