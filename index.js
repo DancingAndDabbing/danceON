@@ -27,18 +27,28 @@ app.use(passport.initialize());
 app.use(passport.session());
 const User = require('./models/userSchema');
 passport.use(new LocalStrategy(
-    function(username, password, next) {
+    function verify(username, password, next) {
         console.log('auth');
+        console.log(username);
+        console.log(password);
         User.findOne({username: username}, function(err, user) {
             console.log('passport');
             if(err) { return  next(err);}
             if(!user) { 
                 return next(null, false, {message : 'invalid username'});
             }
-            if(!user.validPassword(password)) {
-                return next(null, false, {message: 'invalid password'})
-            }
-            return next(null, user);
+
+            crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+                if (err) { return next(err); }
+                if (!crypto.timingSafeEqual(user.hash, hashedPassword)) {
+                  return next(null, false, { message: 'Incorrect username or password.' });
+                }
+                return next(null, user);
+              });
+            // if(!user.validPassword(password)) {
+            //     return next(null, false, {message: 'invalid password'})
+            // }
+            // return next(null, user);
         });
     }
 ));
