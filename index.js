@@ -30,10 +30,9 @@ const User = require('./models/userSchema');
 passport.use(new LocalStrategy(
     function verify(username, password, next) {
         console.log('auth');
-        console.log(username);
-        console.log(password);
-        User.findOne({username: username}, function(err, user) {
+        User.findOne({username: username},'username salt hash', function(err, user) {
             console.log('passport');
+            console.log(user)
             if(err) { return  next(err);}
             if(!user) { 
                 return next(null, false, {message : 'invalid username'});
