@@ -28,9 +28,10 @@ const passport = require('passport');
 //         }
 //     });
 // });
-router.post('/',User.authenticate('local', { failureRedirect: '/' }),function(req, res) {
-    res.redirect('/edit');
-});
+router.post('/',passport.authenticate('local', {
+    successRedirect: '/edit',
+    failureRedirect: '/'
+    }));
 
 
 
