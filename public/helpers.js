@@ -192,11 +192,6 @@ async function saveExample(data) {
     },
     body: JSON.stringify(jsonData), // body data type must match "Content-Type" header
   })
-    .then((res) => {
-      document.querySelector(".save").innerHTML = "Saved";
-      console.log("input");
-      console.log(res);
-    })
     .catch((err) => {
       console.log("ouput");
       console.log(err);
