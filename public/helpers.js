@@ -94,35 +94,31 @@ const htmlContent = `
   return div;
 }
 
-let res = null
-let data = null
 
 // load examples in the example modal
 async function loadPage() {
-  if (res == null || data == null) {
-    res = await fetch("/examples/files");
+  let res = await fetch("/examples/files");
 
-    data = await res.json();
+  let data = await res.json();
 
-    let rootDiv = document.getElementById("exampleID");
-    let count = data.length - 1;
-    while (count >= 0) {
-      let imageURL = data[count].image;
-      if (imageURL === undefined){
-          imageURL = "/assets/sample.jpg";
-      }
-      let card = createCard(
-        data[count].title,
-        data[count].description,
-        imageURL,
-        data[count]._id
-      );    
-      card.classList.add("column");
-      rootDiv.appendChild(card);
-      count--;
+  let rootDiv = document.getElementById("exampleID");
+  let count = data.length - 1;
+  while (count >= 0) {
+    let imageURL = data[count].image;
+    if (imageURL === undefined){
+        imageURL = "/assets/sample.jpg";
     }
-    exampleDivs = rootDiv.children;
+    let card = createCard(
+      data[count].title,
+      data[count].description,
+      imageURL,
+      data[count]._id
+    );    
+    card.classList.add("column");
+    rootDiv.appendChild(card);
+    count--;
   }
+  exampleDivs = rootDiv.children;
 }
 
 // show modal frame
