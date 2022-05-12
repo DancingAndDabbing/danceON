@@ -55,7 +55,7 @@ const passport = require('passport');
 router.post('/',
   passport.authenticate('local',{
     successRedirect: '/edit',
-    failureRedirect: '/login'
+    failureRedirect: '/'
   }));
 
 
