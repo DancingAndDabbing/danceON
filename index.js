@@ -2,16 +2,14 @@ require('dotenv').config()
 const express = require('express');
 const mongoService = require("./services/mongoservice").mongoService
 const app = express();
+const connectEnsureLogin = require('connect-ensure-login');
 const bodyParser = require("body-parser"); // to parse request response body in user friendly way
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session)
 const passport = require('passport');
 const cors = require('cors');
-// var morgan = require('morgan')
-// app.use(morgan('dev'));
-app.use(cors());
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit:'50mb',extended:false}));
+const User = require('./models/userSchema');
+var LocalStrategy = require('passport-local');
 app.use(session({
     cookie: {
         maxAge: 86400000
@@ -23,8 +21,19 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
+app.use(cors());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit:'50mb',extended:false}));
 app.use(passport.initialize());
 app.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+// var morgan = require('morgan')
+// app.use(morgan('dev'));
+
+
+
 
 const mongoURL = process.env.MONGODB_URI
 mongoService.startConnection(mongoURL) // mongoDB connection

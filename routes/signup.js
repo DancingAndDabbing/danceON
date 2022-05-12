@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const passport = require('passport');
+// const passport = require('passport');
 const User = require('../models/userSchema');
-var LocalStrategy = require('passport-local');
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+
 
 router.post('/', async function(req, res) {
     console.log(req.body.uname);
