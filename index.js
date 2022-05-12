@@ -26,7 +26,23 @@ app.use(bodyParser.urlencoded({limit:'50mb',extended:false}));
 app.use(passport.initialize());
 app.use(passport.session());
 const User = require('./models/userSchema');
-passport.use(new LocalStrategy(User.authenticate()));
+passport.use(new LocalStrategy(
+    function(username, password, next) {
+        console.log('auth');
+        User.findOne({username: username}, function(err, user) {
+            console.log('passport');
+            if(err) { return  next(err);}
+            if(!user) { 
+                return next(null, false, {message : 'invalid username'});
+            }
+            if(!user.validPassword(password)) {
+                return next(null, false, {message: 'invalid password'})
+            }
+            return next(null, user);
+        });
+    }
+));
+// passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 // var morgan = require('morgan')

@@ -28,30 +28,37 @@ const passport = require('passport');
 //         }
 //     });
 // });
-router.post('/',async function(req, res,){
-    console.log(req.body.username);
-    passport.authenticate('local', function (err, user, info) {
-        console.log(err);
-        console.log(info);
-        if (err) {
-            return res.status(500).json({
-                err: err
-                });
-                }
-        if (!user) {
-            return res.status(404).json({err: info});
-        }
-        req.login(user, function(err){
-            if (err){
-                console.log(err)
-                res.redirect('/');
-            } else{
-                res.redirect('/edit');
-            }
-        })
-    });
-})
+// router.post('/',async function(req, res,){
+//     console.log(req.body.username);
+//     passport.authenticate('local', function (err, user, info) {
+//         console.log(err);
+//         console.log(info);
+//         if (err) {
+//             return res.status(500).json({
+//                 err: err
+//                 });
+//                 }
+//         if (!user) {
+//             return res.status(404).json({err: info});
+//         }
+//         req.login(user, function(err){
+//             if (err){
+//                 console.log(err)
+//                 res.redirect('/');
+//             } else{
+//                 res.redirect('/edit');
+//             }
+//         })
+//     });
+// })
 
+router.post('/',
+  passport.authenticate('local'),
+  function(req, res) {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    res.send('Done');
+  });
 
 
 module.exports = router;
