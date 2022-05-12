@@ -72,7 +72,7 @@ const htmlContent = `
       <p class="card-header-title">${title}</p>
   </div>
   <div class = "container">
-    <a href="http://localhost:3000/?id=${id}">
+    <a href="/?id=${id}">
       <div class="" style="">
         <div class="image is-3by4" id ="egImage" style ="background-image:url(${src});">
             
@@ -100,7 +100,7 @@ let data = null
 // load examples in the example modal
 async function loadPage() {
   if (res == null || data == null) {
-    res = await fetch("http://localhost:3000/examples/files");
+    res = await fetch("/examples/files");
 
     data = await res.json();
 
@@ -109,7 +109,7 @@ async function loadPage() {
     while (count >= 0) {
       let imageURL = data[count].image;
       if (imageURL === undefined){
-          imageURL = "http://localhost:3000/assets/sample.jpg";
+          imageURL = "/assets/sample.jpg";
       }
       let card = createCard(
         data[count].title,
@@ -153,7 +153,7 @@ function getdbid() {
 // delete the example
 async function onDelete(dbid) {
   await deleteExample(dbid);
-  window.location.href = "http://localhost:3000/examples/list";
+  window.location.href = "/examples/list";
 }
 
 // save example to db
