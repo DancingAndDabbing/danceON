@@ -6,8 +6,8 @@ const bodyParser = require("body-parser"); // to parse request response body in 
 const session = require('express-session');
 const passport = require('passport');
 const cors = require('cors');
-var morgan = require('morgan')
-app.use(morgan('dev'));
+// var morgan = require('morgan')
+// app.use(morgan('dev'));
 app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit:'50mb',extended:false}));
