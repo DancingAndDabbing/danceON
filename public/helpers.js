@@ -102,6 +102,9 @@ async function loadPage() {
   let data = await res.json();
 
   let rootDiv = document.getElementById("exampleID");
+  // clear the div
+  rootDiv.innerHTML = "";
+  // create the divs
   let count = data.length - 1;
   while (count >= 0) {
     let imageURL = data[count].image;
