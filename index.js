@@ -19,7 +19,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const mongoURL = process.env.DBURL
+const mongoURL = process.env.MONGODB_URI
 mongoService.startConnection(mongoURL) // mongoDB connection
 const port  = process.env.PORT || 3000;
 // Routes
