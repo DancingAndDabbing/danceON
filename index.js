@@ -40,6 +40,7 @@ passport.use(new LocalStrategy(
 
             crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
                 if (err) { return next(err); }
+                console.log(hashedPassword.toString('hex'));
                 if (user.hash !== hashedPassword.toString('hex')) {
                     return next(null, false, {message : 'invalid password'});
                 }
