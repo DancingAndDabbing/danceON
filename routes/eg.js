@@ -24,21 +24,20 @@ router.post('/', async function (req, res) {
     let time = date_ob.getUTCHours() + "-"+date_ob.getUTCMinutes()+"-"+date_ob.getUTCMilliseconds()
     let createDate =  year + "-" + month + "-" + date+"T"+time;
     // console.log(req.body.image);
-    try {
 
-        var data = await Example.create({
-                authorName:req.user.username, 
-                createDate: createDate, 
-                description:req.body.desc,
-                title:req.body.title,
-                tags:req.body.tag,
-                examples: req.body.code,
-                image: req.body.image
-        })}
-    catch (err) {
-            console.log(err);
-    }
+    var data = await Example.create({
+            authorName:req.user.username, 
+            createDate: createDate, 
+            description:req.body.desc,
+            title:req.body.title,
+            tags:req.body.tag,
+            examples: req.body.code,
+            image: req.body.image
+    }).then(function(data){
     res.status(200).send(data);
+    }).catch(function(err){
+        res.status(500).send(err);
+    });
 });
 // GET /examples/:id
 router.get('/', function(req, res) {
