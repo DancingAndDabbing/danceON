@@ -8,8 +8,7 @@ const session = require('express-session');
 const MemoryStore = require('memorystore')(session)
 const passport = require('passport');
 const cors = require('cors');
-const User = require('./models/userSchema');
-var LocalStrategy = require('passport-local');
+var LocalStrategy = require('passport-local').Strategy;
 app.use(session({
     cookie: {
         maxAge: 86400000
@@ -26,7 +25,8 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit:'50mb',extended:false}));
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(User.createStrategy());
+const User = require('./models/userSchema');
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 // var morgan = require('morgan')
