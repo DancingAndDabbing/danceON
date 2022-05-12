@@ -38,10 +38,10 @@ passport.use(new LocalStrategy(
                 return next(null, false, {message : 'invalid username'});
             }
 
-            crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+            crypto.pbkdf2(password, user.salt, 25000, 512, 'sha256', function(err, hashedPassword) {
                 if (err) { return next(err); }
-                console.log(hashedPassword.toString());
-                if (user.hash !== hashedPassword.toString()) {
+                // console.log(hashedPassword.toString());
+                if (user.hash !== hashedPassword.toString('hex')) {
                     return next(null, false, {message : 'invalid password'});
                 }
                 // if (!crypto.timingSafeEqual(Buffer.from(user.hash), Buffer.from(hashedPassword))) {
