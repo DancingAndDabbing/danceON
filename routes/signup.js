@@ -7,14 +7,14 @@ const User = require('../models/userSchema');
 
 router.post('/', async function(req, res) {
     console.log(req.body.uname);
-    User.register({username: req.body.uname}, req.body.psw, function(err, user){
+    User.register({username: req.body.username}, req.body.password, function(err, user){
         if (err){
             console.log(err)
             console.log("error happened")
             res.sendFile(path.join(__dirname,'..', '/public/index.html'));
         } else{
             const authenticate = User.authenticate();
-            authenticate(req.body.uname, req.body.psw, function(err, result){
+            authenticate(req.body.username, req.body.password, function(err, result){
                 if (err){
                     console.log(err)
                     console.log("here lies error")
