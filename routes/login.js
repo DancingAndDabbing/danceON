@@ -29,7 +29,7 @@ const passport = require('passport');
 //     });
 // });
 router.post('/',async function(req, res,){
-    console.log(req.body.uname);
+    console.log(req.body.username);
     passport.authenticate('local', function (err, user, info) {
         console.log(err);
         console.log(info);
