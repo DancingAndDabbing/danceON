@@ -160,6 +160,7 @@ async function saveExample(data) {
 
   // call snapshot function
   let snapshot = getCanvasSnapshot();
+  console.log(snapshot);
 
 
   const url = "/examples";
