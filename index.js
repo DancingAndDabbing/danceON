@@ -8,6 +8,7 @@ const session = require('express-session');
 const MemoryStore = require('memorystore')(session)
 const passport = require('passport');
 const cors = require('cors');
+var crypto = require('crypto');
 var LocalStrategy = require('passport-local').Strategy;
 app.use(session({
     cookie: {
