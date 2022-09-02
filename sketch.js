@@ -296,6 +296,10 @@ function setup() {
             options[t] = select(`#${t}`).checked();
         })
     });
+
+    // Force webcam mode on for installation
+    options.webcam = true;
+    handleWebCamToggle();
 }
 
 function draw() {
@@ -392,8 +396,6 @@ function keyPressed() {
     if (keyCode == LEFT_ARROW) goForwardOrBackward(options, video, -1);
     if (keyCode == UP_ARROW) goForwardOrBackward(options, video, 10);
     if (keyCode == DOWN_ARROW) goForwardOrBackward(options, video, -10);
-
-
 
     return false;
 }
