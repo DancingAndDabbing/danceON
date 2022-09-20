@@ -66,7 +66,7 @@ router.get('/list', function(req, res) {
 router.get('/files', function(req, res) {
     let lazy = (req.query.lazy === 'true');
     if (lazy) {
-        Example.find().sort({createDate: -1}).limit(9).exec(function(err,examples){
+        Example.find().sort({createDate: -1}).limit(6).exec(function(err,examples){
             if (err){
                 console.log(err)
             } else{
@@ -74,7 +74,7 @@ router.get('/files', function(req, res) {
             }
         });
     } else {
-        Example.find().sort({createDate: -1}).skip(9).exec(function(err,examples){
+        Example.find().sort({createDate: -1}).skip(6).exec(function(err,examples){
             if (err){
                 console.log(err)
             } else{

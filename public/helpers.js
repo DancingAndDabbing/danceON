@@ -139,7 +139,7 @@ async function loadPage() {
   //   count--;
   // }
   
-  let res2 = await featch("/examples/files?lazy=false");
+  let res2 = await fetch("/examples/files?lazy=false");
   let data2 = await res2.json();
   count = data2.length - 1;
   renderGrid(rootDiv, data2, count);
