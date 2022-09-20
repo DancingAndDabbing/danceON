@@ -25,7 +25,7 @@ router.post('/', async function (req, res) {
     let createDate =  year + "-" + month + "-" + date+"T"+time;
     // console.log(req.body.image);
 
-    var data = await Example.create({
+    let data = await Example.create({
             authorName:req.user.username, 
             createDate: createDate, 
             description:req.body.desc,
@@ -64,12 +64,30 @@ router.get('/list', function(req, res) {
     res.sendFile(path.join(__dirname,'..', '/public/examples.html'));
 });
 router.get('/files', function(req, res) {
-    Example.find(function(err,examples){
-         if (err){
-             console.log(err)
-         } else{
-             res.send(examples);
-         }
-    });
+    let lazy = (req.query.lazy === 'true');
+    if (lazy) {
+        Example.find().sort({createDate: -1}).limit(9).exec(function(err,examples){
+            if (err){
+                console.log(err)
+            } else{
+                res.send(examples)
+            }
+        });
+    } else {
+        Example.find().sort({createDate: -1}).skip(9).exec(function(err,examples){
+            if (err){
+                console.log(err)
+            } else{
+                res.send(examples)
+            }
+        });
+    }
+    // Example.find(function(err,examples){
+    //      if (err){
+    //          console.log(err)
+    //      } else{
+    //          res.send(examples);
+    //      }
+    // });
 });
 module.exports = router;

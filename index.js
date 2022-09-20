@@ -66,7 +66,7 @@ passport.deserializeUser(User.deserializeUser());
 
 
 const mongoURL = process.env.MONGODB_URI
-mongoService.startConnection(mongoURL) // mongoDB connection
+mongoService.startConnection(mongoURL ? mongoURL :  process.env.DBURL) // mongoDB connection
 const port  = process.env.PORT || 3000;
 // Routes
 
