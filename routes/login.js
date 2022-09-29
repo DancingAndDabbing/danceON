@@ -7,8 +7,8 @@ const passport = require('passport');
 router.post('/', function(req, res) {
   console.log(req.body.username)
   User.findOne({username: req.body.username}, function(err, user){
-    console.log("The user is: "+user);
-    if (user.admin === true){
+    console.log("The user is: "+user.admin);
+    if (user.admin === "true"){
       // res.redirect('/admin');
       // admin = true;
       passport.authenticate('local',{
