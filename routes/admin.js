@@ -4,7 +4,7 @@ const path = require('path');
 router.get('/', function(req, res) {
     // console.log(req.body.uname)
     // console.log(req.body.psw)
-    if (req.isAuthenticated()){
+    if (req.user){
         console.log('Sucess')
         res.sendFile(path.join(__dirname,'..','/public/admin.html'));
     } else {
