@@ -77,6 +77,7 @@ app.use('/login', require('./routes/login'));
 app.use('/signup', require('./routes/signup'));
 app.use('/logout', require('./routes/logout'));
 app.use('/users', require('./routes/user'))
+app.use('/admin', require('./routes/admin'))
 app.use('/dashboard', require('./routes/dashboard'));;
 app.use(express.static("public"));
 app.listen(port, ()=>{
