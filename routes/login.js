@@ -9,8 +9,8 @@ router.post('/', function(req, res) {
   User.findOne({username: req.body.username}, function(err, user){
     console.log("The user is: "+user);
     if (user.admin === true){
-      res.redirect('/admin');
-      admin = true;
+      // res.redirect('/admin');
+      // admin = true;
       passport.authenticate('local',{
         successRedirect: '/admin',
         failureRedirect: '/'
