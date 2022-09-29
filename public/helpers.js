@@ -123,21 +123,6 @@ async function loadPage() {
   // create the divs
   let count = data.length - 1;
   renderGrid(rootDiv, data, count);
-  // while (count >= 0) {
-  //   let imageURL = data[count].image;
-  //   if (imageURL === undefined){
-  //       imageURL = "/assets/sample.jpg";
-  //   }
-  //   let card = createCard(
-  //     data[count].title,
-  //     data[count].description,
-  //     imageURL,
-  //     data[count]._id
-  //   );    
-  //   card.classList.add("column");
-  //   rootDiv.appendChild(card);
-  //   count--;
-  // }
   
   let res2 = await fetch("/examples/files?lazy=false");
   let data2 = await res2.json();

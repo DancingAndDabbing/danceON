@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html
+  class="has-navbar-fixed-top"
+  lang="en"
+  style="overscroll-behavior-x: none"
+>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <title>danceON!</title>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+
+    <!-- MediaPipe -->
+    <!-- Currently Giving TypeError: t.Pose is not a constructor -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script> -->
+
+    <!-- TensorFlow -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+
+    <!-- ACE -->
+    <script src="ace/ace.js"></script>
+    <script src="ace/ext-language_tools.js"></script>
+
+    <!-- ESPrima -->
+    <script src="https://unpkg.com/esprima@~4.0/dist/esprima.js"></script>
+
+    <!-- Rough -->
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+
+    <!-- Style -->
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css"
+    />
+    <link rel="stylesheet" type="text/css" href="style/mystyles.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../sass-dance/css/mystyles.css"> -->
+
+    <!-- Favicon -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
+  </head>
+  <body style="margin:50px 80px 0 80px">
+    <nav
+        style="box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.2)"
+        class="navbar is-light is-fixed-top"
+        role="navigation"
+        aria-label="main navigation"
+      >
+        <div class="navbar-brand">
+          <a href="/">
+            <li class="is-family-code navbar-item is-size-4 title_text">
+              () => [<i><b>danceON</b></i
+              >]
+            </li>
+          </a>
+          <a
+            role="button"
+            class="navbar-burger"
+            data-target="navMenu"
+            aria-label="menu"
+            aria-expanded="false"
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                <button
+                  id="settingsButton"
+                  onclick="openSettings()"
+                  class="button is-light"
+                >
+                  <span class="icon"><i class="fas fa-sliders-h"></i></span>
+                  <span>Editor</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    <div class="block">
+        <div class="block-header">
+            <h1 class="title">Dashboard</h1>
+        </div>
+    </div>
+    <div class="block">
+        <table class="table">
+            <thead>
+              <tr>
+                <th><abbr title="Index">#</abbr></th>
+                <th>Username</th>
+                <th><abbr title="Role">Role</abbr></th>
+                <th><abbr title="Won">W</abbr></th>
+                <th><abbr title="Drawn">D</abbr></th>
+                <th><abbr title="Lost">L</abbr></th>
+                <th><abbr title="Goals for">GF</abbr></th>
+                <th><abbr title="Goals against">GA</abbr></th>
+                <th><abbr title="Goal difference">GD</abbr></th>
+                <th><abbr title="Points">Pts</abbr></th>
+                <th>Qualification or relegation</th>
+              </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th><abbr title="Index">#</abbr></th>
+                    <th>Username</th>
+                    <th><abbr title="Role">Role</abbr></th>
+                    <th><abbr title="Won">W</abbr></th>
+                    <th><abbr title="Drawn">D</abbr></th>
+                    <th><abbr title="Lost">L</abbr></th>
+                    <th><abbr title="Goals for">GF</abbr></th>
+                    <th><abbr title="Goals against">GA</abbr></th>
+                    <th><abbr title="Goal difference">GD</abbr></th>
+                    <th><abbr title="Points">Pts</abbr></th>
+                    <th>Qualification or relegation</th>
+                </tr>
+            </tfoot>
+            <tbody id="users">
+            </tbody>
+          </table>
+    </div>
+    
+    <script src="lib/bulma-quickview.min.js"></script>
+    <script src="dashboard_helpers.js"></script>
+    <script src="topnav_handler.js"></script>
+    <script>
+      window.addEventListener("load", function () {
+        loadUsers();
+      });
+    </script>
+  </body>
+</html>

@@ -76,7 +76,8 @@ app.use('/examples', require('./routes/eg'));
 app.use('/login', require('./routes/login'));
 app.use('/signup', require('./routes/signup'));
 app.use('/logout', require('./routes/logout'));
-app.use('/user', require('./routes/user'));
+app.use('/users', require('./routes/user'))
+app.use('/dashboard', require('./routes/dashboard'));;
 app.use(express.static("public"));
 app.listen(port, ()=>{
     console.log(`The server is listening on port ${port}`)
