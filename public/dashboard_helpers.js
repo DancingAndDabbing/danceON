@@ -1,6 +1,6 @@
 // load the users in the table
 async function loadUsers() {
-    const users = await fetch("/users").then((res) => res.json());
+    const users = await fetch("/users").then(async (res) => await res.json());
     const table = document.getElementById("users");
     console.log(users);
     users.forEach((user, index) => {
