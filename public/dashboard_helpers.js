@@ -12,7 +12,7 @@ async function loadUsers() {
         const row = document.createElement("tr");
         row.setAttribute("data-id", user._id);
         row.innerHTML = `
-        <th>${index+1}</th>
+        <th>${i+1}</th>
         <td>title="${user.username}">${user.username}</td>
         <td>${user.admin ? "Admin" : "Contributor"}</td>
         <td>23</td>
