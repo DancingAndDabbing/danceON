@@ -5,10 +5,10 @@ async function loadUsers() {
     // const users = await fetch("/users").then(async (res) => await res.json());
     const table = document.getElementById("users");
     console.log("len: ",users.length)
-    for (let i = 0; i < users.length; i++) {
+    for (var i in users) {
         console.log(JSON.stringify(users[i]));
         const user = users[i];
-        console.log('inside for loop');
+        console.log('inside for loop: ',user);
         const row = document.createElement("tr");
         row.setAttribute("data-id", user._id);
         row.innerHTML = `
