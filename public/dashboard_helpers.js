@@ -1,13 +1,13 @@
 // load the users in the table
 async function loadUsers() {
     let res = await fetch('/users');
-    const users = JSON.parse(await res.json());
+    const users = await res.json();
     // const users = await fetch("/users").then(async (res) => await res.json());
     const table = document.getElementById("users");
-    console.log(users);
     for (let i = 0; i < users.length; i++) {
         console.log(JSON.stringify(users[i]));
         const user = users[i];
+        console.log(user);
         const row = document.createElement("tr");
         row.setAttribute("data-id", user._id);
         row.innerHTML = `
