@@ -13,7 +13,7 @@ async function loadUsers() {
         row.setAttribute("data-id", user._id);
         row.innerHTML = `
         <th>${i}</th>
-        <td>title="${user.username}</td>
+        <td>"${user.username}</td>
         <td>${user.admin ? "Admin" : "Contributor"}</td>
         `;
         table.appendChild(row);
