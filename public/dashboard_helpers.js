@@ -7,7 +7,7 @@ async function loadUsers() {
     for (let i = 0; i < users.length; i++) {
         console.log(JSON.stringify(users[i]));
         const user = users[i];
-        console.log(user);
+        console.log('inside for loop');
         const row = document.createElement("tr");
         row.setAttribute("data-id", user._id);
         row.innerHTML = `
