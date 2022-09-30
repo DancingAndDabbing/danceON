@@ -1,16 +1,18 @@
 const express = require('express');
 const http = require('http');
+const User = require('../models/userSchema');
+const passport = require('passport');
 const router = express.Router();
 
 router.get('/', (req, res) => {
     if (req.isAuthenticated()){
-        var json = {"status":'true'}
-        const data = JSON.stringify(json)
-        res.send(data)
-    } else {
-        var json = {status:'false'}
-        const data =  JSON.stringify(json)
-        res.send(data)
+        User.find({}, function(err, users){
+            if (err){
+                console.log(err);
+            } else {
+                res.send(users);
+            }
+        });
     }
 });
 
