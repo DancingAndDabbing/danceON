@@ -2,6 +2,7 @@
 async function loadUsers() {
     const users = await fetch("/users").then((res) => res.json());
     const table = document.getElementById("users");
+    console.log(users);
     users.forEach((user, index) => {
       const row = document.createElement("tr");
       row.setAttribute("data-id", user._id);
