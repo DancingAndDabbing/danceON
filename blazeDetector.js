@@ -104,6 +104,8 @@ class BlazeDetector {
     async loadModel(options, onSuccess, onError) {
         this.loaded = false;
         this.model = poseDetection.SupportedModels.BlazePose;
+        // Added to fix loading bug
+        await tf.ready();
 
         this.detector = await poseDetection.createDetector(
             this.model, this.detectorConfig);
